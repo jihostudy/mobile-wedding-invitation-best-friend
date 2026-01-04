@@ -1,0 +1,158 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply text-wedding-brown;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* 모바일 최적화: 터치 영역 개선 */
+  button,
+  a {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+}
+
+@layer components {
+  /* 커스텀 스크롤바 (웹킷 브라우저) */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-wedding-cream;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-wedding-brown-light rounded-full;
+  }
+
+  /* 섹션 공통 스타일 */
+  .section {
+    @apply min-h-screen flex flex-col justify-center items-center px-6 py-12;
+  }
+
+  /* 인스타그램 스토리 스타일 컨테이너 */
+  .story-container {
+    @apply relative w-full max-w-[500px] mx-auto bg-wedding-beige;
+    aspect-ratio: 9 / 16;
+  }
+
+  /* 텍스트 그라데이션 */
+  .text-gradient {
+    @apply bg-gradient-to-r from-wedding-brown to-wedding-gold bg-clip-text text-transparent;
+  }
+
+  /* 버튼 기본 스타일 */
+  .btn-primary {
+    @apply px-6 py-3 bg-wedding-brown text-white rounded-full 
+           hover:bg-wedding-brown-light transition-all duration-300
+           active:scale-95 font-medium shadow-lg;
+  }
+
+  .btn-outline {
+    @apply px-6 py-3 border-2 border-wedding-brown text-wedding-brown rounded-full
+           hover:bg-wedding-brown hover:text-white transition-all duration-300
+           active:scale-95 font-medium;
+  }
+
+  /* 카드 스타일 */
+  .card {
+    @apply bg-white rounded-2xl shadow-lg p-6 border border-wedding-beige;
+  }
+
+  /* 로딩 스피너 */
+  .spinner {
+    @apply animate-spin rounded-full border-4 border-wedding-beige border-t-wedding-brown;
+  }
+}
+
+@layer utilities {
+  /* 텍스트 섀도우 */
+  .text-shadow {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .text-shadow-lg {
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  /* 배경 블러 효과 */
+  .backdrop-blur-light {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  /* Safe Area for iOS */
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* 스냅 스크롤 (갤러리용) */
+  .snap-x {
+    scroll-snap-type: x mandatory;
+  }
+
+  .snap-center {
+    scroll-snap-align: center;
+  }
+
+  /* 텍스트 말줄임 */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+/* 애니메이션 키프레임 */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* 페이드 인 애니메이션 변형 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s ease-out;
+}
+

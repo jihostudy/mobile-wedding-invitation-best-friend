@@ -1,0 +1,59 @@
+import type { Metadata } from 'next';
+import { Noto_Serif_KR, Noto_Sans_KR } from 'next/font/google';
+import './globals.css';
+
+const notoSerif = Noto_Serif_KR({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-serif',
+  display: 'swap',
+});
+
+const notoSans = Noto_Sans_KR({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '700'],
+  variable: '--font-sans',
+  display: 'swap',
+});
+
+export const metadata: Metadata = {
+  title: '김민섭 ♥ 전이서 결혼합니다',
+  description: '2025년 3월 1일 토요일 오후 2시 50분',
+  keywords: ['결혼', '청첩장', '모바일청첩장', '웨딩'],
+  openGraph: {
+    title: '김민섭 ♥ 전이서 결혼합니다',
+    description: '2025년 3월 1일 토요일 오후 2시 50분',
+    type: 'website',
+    locale: 'ko_KR',
+    images: [
+      {
+        url: '/images/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: '김민섭 ♥ 전이서 결혼식 청첩장',
+      },
+    ],
+  },
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+  },
+  themeColor: '#F5F1E8',
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="ko" className={`${notoSerif.variable} ${notoSans.variable}`}>
+      <body className="font-sans antialiased bg-wedding-cream">
+        {children}
+      </body>
+    </html>
+  );
+}
+
