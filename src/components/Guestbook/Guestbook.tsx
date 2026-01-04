@@ -1,25 +1,17 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getGuestMessages, createGuestMessage, deleteGuestMessage } from '@/lib/supabase';
-import type { GuestMessage, GuestMessageInput } from '@/types';
+import { getGuestMessages } from '@/lib/supabase';
+import type { GuestMessage } from '@/types';
+import GuestbookModal from './GuestbookModal';
 
 /**
  * 방명록 컴포넌트
- * Supabase 연동
  */
 export default function Guestbook() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [messages, setMessages] = useState<GuestMessage[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  
-  // 폼 상태
-  const [formData, setFormData] = useState<GuestMessageInput>({
-    author: '',
-    message: '',
-    password: '',
-    isPrivate: false,
-  });
 
   // 메시지 로드
   useEffect(() => {
@@ -33,163 +25,93 @@ export default function Guestbook() {
     setLoading(false);
   };
 
-  // 메시지 작성
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!formData.author.trim() || !formData.message.trim() || !formData.password) {
-      alert('모든 필드를 입력해주세요.');
-      return;
-    }
-
-    const result = await createGuestMessage(formData);
-
-    if (result.success) {
-      alert('축하 메시지가 등록되었습니다! 💐');
-      setFormData({ author: '', message: '', password: '', isPrivate: false });
-      setIsFormOpen(false);
-      loadMessages();
-    } else {
-      alert(`오류가 발생했습니다: ${result.error}`);
-    }
+  const handleWriteClick = () => {
+    setIsModalOpen(true);
   };
 
-  // 메시지 삭제
-  const handleDelete = async (messageId: string) => {
-    const password = prompt('삭제하려면 비밀번호를 입력하세요:');
-    if (!password) return;
-
-    const result = await deleteGuestMessage(messageId, password);
-
-    if (result.success) {
-      alert('메시지가 삭제되었습니다.');
-      loadMessages();
-    } else {
-      alert(`오류: ${result.error}`);
-    }
+  const handleSuccess = () => {
+    loadMessages();
   };
 
   return (
-    <section className="section bg-wedding-beige">
-      <div className="max-w-2xl w-full">
+    <section className="section bg-white">
+      <div className="max-w-md w-full">
         {/* 타이틀 */}
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-serif text-wedding-brown mb-2">
-            축하 메시지
-          </h2>
-          <p className="text-wedding-brown-light">
-            따뜻한 축하의 말을 남겨주세요
+          <p className="text-sm tracking-[0.3em] text-wedding-brown-light/60 uppercase font-serif mb-4">
+            --------- Wedding Guest book ---------
           </p>
+          <h2 className="text-3xl font-bold text-wedding-brown">
+            방명록
+          </h2>
         </div>
 
-        {/* 메시지 작성 버튼 */}
-        {!isFormOpen && (
-          <button
-            onClick={() => setIsFormOpen(true)}
-            className="btn-primary w-full mb-8"
+        {/* 축하 메시지 박스 */}
+        <div className="relative mb-8">
+          {/* 텍스처 배경 효과 */}
+          <div className="absolute inset-0 bg-gradient-to-br from-wedding-beige/50 via-wedding-cream/30 to-wedding-beige/50 rounded-lg opacity-60" />
+          <div 
+            className="relative p-8 rounded-lg border border-wedding-brown/10 shadow-sm"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='paper' x='0' y='0' width='20' height='20' patternUnits='userSpaceOnUse'%3E%3Ccircle cx='1' cy='1' r='0.5' fill='%23d4af37' opacity='0.1'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100' height='100' fill='url(%23paper)'/%3E%3C/svg%3E")`,
+              backgroundSize: '100px 100px',
+            }}
           >
-            축하 메시지 남기기 ✍️
+            {/* 불규칙한 가장자리 효과 */}
+            <div className="absolute inset-0 rounded-lg overflow-hidden">
+              <div className="absolute -top-2 -left-2 w-8 h-8 bg-white rounded-full opacity-20" />
+              <div className="absolute -top-1 -right-3 w-6 h-6 bg-white rounded-full opacity-20" />
+              <div className="absolute -bottom-2 -left-1 w-7 h-7 bg-white rounded-full opacity-20" />
+              <div className="absolute -bottom-1 -right-2 w-5 h-5 bg-white rounded-full opacity-20" />
+            </div>
+
+            {/* 축하 메시지 */}
+            <div className="relative z-10 text-left space-y-2 text-wedding-brown">
+              <p>결혼을 진심으로</p>
+              <p>진심으로축하드려요 💕</p>
+              <p>두 분의 앞날이 언제나</p>
+              <p>사랑과 웃음으로</p>
+              <p>가득하길 바랍니다.</p>
+              
+              {/* 하단 서명 */}
+              <div className="text-center mt-6 pt-4 border-t border-wedding-brown/10">
+                <p className="text-sm text-wedding-brown/70">- 웨딩북 -</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 작성하기 버튼 */}
+        <div className="text-center">
+          <button
+            onClick={handleWriteClick}
+            className="px-8 py-3 bg-white border border-wedding-brown/20 rounded-lg text-wedding-brown font-medium hover:bg-wedding-beige/50 transition-colors shadow-sm"
+          >
+            작성하기
           </button>
-        )}
+        </div>
 
-        {/* 메시지 작성 폼 */}
-        {isFormOpen && (
-          <form onSubmit={handleSubmit} className="card mb-8">
-            <div className="space-y-4">
-              <div>
-                <label htmlFor="author" className="block text-sm font-medium text-wedding-brown mb-2">
-                  작성자
-                </label>
-                <input
-                  type="text"
-                  id="author"
-                  value={formData.author}
-                  onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-                  className="w-full px-4 py-2 border border-wedding-brown-light rounded-lg focus:outline-none focus:ring-2 focus:ring-wedding-brown"
-                  placeholder="이름을 입력하세요"
-                  maxLength={20}
-                />
+        {/* 방명록 목록 (공개 메시지만 표시) */}
+        {messages.length > 0 && (
+          <div className="mt-12 space-y-4">
+            <h3 className="text-xl font-semibold text-wedding-brown mb-4 text-center">
+              축하 메시지
+            </h3>
+            {loading ? (
+              <div className="flex justify-center py-8">
+                <div className="spinner w-8 h-8" />
               </div>
-
-              <div>
-                <label htmlFor="message" className="block text-sm font-medium text-wedding-brown mb-2">
-                  메시지
-                </label>
-                <textarea
-                  id="message"
-                  value={formData.message}
-                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  className="w-full px-4 py-2 border border-wedding-brown-light rounded-lg focus:outline-none focus:ring-2 focus:ring-wedding-brown resize-none"
-                  placeholder="축하 메시지를 입력하세요"
-                  rows={4}
-                  maxLength={300}
-                />
-                <p className="text-xs text-wedding-brown-light mt-1 text-right">
-                  {formData.message.length}/300
-                </p>
-              </div>
-
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-wedding-brown mb-2">
-                  비밀번호 (삭제시 필요)
-                </label>
-                <input
-                  type="password"
-                  id="password"
-                  value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className="w-full px-4 py-2 border border-wedding-brown-light rounded-lg focus:outline-none focus:ring-2 focus:ring-wedding-brown"
-                  placeholder="4자리 이상"
-                  minLength={4}
-                />
-              </div>
-
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  id="isPrivate"
-                  checked={formData.isPrivate}
-                  onChange={(e) => setFormData({ ...formData, isPrivate: e.target.checked })}
-                  className="w-4 h-4 text-wedding-brown rounded focus:ring-wedding-brown"
-                />
-                <label htmlFor="isPrivate" className="text-sm text-wedding-brown">
-                  비공개 메시지로 작성
-                </label>
-              </div>
-
-              <div className="flex gap-3 pt-2">
-                <button type="submit" className="btn-primary flex-1">
-                  등록하기
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setIsFormOpen(false)}
-                  className="btn-outline flex-1"
+            ) : (
+              messages.map((message) => (
+                <div
+                  key={message.id}
+                  className="bg-white rounded-lg p-4 border border-wedding-brown/10 shadow-sm"
                 >
-                  취소
-                </button>
-              </div>
-            </div>
-          </form>
-        )}
-
-        {/* 메시지 목록 */}
-        <div className="space-y-4">
-          {loading ? (
-            <div className="flex justify-center py-12">
-              <div className="spinner w-12 h-12" />
-            </div>
-          ) : messages.length === 0 ? (
-            <div className="text-center py-12 text-wedding-brown-light">
-              <p>첫 번째 축하 메시지를 남겨주세요! 💌</p>
-            </div>
-          ) : (
-            messages.map((message) => (
-              <div key={message.id} className="card">
-                <div className="flex justify-between items-start mb-3">
-                  <div>
-                    <p className="font-medium text-wedding-brown">{message.author}</p>
-                    <p className="text-xs text-wedding-brown-light mt-1">
+                  <div className="flex justify-between items-start mb-2">
+                    <p className="font-medium text-wedding-brown">
+                      {message.author}
+                    </p>
+                    <p className="text-xs text-wedding-brown-light">
                       {new Date(message.createdAt).toLocaleDateString('ko-KR', {
                         year: 'numeric',
                         month: 'long',
@@ -197,29 +119,22 @@ export default function Guestbook() {
                       })}
                     </p>
                   </div>
-                  <button
-                    onClick={() => handleDelete(message.id)}
-                    className="text-xs text-wedding-brown-light hover:text-wedding-brown"
-                    aria-label="메시지 삭제"
-                  >
-                    삭제
-                  </button>
-                </div>
-
-                {message.isPrivate ? (
-                  <p className="text-sm text-wedding-brown-light italic">
-                    🔒 비공개 메시지입니다
-                  </p>
-                ) : (
                   <p className="text-wedding-brown whitespace-pre-wrap break-words">
                     {message.message}
                   </p>
-                )}
-              </div>
-            ))
-          )}
-        </div>
+                </div>
+              ))
+            )}
+          </div>
+        )}
       </div>
+
+      {/* 방명록 작성 모달 */}
+      <GuestbookModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={handleSuccess}
+      />
     </section>
   );
 }

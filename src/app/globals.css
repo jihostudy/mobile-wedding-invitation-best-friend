@@ -35,6 +35,23 @@
     @apply bg-wedding-brown-light rounded-full;
   }
 
+  /* 모달 스크롤바 */
+  .modal-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .modal-scrollbar::-webkit-scrollbar-track {
+    @apply bg-wedding-brown/50;
+  }
+
+  .modal-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-wedding-beige/30 rounded-full;
+  }
+
+  .modal-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-wedding-beige/50;
+  }
+
   /* 섹션 공통 스타일 */
   .section {
     @apply min-h-screen flex flex-col justify-center items-center px-6 py-12;

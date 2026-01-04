@@ -50,7 +50,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko" className={`${notoSerif.variable} ${notoSans.variable}`}>
-      <body className="font-sans antialiased bg-wedding-cream">
+      <body className="font-sans antialiased bg-white">
         {children}
       </body>
     </html>

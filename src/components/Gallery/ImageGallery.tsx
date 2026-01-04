@@ -1,115 +1,101 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import { GALLERY_IMAGES } from '@/constants/wedding-data';
 
 /**
- * 이미지 갤러리 - 스와이프 가능한 인스타그램 스타일
- * 모바일 최적화된 터치 제스처 지원
+ * 웨딩 갤러리 - 3x3 그리드 형식
  */
 export default function ImageGallery() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
-  useEffect(() => {
-    const element = scrollRef.current;
-    if (!element) return;
-
-    const handleScroll = () => {
-      const scrollLeft = element.scrollLeft;
-      const width = element.offsetWidth;
-      const newIndex = Math.round(scrollLeft / width);
-      setCurrentIndex(newIndex);
-    };
-
-    element.addEventListener('scroll', handleScroll);
-    return () => element.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const scrollToImage = (index: number) => {
-    const element = scrollRef.current;
-    if (!element) return;
-
-    const width = element.offsetWidth;
-    element.scrollTo({
-      left: width * index,
-      behavior: 'smooth',
-    });
-  };
+  // 최대 9개 이미지만 표시 (3x3 그리드)
+  const displayImages = GALLERY_IMAGES.slice(0, 9);
 
   return (
-    <section className="section bg-wedding-cream">
+    <section className="section bg-wedding-beige">
       <div className="w-full max-w-2xl">
         {/* 타이틀 */}
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-serif text-wedding-brown mb-2">
-            Our Story
-          </h2>
-          <p className="text-wedding-brown-light">
-            우리의 소중한 순간들
+          <p className="text-sm tracking-[0.3em] text-wedding-brown-light/60 uppercase font-serif mb-2">
+            --------- Gallery ---------
           </p>
+          <h2 className="text-3xl font-serif text-wedding-brown font-bold">
+            웨딩 갤러리
+          </h2>
         </div>
 
-        {/* 이미지 슬라이더 */}
-        <div className="relative">
-          {/* 스크롤 컨테이너 */}
-          <div
-            ref={scrollRef}
-            className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide"
-            style={{
-              scrollbarWidth: 'none',
-              msOverflowStyle: 'none',
-            }}
-          >
-            {GALLERY_IMAGES.map((image) => (
-              <div
-                key={image.id}
-                className="flex-shrink-0 w-full snap-center px-2"
-              >
-                <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-xl">
-                  <Image
-                    src={image.url}
-                    alt={image.alt}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 600px"
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
+        {/* 3x3 그리드 */}
+        <div className="grid grid-cols-3 gap-2">
+          {displayImages.map((image) => (
+            <div
+              key={image.id}
+              className="relative aspect-square overflow-hidden rounded-lg border border-wedding-brown/20 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+              onClick={() => setSelectedImage(image.url)}
+            >
+              <Image
+                src={image.url}
+                alt={image.alt}
+                fill
+                className="object-cover hover:scale-105 transition-transform duration-300"
+                sizes="(max-width: 768px) 33vw, 200px"
+              />
+            </div>
+          ))}
+        </div>
 
-          {/* 인디케이터 도트 */}
-          <div className="flex justify-center gap-2 mt-6">
-            {GALLERY_IMAGES.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => scrollToImage(index)}
-                className={`transition-all duration-300 rounded-full ${
-                  index === currentIndex
-                    ? 'w-8 h-2 bg-wedding-brown'
-                    : 'w-2 h-2 bg-wedding-brown-light'
-                }`}
-                aria-label={`이미지 ${index + 1}번으로 이동`}
+        {/* 이미지가 9개 미만일 경우 빈 칸 채우기 */}
+        {displayImages.length < 9 && (
+          <div className="grid grid-cols-3 gap-2 mt-2">
+            {Array.from({ length: 9 - displayImages.length }).map((_, index) => (
+              <div
+                key={`empty-${index}`}
+                className="aspect-square bg-wedding-brown/5 rounded-lg border border-wedding-brown/10 border-dashed"
               />
             ))}
           </div>
-
-          {/* 이미지 카운터 */}
-          <div className="text-center mt-4">
-            <p className="text-sm text-wedding-brown-light">
-              {currentIndex + 1} / {GALLERY_IMAGES.length}
-            </p>
-          </div>
-        </div>
+        )}
       </div>
 
-      <style jsx>{`
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
+      {/* 이미지 확대 모달 */}
+      {selectedImage && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+          onClick={() => setSelectedImage(null)}
+        >
+          <div className="relative max-w-4xl w-full max-h-[90vh]">
+            <button
+              onClick={() => setSelectedImage(null)}
+              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
+              aria-label="닫기"
+            >
+              <svg
+                className="w-6 h-6 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+            <div className="relative aspect-[3/4] rounded-lg overflow-hidden">
+              <Image
+                src={selectedImage}
+                alt="확대된 이미지"
+                fill
+                className="object-contain"
+                sizes="90vw"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

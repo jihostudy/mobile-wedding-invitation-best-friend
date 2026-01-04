@@ -1,9 +1,10 @@
 import MainHero from '@/components/Hero/MainHero';
 import InvitationMessage from '@/components/Invitation/InvitationMessage';
+import WeddingCalendar from '@/components/Calendar/WeddingCalendar';
 import ImageGallery from '@/components/Gallery/ImageGallery';
 import VenueInfo from '@/components/Location/VenueInfo';
 import Guestbook from '@/components/Guestbook/Guestbook';
-import ShareButtons from '@/components/Share/ShareButtons';
+import ThankYouSection from '@/components/ThankYou/ThankYouSection';
 
 /**
  * 메인 페이지
@@ -11,31 +12,31 @@ import ShareButtons from '@/components/Share/ShareButtons';
  */
 export default function HomePage() {
   return (
-    <main className="relative">
+    <main className="relative max-w-[600px] mx-auto bg-white">
       {/* 1. 메인 히어로 (인스타그램 스토리 스타일) */}
       <MainHero />
 
       {/* 2. 초대 메시지 */}
       <InvitationMessage />
 
-      {/* 3. 갤러리 */}
+      {/* 3. 캘린더 및 카운트다운 */}
+      <WeddingCalendar />
+
+      {/* 4. 갤러리 */}
       <ImageGallery />
 
-      {/* 4. 위치 정보 */}
+      {/* 5. 위치 정보 */}
       <VenueInfo />
 
-      {/* 5. 방명록 */}
+      {/* 6. 방명록 */}
       <Guestbook />
 
-      {/* 6. 공유하기 */}
-      <ShareButtons />
+      {/* 7. 끝맺음 (Thank You) */}
+      <ThankYouSection />
 
       {/* 푸터 */}
       <footer className="py-8 text-center bg-wedding-beige">
-        <p className="text-sm text-wedding-brown-light">
-          Thank you for celebrating with us
-        </p>
-        <p className="text-xs text-wedding-brown-light mt-2">
+        <p className="text-xs text-wedding-brown-light">
           © 2025. All rights reserved.
         </p>
       </footer>

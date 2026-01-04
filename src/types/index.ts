@@ -21,6 +21,8 @@ export interface Person {
 export interface Parents {
   father: string;
   mother: string;
+  fatherContact?: string;
+  motherContact?: string;
 }
 
 export interface WeddingDate {
@@ -37,6 +39,7 @@ export interface Venue {
   address: string;
   floor?: string;
   hall?: string;
+  contact?: string;
   coordinates: {
     lat: number;
     lng: number;
@@ -48,6 +51,7 @@ export interface Venue {
 export interface TransportInfo {
   subway?: string[];
   bus?: string[];
+  busNote?: string;
   parking?: string;
 }
 
@@ -63,16 +67,14 @@ export interface GuestMessage {
   id: string;
   author: string;
   message: string;
-  password: string; // 암호화된 비밀번호
   createdAt: Date;
-  isPrivate: boolean;
+  isPublic: boolean; // true: 공개, false: 비공개
 }
 
 export interface GuestMessageInput {
   author: string;
   message: string;
-  password: string;
-  isPrivate: boolean;
+  isPublic: boolean; // true: 공개 (청첩장에 표시), false: 비공개
 }
 
 export interface ShareOptions {

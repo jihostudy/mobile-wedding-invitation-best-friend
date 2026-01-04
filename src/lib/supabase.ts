@@ -30,9 +30,8 @@ export async function getGuestMessages(): Promise<GuestMessage[]> {
     id: item.id,
     author: item.author,
     message: item.message,
-    password: item.password,
     createdAt: new Date(item.created_at),
-    isPrivate: item.is_private,
+    isPublic: item.is_public ?? true, // 기본값: 공개
   }));
 }
 
@@ -42,15 +41,11 @@ export async function getGuestMessages(): Promise<GuestMessage[]> {
 export async function createGuestMessage(
   input: GuestMessageInput
 ): Promise<{ success: boolean; error?: string }> {
-  // 비밀번호 해시화 (프론트엔드에서 간단하게 처리)
-  const hashedPassword = await hashPassword(input.password);
-
   const { error } = await supabase.from('guest_messages').insert([
     {
       author: input.author,
       message: input.message,
-      password: hashedPassword,
-      is_private: input.isPrivate,
+      is_public: input.isPublic,
     },
   ]);
 
@@ -63,52 +58,21 @@ export async function createGuestMessage(
 }
 
 /**
- * 방명록 메시지 삭제 (비밀번호 확인)
+ * 방명록 메시지 삭제
  */
 export async function deleteGuestMessage(
-  messageId: string,
-  password: string
+  messageId: string
 ): Promise<{ success: boolean; error?: string }> {
-  // 메시지 조회
-  const { data, error: fetchError } = await supabase
-    .from('guest_messages')
-    .select('password')
-    .eq('id', messageId)
-    .single();
-
-  if (fetchError || !data) {
-    return { success: false, error: '메시지를 찾을 수 없습니다.' };
-  }
-
-  // 비밀번호 확인
-  const hashedPassword = await hashPassword(password);
-  if (data.password !== hashedPassword) {
-    return { success: false, error: '비밀번호가 일치하지 않습니다.' };
-  }
-
-  // 삭제
-  const { error: deleteError } = await supabase
+  const { error } = await supabase
     .from('guest_messages')
     .delete()
     .eq('id', messageId);
 
-  if (deleteError) {
-    return { success: false, error: deleteError.message };
+  if (error) {
+    return { success: false, error: error.message };
   }
 
   return { success: true };
-}
-
-/**
- * 간단한 비밀번호 해시 (Web Crypto API 사용)
- */
-async function hashPassword(password: string): Promise<string> {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(password);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const hashHex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
-  return hashHex;
 }
 
 /**
@@ -119,8 +83,7 @@ async function hashPassword(password: string): Promise<string> {
  *   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
  *   author TEXT NOT NULL,
  *   message TEXT NOT NULL,
- *   password TEXT NOT NULL,
- *   is_private BOOLEAN DEFAULT FALSE,
+ *   is_public BOOLEAN DEFAULT TRUE,
  *   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
  * );
  * 
@@ -129,13 +92,16 @@ async function hashPassword(password: string): Promise<string> {
  * -- Row Level Security (RLS) 활성화
  * ALTER TABLE guest_messages ENABLE ROW LEVEL SECURITY;
  * 
- * -- 모든 사용자가 읽기 가능
- * CREATE POLICY "Public read access" ON guest_messages FOR SELECT USING (true);
+ * -- 모든 사용자가 읽기 가능 (공개 메시지만)
+ * CREATE POLICY "Public read access" ON guest_messages 
+ *   FOR SELECT USING (is_public = true);
  * 
  * -- 모든 사용자가 삽입 가능
- * CREATE POLICY "Public insert access" ON guest_messages FOR INSERT WITH CHECK (true);
+ * CREATE POLICY "Public insert access" ON guest_messages 
+ *   FOR INSERT WITH CHECK (true);
  * 
- * -- 본인만 삭제 가능 (비밀번호로 확인)
- * CREATE POLICY "Delete own messages" ON guest_messages FOR DELETE USING (true);
+ * -- 모든 사용자가 삭제 가능 (추후 관리자 기능 추가 시 수정)
+ * CREATE POLICY "Delete messages" ON guest_messages 
+ *   FOR DELETE USING (true);
  */
 
