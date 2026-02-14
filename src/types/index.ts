@@ -12,7 +12,6 @@ export interface WeddingInfo {
     groom: AccountItem;
     bride: AccountItem;
   };
-  share?: ShareConfig;
 }
 
 export interface Person {
@@ -55,9 +54,14 @@ export interface Venue {
 
 export interface TransportInfo {
   subway?: string[];
+  subwayDetails?: {
+    label: string;
+    color: string;
+  }[];
   bus?: string[];
   busNote?: string;
   parking?: string;
+  shuttlePickup?: string;
 }
 
 export interface GalleryImage {
@@ -78,12 +82,6 @@ export interface AccountItem {
   account: string;
   holder: string;
   label?: string;
-}
-
-export interface ShareConfig {
-  title: string;
-  description: string;
-  imageUrl?: string;
 }
 
 export interface HeroSectionData {
@@ -114,6 +112,26 @@ export interface GallerySectionData {
   images: GalleryImage[];
 }
 
+export interface InterviewAnswer {
+  role: string;
+  name: string;
+  paragraphs: string[];
+}
+
+export interface InterviewQuestion {
+  question: string;
+  answers: InterviewAnswer[];
+}
+
+export interface InterviewSectionData {
+  kicker: string;
+  title: string;
+  description: string;
+  image: ImageAsset;
+  buttonLabel: string;
+  questions: InterviewQuestion[];
+}
+
 export interface LocationSectionData {
   kicker: string;
   title: string;
@@ -125,13 +143,6 @@ export interface AccountSectionData {
   title: string;
   description: string;
   accounts: AccountItem[];
-}
-
-export interface ClosingSectionData {
-  kicker: string;
-  title: string;
-  messages: string[];
-  copyButtonLabel: string;
 }
 
 export interface FloatingNavItem {
@@ -153,10 +164,3 @@ export interface GuestMessageInput {
   isPublic: boolean; // true: 공개 (청첩장에 표시), false: 비공개
 }
 
-export interface ShareOptions {
-  type: 'kakao' | 'link' | 'facebook';
-  url: string;
-  title: string;
-  description: string;
-  imageUrl: string;
-}

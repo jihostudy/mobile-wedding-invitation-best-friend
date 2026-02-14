@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import type { LocationSectionData, Venue, WeddingDate } from '@/types';
+import type { LocationSectionData, Venue, WeddingDate } from "@/types";
 
 interface VenueInfoProps {
   section: LocationSectionData;
@@ -10,67 +10,109 @@ interface VenueInfoProps {
 
 export default function VenueInfo({ section, venue, date }: VenueInfoProps) {
   const mapUrl = `https://map.naver.com/v5/search/${encodeURIComponent(venue.address)}`;
+  const staticMapUrl = `https://staticmap.openstreetmap.de/staticmap.php?center=${venue.coordinates.lat},${venue.coordinates.lng}&zoom=16&size=900x420&maptype=mapnik&markers=${venue.coordinates.lat},${venue.coordinates.lng},lightblue1`;
+  const subwayLines =
+    venue.transport?.subwayDetails?.length
+      ? venue.transport.subwayDetails
+      : (venue.transport?.subway ?? []).map((label, index) => ({
+          label,
+          color: index === 0 ? "#D31145" : "#747F00",
+        }));
+  const busLines = venue.transport?.bus ?? [];
+  const trunkBus =
+    busLines
+      .find((line) => line.includes("간선"))
+      ?.replace("간선버스:", "")
+      .trim() ?? "-";
+  const branchBus =
+    busLines
+      .find((line) => line.includes("지선"))
+      ?.replace("지선버스:", "")
+      .trim() ?? "-";
 
   return (
-    <section id="location" className="bg-wedding-beige px-6 py-16">
-      <div className="mx-auto w-full max-w-2xl">
-        <div className="mb-8 text-center">
-          <p className="font-serif text-xs uppercase tracking-[0.33em] text-wedding-brown-light/70">{section.kicker}</p>
-          <h2 className="mt-3 text-3xl font-serif text-wedding-brown">{section.title}</h2>
-          <p className="mt-2 text-sm text-wedding-brown-light">
-            {date.year}년 {date.month}월 {date.day}일 {date.dayOfWeek} {date.time}
+    <section id="location" className="py-16">
+      <div className="mx-auto w-full max-w-[425px]">
+        <div className="px-8 text-center">
+          <p className="font-serif text-xs uppercase tracking-[0.33em] text-wedding-brown-light/70">
+            {section.kicker}
+          </p>
+          <h2 className="mt-3 text-xl font-serif text-wedding-brown">
+            {section.title}
+          </h2>
+        </div>
+
+        <div className="mt-10 px-8 text-center">
+          <h3 className="text-xl font-bold text-wedding-brown">
+            {venue.name}
+            {venue.floor ? ` ${venue.floor}` : ""}
+          </h3>
+          <p className="mt-2 text-[15px] text-wedding-brown-light">
+            {venue.address}
+          </p>
+          <p className="mt-2 text-[15px] text-wedding-brown-light">
+            Tel. {venue.contact ?? "02-000-0000"}
           </p>
         </div>
 
-        <div className="rounded-2xl border border-wedding-brown/15 bg-white/50 p-6 text-center shadow-sm">
-          <h3 className="text-xl font-semibold text-wedding-brown">
-            {venue.name}
-            {venue.floor ? ` ${venue.floor}` : ''}
-          </h3>
-          <p className="mt-2 text-sm text-wedding-brown-light">{venue.address}</p>
-          {venue.contact && <p className="text-sm text-wedding-brown-light">Tel. {venue.contact}</p>}
+        <div className="mt-8 overflow-hidden border-y border-gray-300/70">
+          <img
+            src={staticMapUrl}
+            alt={`${venue.name} 지도`}
+            className="h-[230px] w-full object-cover"
+            loading="lazy"
+          />
+        </div>
 
+        <div className="px-8">
           <a
             href={mapUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-5 inline-flex rounded-full border border-wedding-brown/30 bg-white px-6 py-2 text-sm font-medium text-wedding-brown transition hover:bg-wedding-beige"
+            className="mt-6 inline-flex w-full items-center justify-center rounded-xl border border-gray-300 bg-transparent px-6 py-3 text-[15px] font-medium text-wedding-brown"
           >
-            {section.mapCtaLabel}
+            약도 이미지 보기
           </a>
         </div>
 
-        {venue.transport && (
-          <div className="mt-8 space-y-4 rounded-2xl border border-wedding-brown/10 bg-white/45 p-5 text-sm text-wedding-brown">
-            {venue.transport.parking && (
-              <div>
-                <p className="font-semibold">자가용</p>
-                <p className="mt-1 text-wedding-brown-light">{venue.transport.parking}</p>
-              </div>
-            )}
-            {venue.transport.subway && venue.transport.subway.length > 0 && (
-              <div>
-                <p className="font-semibold">지하철</p>
-                {venue.transport.subway.map((line) => (
-                  <p key={line} className="mt-1 text-wedding-brown-light">
-                    {line}
-                  </p>
-                ))}
-              </div>
-            )}
-            {venue.transport.bus && venue.transport.bus.length > 0 && (
-              <div>
-                <p className="font-semibold">버스</p>
-                {venue.transport.bus.map((line) => (
-                  <p key={line} className="mt-1 text-wedding-brown-light">
-                    {line}
-                  </p>
-                ))}
-                {venue.transport.busNote && <p className="mt-1 text-wedding-brown-light">{venue.transport.busNote}</p>}
-              </div>
-            )}
+        <div className="mx-8 mt-10 border-t border-gray-300/80 pt-8">
+          <h4 className="text-base font-semibold text-wedding-brown">지하철</h4>
+          <div className="mt-4 space-y-2 text-[15px] text-wedding-brown">
+            {subwayLines.map((line) => (
+              <p key={line.label}>
+                <span
+                  className="mr-2 inline-block h-3.5 w-3.5 rounded-full"
+                  style={{ backgroundColor: line.color }}
+                />
+                {line.label}
+              </p>
+            ))}
           </div>
-        )}
+        </div>
+
+        <div className="mx-8 mt-8 border-t border-gray-300/80 pt-8">
+          <h4 className="text-base font-semibold text-wedding-brown">
+            셔틀버스
+          </h4>
+          <p className="mt-4 text-[15px] text-wedding-brown">
+            {venue.transport?.shuttlePickup ??
+              `${date.month}월 ${date.day}일 강남구청역 인근 셔틀 탑승`}
+          </p>
+        </div>
+
+        <div className="mx-8 mt-8 border-t border-gray-300/80 pt-8">
+          <h4 className="text-base font-semibold text-wedding-brown">버스</h4>
+          <div className="mt-4 space-y-2 text-[15px] text-wedding-brown">
+            <p>
+              <span className="mr-2 inline-block h-3.5 w-3.5 rounded-full bg-[#1d3f8a]" />
+              간선버스 : {trunkBus}
+            </p>
+            <p>
+              <span className="mr-2 inline-block h-3.5 w-3.5 rounded-full bg-[#2d9b46]" />
+              지선버스 : {branchBus}
+            </p>
+          </div>
+        </div>
       </div>
     </section>
   );

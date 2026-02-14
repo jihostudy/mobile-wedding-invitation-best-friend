@@ -22,7 +22,7 @@ export default function Guestbook() {
   };
 
   return (
-    <section id="guestbook" className="bg-wedding-beige px-6 py-16">
+    <section id="guestbook" className="bg-white px-6 py-16">
       <div className="mx-auto w-full max-w-md">
         <div className="text-center">
           <p className="font-serif text-xs uppercase tracking-[0.33em] text-wedding-brown-light/70">GUESTBOOK</p>

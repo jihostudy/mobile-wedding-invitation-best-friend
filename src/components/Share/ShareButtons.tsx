@@ -98,7 +98,7 @@ export default function ShareButtons() {
   };
 
   return (
-    <section className="section bg-wedding-beige">
+    <section className="section bg-white">
       <div className="max-w-md w-full">
         {/* 타이틀 */}
         <div className="text-center mb-8">

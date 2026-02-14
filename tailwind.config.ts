@@ -10,8 +10,8 @@ const config: Config = {
     extend: {
       colors: {
         wedding: {
-          beige: '#F5F1E8',
-          cream: '#FAF8F3',
+          beige: '#FFFFFF',
+          cream: '#FFFFFF',
           brown: '#8B7355',
           'brown-light': '#B4A190',
           gold: '#D4AF37',
