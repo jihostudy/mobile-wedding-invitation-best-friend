@@ -1,102 +1,144 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import { GALLERY_IMAGES } from '@/constants/wedding-data';
+import type { GalleryImage, GallerySectionData } from '@/types';
 
-/**
- * 웨딩 갤러리 - 3x3 그리드 형식
- */
-export default function ImageGallery() {
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+interface ImageGalleryProps {
+  section: GallerySectionData;
+}
 
-  // 최대 9개 이미지만 표시 (3x3 그리드)
-  const displayImages = GALLERY_IMAGES.slice(0, 9);
+export default function ImageGallery({ section }: ImageGalleryProps) {
+  const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const scrollToIndex = (index: number) => {
+    if (!scrollContainerRef.current) return;
+
+    const container = scrollContainerRef.current;
+    container.scrollTo({
+      left: index * container.clientWidth,
+      behavior: 'smooth',
+    });
+    setCurrentIndex(index);
+  };
+
+  const goToPrevious = () => {
+    const newIndex = currentIndex > 0 ? currentIndex - 1 : section.images.length - 1;
+    scrollToIndex(newIndex);
+  };
+
+  const goToNext = () => {
+    const newIndex = currentIndex < section.images.length - 1 ? currentIndex + 1 : 0;
+    scrollToIndex(newIndex);
+  };
+
+  const handleScroll = () => {
+    if (!scrollContainerRef.current) return;
+    const container = scrollContainerRef.current;
+    setCurrentIndex(Math.round(container.scrollLeft / container.clientWidth));
+  };
+
+  useEffect(() => {
+    if (!selectedImage) return;
+
+    document.body.style.overflow = 'hidden';
+    const onEsc = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setSelectedImage(null);
+      }
+    };
+
+    window.addEventListener('keydown', onEsc);
+    return () => {
+      document.body.style.overflow = 'unset';
+      window.removeEventListener('keydown', onEsc);
+    };
+  }, [selectedImage]);
 
   return (
-    <section className="section bg-wedding-beige">
-      <div className="w-full max-w-2xl">
-        {/* 타이틀 */}
-        <div className="text-center mb-8">
-          <p className="text-sm tracking-[0.3em] text-wedding-brown-light/60 uppercase font-serif mb-2">
-            --------- Gallery ---------
-          </p>
-          <h2 className="text-3xl font-serif text-wedding-brown font-bold">
-            웨딩 갤러리
-          </h2>
+    <section id="gallery" className="bg-wedding-beige px-4 py-16">
+      <div className="mx-auto flex w-full max-w-2xl flex-col">
+        <div className="mb-8 text-center">
+          <p className="font-serif text-xs uppercase tracking-[0.34em] text-wedding-brown-light/70">{section.kicker}</p>
+          <h2 className="mt-3 text-3xl font-serif text-wedding-brown">{section.title}</h2>
         </div>
 
-        {/* 3x3 그리드 */}
-        <div className="grid grid-cols-3 gap-2">
-          {displayImages.map((image) => (
-            <div
-              key={image.id}
-              className="relative aspect-square overflow-hidden rounded-lg border border-wedding-brown/20 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-              onClick={() => setSelectedImage(image.url)}
-            >
-              <Image
-                src={image.url}
-                alt={image.alt}
-                fill
-                className="object-cover hover:scale-105 transition-transform duration-300"
-                sizes="(max-width: 768px) 33vw, 200px"
-              />
-            </div>
-          ))}
-        </div>
+        <div className="relative">
+          <button
+            onClick={goToPrevious}
+            className="absolute left-1 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/85 p-2 shadow"
+            aria-label="이전 이미지"
+          >
+            <svg className="h-5 w-5 text-wedding-brown" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
 
-        {/* 이미지가 9개 미만일 경우 빈 칸 채우기 */}
-        {displayImages.length < 9 && (
-          <div className="grid grid-cols-3 gap-2 mt-2">
-            {Array.from({ length: 9 - displayImages.length }).map((_, index) => (
-              <div
-                key={`empty-${index}`}
-                className="aspect-square bg-wedding-brown/5 rounded-lg border border-wedding-brown/10 border-dashed"
+          <div
+            ref={scrollContainerRef}
+            onScroll={handleScroll}
+            className="scrollbar-hide flex snap-x snap-mandatory overflow-x-auto"
+          >
+            {section.images.map((image) => (
+              <button
+                key={image.id}
+                className="relative h-[66dvh] w-full flex-shrink-0 snap-center px-3 text-left"
+                onClick={() => setSelectedImage(image)}
+                aria-label={`${image.alt} 크게 보기`}
+              >
+                <span className="relative block h-full w-full overflow-hidden rounded-2xl bg-white/70 shadow-lg">
+                  <Image src={image.url} alt={image.alt} fill className="object-contain" sizes="(max-width: 768px) 100vw, 720px" />
+                </span>
+              </button>
+            ))}
+          </div>
+
+          <button
+            onClick={goToNext}
+            className="absolute right-1 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/85 p-2 shadow"
+            aria-label="다음 이미지"
+          >
+            <svg className="h-5 w-5 text-wedding-brown" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+
+          <div className="mt-5 flex justify-center gap-2">
+            {section.images.map((_, index) => (
+              <button
+                key={`indicator-${index}`}
+                onClick={() => scrollToIndex(index)}
+                className={`h-2 rounded-full transition-all ${index === currentIndex ? 'w-6 bg-wedding-brown' : 'w-2 bg-wedding-brown/30'}`}
+                aria-label={`${index + 1}번 이미지로 이동`}
               />
             ))}
           </div>
-        )}
+        </div>
       </div>
 
-      {/* 이미지 확대 모달 */}
       {selectedImage && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4"
           onClick={() => setSelectedImage(null)}
+          role="dialog"
+          aria-modal="true"
         >
-          <div className="relative max-w-4xl w-full max-h-[90vh]">
+          <div className="relative h-[88dvh] w-full max-w-4xl" onClick={(event) => event.stopPropagation()}>
             <button
               onClick={() => setSelectedImage(null)}
-              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
-              aria-label="닫기"
+              className="absolute right-3 top-3 z-10 rounded-full bg-black/40 p-2"
+              aria-label="갤러리 확대 닫기"
             >
-              <svg
-                className="w-6 h-6 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
+              <svg className="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
-            <div className="relative aspect-[3/4] rounded-lg overflow-hidden">
-              <Image
-                src={selectedImage}
-                alt="확대된 이미지"
-                fill
-                className="object-contain"
-                sizes="90vw"
-              />
-            </div>
+            <Image src={selectedImage.url} alt={selectedImage.alt} fill className="object-contain" sizes="90vw" priority />
           </div>
         </div>
       )}
     </section>
   );
 }
-

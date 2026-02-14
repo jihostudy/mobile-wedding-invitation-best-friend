@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     locale: 'ko_KR',
     images: [
       {
-        url: '/images/og-image.jpg',
+        url: '/images/placeholder-couple.svg',
         width: 1200,
         height: 630,
         alt: '김민섭 ♥ 전이서 결혼식 청첩장',
@@ -56,4 +56,3 @@ export default function RootLayout({
     </html>
   );
 }
-

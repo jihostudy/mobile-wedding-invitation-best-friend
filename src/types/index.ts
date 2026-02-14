@@ -8,6 +8,11 @@ export interface WeddingInfo {
   bride: Person;
   date: WeddingDate;
   venue: Venue;
+  account?: {
+    groom: AccountItem;
+    bride: AccountItem;
+  };
+  share?: ShareConfig;
 }
 
 export interface Person {
@@ -63,6 +68,77 @@ export interface GalleryImage {
   height: number;
 }
 
+export interface ImageAsset {
+  url: string;
+  alt: string;
+}
+
+export interface AccountItem {
+  bank: string;
+  account: string;
+  holder: string;
+  label?: string;
+}
+
+export interface ShareConfig {
+  title: string;
+  description: string;
+  imageUrl?: string;
+}
+
+export interface HeroSectionData {
+  kicker: string;
+  title: string;
+  scriptLine: string;
+  dateLine: string;
+  venueLine: string;
+  mainImage: ImageAsset;
+}
+
+export interface InvitationSectionData {
+  kicker: string;
+  title: string;
+  message: string;
+  contactCtaLabel: string;
+}
+
+export interface CalendarSectionData {
+  title: string;
+  subtitle: string;
+  monthLabel: string;
+}
+
+export interface GallerySectionData {
+  kicker: string;
+  title: string;
+  images: GalleryImage[];
+}
+
+export interface LocationSectionData {
+  kicker: string;
+  title: string;
+  mapCtaLabel: string;
+}
+
+export interface AccountSectionData {
+  kicker: string;
+  title: string;
+  description: string;
+  accounts: AccountItem[];
+}
+
+export interface ClosingSectionData {
+  kicker: string;
+  title: string;
+  messages: string[];
+  copyButtonLabel: string;
+}
+
+export interface FloatingNavItem {
+  id: string;
+  label: string;
+}
+
 export interface GuestMessage {
   id: string;
   author: string;
@@ -84,4 +160,3 @@ export interface ShareOptions {
   description: string;
   imageUrl: string;
 }
-

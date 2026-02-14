@@ -5,42 +5,46 @@ import ImageGallery from '@/components/Gallery/ImageGallery';
 import VenueInfo from '@/components/Location/VenueInfo';
 import Guestbook from '@/components/Guestbook/Guestbook';
 import ThankYouSection from '@/components/ThankYou/ThankYouSection';
+import AccountSection from '@/components/Account/AccountSection';
+import FloatingNav from '@/components/Navigation/FloatingNav';
+import {
+  WEDDING_DATA,
+  HERO_SECTION,
+  INVITATION_SECTION,
+  CALENDAR_SECTION,
+  GALLERY_SECTION,
+  LOCATION_SECTION,
+  ACCOUNT_SECTION,
+  CLOSING_SECTION,
+  FLOATING_NAV_ITEMS,
+} from '@/constants/wedding-data';
 
-/**
- * 메인 페이지
- * 모든 섹션을 순서대로 렌더링
- */
 export default function HomePage() {
   return (
-    <main className="relative max-w-[600px] mx-auto bg-white">
-      {/* 1. 메인 히어로 (인스타그램 스토리 스타일) */}
-      <MainHero />
-
-      {/* 2. 초대 메시지 */}
-      <InvitationMessage />
-
-      {/* 3. 캘린더 및 카운트다운 */}
-      <WeddingCalendar />
-
-      {/* 4. 갤러리 */}
-      <ImageGallery />
-
-      {/* 5. 위치 정보 */}
-      <VenueInfo />
-
-      {/* 6. 방명록 */}
+    <main className="relative mx-auto max-w-[600px] bg-[#F9F2EB]">
+      <MainHero section={HERO_SECTION} groom={WEDDING_DATA.groom} bride={WEDDING_DATA.bride} />
+      <InvitationMessage section={INVITATION_SECTION} groom={WEDDING_DATA.groom} bride={WEDDING_DATA.bride} />
+      <WeddingCalendar
+        section={CALENDAR_SECTION}
+        groom={WEDDING_DATA.groom}
+        bride={WEDDING_DATA.bride}
+        date={WEDDING_DATA.date}
+      />
+      <ImageGallery section={GALLERY_SECTION} />
+      <VenueInfo section={LOCATION_SECTION} venue={WEDDING_DATA.venue} date={WEDDING_DATA.date} />
+      <AccountSection section={ACCOUNT_SECTION} />
       <Guestbook />
-
-      {/* 7. 끝맺음 (Thank You) */}
-      <ThankYouSection />
-
-      {/* 푸터 */}
-      <footer className="py-8 text-center bg-wedding-beige">
-        <p className="text-xs text-wedding-brown-light">
-          © 2025. All rights reserved.
-        </p>
-      </footer>
+      <ThankYouSection
+        section={CLOSING_SECTION}
+        image={HERO_SECTION.mainImage}
+        share={
+          WEDDING_DATA.share || {
+            title: `${WEDDING_DATA.groom.name} ♥ ${WEDDING_DATA.bride.name} 결혼합니다`,
+            description: `${WEDDING_DATA.date.year}.${WEDDING_DATA.date.month}.${WEDDING_DATA.date.day}`,
+          }
+        }
+      />
+      <FloatingNav items={FLOATING_NAV_ITEMS} />
     </main>
   );
 }
-

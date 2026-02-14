@@ -2,6 +2,19 @@
 
 import { useState } from 'react';
 
+interface KakaoApi {
+  isInitialized: () => boolean;
+  Share: {
+    sendDefault: (options: unknown) => void;
+  };
+}
+
+declare global {
+  interface Window {
+    Kakao?: KakaoApi;
+  }
+}
+
 /**
  * 공유 버튼 컴포넌트
  * 카카오톡, 링크 복사 등
@@ -14,12 +27,12 @@ export default function ShareButtons() {
     if (typeof window === 'undefined') return;
 
     // 카카오톡 SDK 로드 확인
-    if (!(window as any).Kakao) {
+    if (!window.Kakao) {
       alert('카카오톡 공유 기능을 사용할 수 없습니다.');
       return;
     }
 
-    const kakao = (window as any).Kakao;
+    const kakao = window.Kakao;
 
     if (!kakao.isInitialized()) {
       // 카카오 JavaScript 키로 초기화 (실제 키 필요)
@@ -33,7 +46,7 @@ export default function ShareButtons() {
       content: {
         title: '김민섭 ♥ 전이서 결혼합니다',
         description: '2025년 3월 1일 토요일 오후 2시 50분',
-        imageUrl: `${window.location.origin}/images/og-image.jpg`,
+        imageUrl: `${window.location.origin}/images/placeholder-couple.svg`,
         link: {
           mobileWebUrl: window.location.href,
           webUrl: window.location.href,
@@ -167,4 +180,3 @@ export default function ShareButtons() {
     </section>
   );
 }
-

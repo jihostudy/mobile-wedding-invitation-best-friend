@@ -15,10 +15,10 @@ export default function Head() {
       <meta name="theme-color" content="#F5F1E8" />
       
       {/* Apple Touch Icon */}
-      <link rel="apple-touch-icon" href="/images/apple-touch-icon.png" />
+      <link rel="apple-touch-icon" href="/images/placeholder-couple.svg" />
       
       {/* Favicon */}
-      <link rel="icon" href="/favicon.ico" />
+      <link rel="icon" href="/images/placeholder-couple.svg" />
     </>
   );
 }

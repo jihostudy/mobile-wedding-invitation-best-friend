@@ -1,73 +1,88 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Image from "next/image";
-import { MAIN_IMAGE_URL, WEDDING_DATA } from "@/constants/wedding-data";
+import { useState } from 'react';
+import Image from 'next/image';
+import type { ClosingSectionData, ImageAsset, ShareConfig } from '@/types';
 
-/**
- * 끝맺음 섹션 - Thank You
- */
-export default function ThankYouSection() {
-  const { groom, bride } = WEDDING_DATA;
+interface ThankYouSectionProps {
+  section: ClosingSectionData;
+  image: ImageAsset;
+  share: ShareConfig;
+}
+
+export default function ThankYouSection({ section, image, share }: ThankYouSectionProps) {
   const [copied, setCopied] = useState(false);
 
   const copyLink = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setTimeout(() => setCopied(false), 1500);
     } catch (error) {
-      console.error("Failed to copy:", error);
-      alert("링크 복사에 실패했습니다.");
+      console.error('Failed to copy:', error);
+      alert('링크 복사에 실패했습니다.');
     }
   };
 
-  return (
-    <section className="section bg-white">
-      <div className="w-full">
-        {/* Thank You 타이틀 */}
-        <div className="text-center mb-8">
-          <p className="text-sm tracking-[0.3em] text-wedding-brown-light/60 uppercase font-serif mb-4">
-            --------- Thank you ---------
-          </p>
-        </div>
+  const shareFacebook = () => {
+    const url = encodeURIComponent(window.location.href);
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank', 'width=600,height=400');
+  };
 
-        {/* 커플 사진 (프레임 효과) */}
-        <div className="mb-8">
-          <div className="relative w-full max-w-[300px] mx-auto">
-            {/* 프레임 효과 */}
-            <div className="absolute inset-0 bg-white rounded-lg shadow-lg transform rotate-1" />
-            <div className="relative aspect-[3/4] rounded-lg overflow-hidden shadow-xl border-4 border-white">
-              <Image
-                src={MAIN_IMAGE_URL}
-                alt={`${groom.name}과 ${bride.name}의 결혼식`}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 300px"
-              />
-            </div>
+  const shareTwitter = () => {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent(share.title);
+    window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank', 'width=600,height=400');
+  };
+
+  return (
+    <section id="closing" className="bg-wedding-beige px-6 py-16 pb-24">
+      <div className="mx-auto w-full max-w-md">
+        <div className="rounded-2xl border border-wedding-brown/15 bg-white p-5 shadow-lg">
+          <p className="text-center font-serif text-xs uppercase tracking-[0.33em] text-wedding-brown-light/70">{section.kicker}</p>
+          <h2 className="mt-4 text-center text-2xl font-serif text-wedding-brown">{section.title}</h2>
+
+          <div className="mt-5 relative aspect-square w-full overflow-hidden rounded-lg">
+            <Image src={image.url} alt={image.alt} fill className="object-cover" sizes="(max-width: 768px) 100vw, 420px" />
+          </div>
+
+          <div className="mt-5 space-y-2 text-center text-wedding-brown">
+            {section.messages.map((message) => (
+              <p key={message} className="leading-relaxed">
+                {message}
+              </p>
+            ))}
           </div>
         </div>
 
-        {/* 감사 메시지 */}
-        <div className="text-center mb-8 space-y-3">
-          <p className="text-base leading-relaxed text-wedding-brown">
-            소중한 분들의 축복 속에서
-            <br />두 사람이 하나 되어 새로운 출발을 합니다.
-          </p>
-          <p className="text-base leading-relaxed text-wedding-brown">
-            따뜻한 마음으로 지켜봐 주세요.
-          </p>
-        </div>
-
-        {/* 청첩장 링크 복사 버튼 */}
-        <div className="text-center">
+        <div className="mt-5 grid grid-cols-3 gap-2">
           <button
             onClick={copyLink}
-            className="px-6 py-3 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-900 font-medium transition-colors shadow-sm"
+            className="col-span-3 rounded-lg bg-gray-100 px-4 py-3 text-sm font-medium text-gray-900 hover:bg-gray-200"
           >
-            {copied ? "✓ 복사되었습니다!" : "청첩장 링크 복사하기"}
+            {copied ? '복사되었습니다' : section.copyButtonLabel}
           </button>
+          <button
+            onClick={shareFacebook}
+            className="rounded-lg bg-[#1877F2] px-3 py-2 text-xs font-semibold text-white"
+            aria-label="페이스북 공유"
+          >
+            Facebook
+          </button>
+          <button
+            onClick={shareTwitter}
+            className="rounded-lg bg-[#1DA1F2] px-3 py-2 text-xs font-semibold text-white"
+            aria-label="트위터 공유"
+          >
+            Twitter
+          </button>
+          <a
+            href="/api/calendar"
+            download="wedding.ics"
+            className="rounded-lg bg-wedding-brown px-3 py-2 text-center text-xs font-semibold text-white"
+          >
+            Calendar
+          </a>
         </div>
       </div>
     </section>
