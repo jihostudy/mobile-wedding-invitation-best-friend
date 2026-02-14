@@ -26,7 +26,7 @@ export default function AccountSection({ section }: AccountSectionProps) {
       <div className="mx-auto w-full max-w-md">
         <div className="text-center">
           <p className="font-serif text-xs uppercase tracking-[0.33em] text-wedding-brown-light/70">{section.kicker}</p>
-          <h2 className="mt-3 text-3xl font-serif text-wedding-brown">{section.title}</h2>
+          <h2 className="mt-3 text-xl font-serif text-wedding-brown">{section.title}</h2>
           <p className="mt-3 text-sm text-wedding-brown-light">{section.description}</p>
         </div>
 

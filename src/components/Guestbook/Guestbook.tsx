@@ -26,7 +26,7 @@ export default function Guestbook() {
       <div className="mx-auto w-full max-w-md">
         <div className="text-center">
           <p className="font-serif text-xs uppercase tracking-[0.33em] text-wedding-brown-light/70">GUESTBOOK</p>
-          <h2 className="mt-3 text-3xl font-serif text-wedding-brown">방명록</h2>
+          <h2 className="mt-3 text-xl font-serif text-wedding-brown">방명록</h2>
         </div>
 
         <div className="mt-7 rounded-2xl border border-wedding-brown/10 bg-white/50 p-6 text-wedding-brown">

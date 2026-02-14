@@ -11,13 +11,12 @@ interface VenueInfoProps {
 export default function VenueInfo({ section, venue, date }: VenueInfoProps) {
   const mapUrl = `https://map.naver.com/v5/search/${encodeURIComponent(venue.address)}`;
   const staticMapUrl = `https://staticmap.openstreetmap.de/staticmap.php?center=${venue.coordinates.lat},${venue.coordinates.lng}&zoom=16&size=900x420&maptype=mapnik&markers=${venue.coordinates.lat},${venue.coordinates.lng},lightblue1`;
-  const subwayLines =
-    venue.transport?.subwayDetails?.length
-      ? venue.transport.subwayDetails
-      : (venue.transport?.subway ?? []).map((label, index) => ({
-          label,
-          color: index === 0 ? "#D31145" : "#747F00",
-        }));
+  const subwayLines = venue.transport?.subwayDetails?.length
+    ? venue.transport.subwayDetails
+    : (venue.transport?.subway ?? []).map((label, index) => ({
+        label,
+        color: index === 0 ? "#D31145" : "#747F00",
+      }));
   const busLines = venue.transport?.bus ?? [];
   const trunkBus =
     busLines

@@ -24,7 +24,7 @@ export default function InvitationMessage({
           <p className="font-serif text-xs uppercase tracking-[0.33em] text-wedding-brown-light/70">
             {section.kicker}
           </p>
-          <h2 className="mt-4 text-3xl text-wedding-brown font-serif">
+          <h2 className="mt-3 text-xl font-serif text-wedding-brown">
             {section.title}
           </h2>
           <p className="mt-8 whitespace-pre-line text-[15px] leading-8 text-wedding-brown">
