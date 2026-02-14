@@ -140,6 +140,16 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+
+  /* 스크롤바 숨김 */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 /* 애니메이션 키프레임 */
