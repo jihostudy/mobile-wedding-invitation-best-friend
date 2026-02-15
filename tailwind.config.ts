@@ -1,52 +1,50 @@
-import type { Config } from 'tailwindcss'
+import type { Config } from "tailwindcss";
 
 const config: Config = {
   content: [
-    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
       colors: {
         wedding: {
-          beige: '#FFFFFF',
-          cream: '#FFFFFF',
-          brown: '#8B7355',
-          'brown-light': '#B4A190',
-          gray: '#4d4c4c',
-          'gray-light': '#999999',
-          'gray-dark': '#1a1a1a',
-          gold: '#D4AF37',
+          beige: "#FFFFFF",
+          "beige-dark": "#eee",
+          brown: "#8B7355",
+          "brown-light": "#B4A190",
+          gray: "#4d4c4c",
+          "gray-light": "#999999",
+          "gray-dark": "#1a1a1a",
+          gold: "#D4AF37",
         },
       },
       fontFamily: {
-        sans: ['var(--font-tmoney)', 'sans-serif'],
-        crimson: ['var(--font-crimson)', 'serif'],
+        sans: ["var(--fontc-tmoney)", "sans-serif"],
+        crimson: ["var(--font-crimson)", "serif"],
       },
       animation: {
-        'fade-in': 'fadeIn 0.8s ease-in-out',
-        'slide-up': 'slideUp 0.6s ease-out',
-        'scale-in': 'scaleIn 0.5s ease-out',
+        "fade-in": "fadeIn 0.8s ease-in-out",
+        "slide-up": "slideUp 0.6s ease-out",
+        "scale-in": "scaleIn 0.5s ease-out",
       },
       keyframes: {
         fadeIn: {
-          '0%': { opacity: '0' },
-          '100%': { opacity: '1' },
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
         },
         slideUp: {
-          '0%': { transform: 'translateY(20px)', opacity: '0' },
-          '100%': { transform: 'translateY(0)', opacity: '1' },
+          "0%": { transform: "translateY(20px)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
         },
         scaleIn: {
-          '0%': { transform: 'scale(0.95)', opacity: '0' },
-          '100%': { transform: 'scale(1)', opacity: '1' },
+          "0%": { transform: "scale(0.95)", opacity: "0" },
+          "100%": { transform: "scale(1)", opacity: "1" },
         },
       },
     },
   },
   plugins: [],
-}
-export default config
-
-
+};
+export default config;

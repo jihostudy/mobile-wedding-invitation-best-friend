@@ -59,15 +59,11 @@ export default function InterviewSection({ section }: InterviewSectionProps) {
 
       {isOpen && (
         <div
-          className="fixed inset-0 z-50 overflow-hidden overscroll-none bg-black/60 backdrop-blur-sm"
-          onClick={() => setIsOpen(false)}
+          className="fixed inset-0 z-50 overflow-hidden overscroll-none bg-wedding-beige-dark backdrop-blur-sm"
           role="dialog"
           aria-modal="true"
         >
-          <div
-            className="modal-scrollbar mx-auto h-[100dvh] w-full max-w-[425px] overflow-y-auto overscroll-contain bg-[#f7f7f7] px-6 pb-12 pt-6"
-              onClick={(event) => event.stopPropagation()}
-          >
+          <div className="modal-scrollbar mx-auto h-[100dvh] w-full max-w-[425px] overflow-y-auto overscroll-contain bg-[#f7f7f7] px-6 pb-12 pt-6">
             <div className="flex items-center justify-between">
               <h3 className="flex-1 text-center text-lg font-semibold text-wedding-gray-dark">
                 우리 두 사람의 이야기
@@ -81,12 +77,9 @@ export default function InterviewSection({ section }: InterviewSectionProps) {
               </button>
             </div>
 
-            <div className="mt-8 space-y-7">
+            <div className="mt-8 divide-y divide-[#dcdcdc]">
               {section.questions.map((questionItem) => (
-                <section
-                  key={questionItem.question}
-                  className="rounded-xl border border-[#e2e2e2] bg-white px-4 py-5"
-                >
+                <section key={questionItem.question} className="py-7">
                   <h4 className="text-[16px] font-semibold text-[#333]">
                     {questionItem.question}
                   </h4>
@@ -95,7 +88,7 @@ export default function InterviewSection({ section }: InterviewSectionProps) {
                       <div
                         key={`${questionItem.question}-${answer.role}-${answer.name}`}
                       >
-                        <p className="flex items-center gap-2 text-[15px] text-[#333]">
+                        <p className="flex items-center gap-2 text-sm font-semibold text-[#333] ">
                           <Icon
                             icon={UserRound}
                             size="sm"
@@ -103,7 +96,7 @@ export default function InterviewSection({ section }: InterviewSectionProps) {
                           />
                           {answer.role} {answer.name}
                         </p>
-                        <div className="mt-3 space-y-4 text-[15px] leading-[1.62] text-[#333]">
+                        <div className="mt-3 space-y-4 text-sm leading-[1.62] text-[#333]">
                           {answer.paragraphs.map((paragraph) => (
                             <p key={paragraph}>{paragraph}</p>
                           ))}
