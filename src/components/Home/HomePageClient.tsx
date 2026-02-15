@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import MainHero from '@/components/Hero/MainHero';
 import BackgroundMusicPlayer from '@/components/Audio/BackgroundMusicPlayer';
 import InvitationMessage from '@/components/Invitation/InvitationMessage';
@@ -11,12 +12,35 @@ import Guestbook from '@/components/Guestbook/Guestbook';
 import AccountSection from '@/components/Account/AccountSection';
 import FinalThanksSection from '@/components/Closing/FinalThanksSection';
 import FadeInUp from '@/components/common/FadeInUp';
+import useToast from '@/components/common/toast/useToast';
+import { apiFetch } from '@/lib/api/client';
 import { FALLBACK_WEDDING_CONTENT } from '@/lib/wedding-content/fallback';
 import { useWeddingContentQuery } from '@/lib/queries/wedding-content';
 
 export default function HomePageClient() {
+  const toast = useToast();
+  const hasShownLoginToast = useRef(false);
   const { data } = useWeddingContentQuery('main');
   const content = data?.content ?? FALLBACK_WEDDING_CONTENT;
+
+  useEffect(() => {
+    if (hasShownLoginToast.current) return;
+
+    let cancelled = false;
+    void apiFetch<{ authenticated: boolean }>('/api/admin/auth/session')
+      .then((result) => {
+        if (cancelled || !result.authenticated || hasShownLoginToast.current) return;
+        hasShownLoginToast.current = true;
+        toast.success('로그인되었습니다.');
+      })
+      .catch(() => {
+        // no-op: main page should remain accessible regardless of admin session check failures
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [toast]);
 
   return (
     <main className="relative mx-auto w-full max-w-[425px] bg-white">
