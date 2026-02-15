@@ -1,9 +1,12 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { Camera } from "lucide-react";
+import FadeInUp from "@/components/common/FadeInUp";
 import Icon from "@/components/common/Icon";
+import FireflyOverlay from "@/components/Snap/FireflyOverlay";
 import SnapUploadModal from "@/components/Snap/SnapUploadModal";
 import type { SnapSectionData } from "@/types";
 
@@ -13,9 +16,27 @@ interface SnapSectionProps {
 
 export default function SnapSection({ section }: SnapSectionProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isCardHovered, setIsCardHovered] = useState(false);
+  const [hasEnteredViewport, setHasEnteredViewport] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const previewImages = section.images.slice(0, 3);
+
+  useEffect(() => {
+    if (hasEnteredViewport || !sectionRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry?.isIntersecting) {
+          setHasEnteredViewport(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3 },
+    );
+
+    observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, [hasEnteredViewport]);
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -32,32 +53,94 @@ export default function SnapSection({ section }: SnapSectionProps) {
       ref={sectionRef}
       className="mt-12 rounded-[18px] bg-white px-6 py-12"
     >
-      <div className="mx-auto w-full max-w-md text-center">
-        <div
-          className="relative mx-auto h-[230px] w-full max-w-[320px]"
-          onMouseEnter={() => setIsCardHovered(true)}
-          onMouseLeave={() => setIsCardHovered(false)}
-        >
+      <FadeInUp className="mx-auto w-full max-w-md text-center">
+        <div className="relative mx-auto h-[230px] w-full max-w-[320px]">
           {previewImages.map((image, index) => {
             const zIndex = index === 1 ? 20 : 10;
-            const hoverOffsetX = index === 0 ? -22 : index === 2 ? 20 : 0;
-            const hoverOffsetY = index === 0 ? -18 : index === 1 ? -18 : -14;
+            const entryOffsetX = !hasEnteredViewport
+              ? index === 0
+                ? -76
+                : index === 2
+                  ? 76
+                  : 0
+              : 0;
+            const entryOffsetY = !hasEnteredViewport ? 20 : 0;
+            const baseX = image.offsetX;
+            const floatX = index === 0 ? -7 : index === 2 ? 7 : 4;
+            const floatY = index === 1 ? 7 : 10;
+            const floatRotate = index === 1 ? 1.4 : 1;
+
             return (
               <div
                 key={image.id}
-                className="absolute left-1/2 top-1/2 h-[200px] w-[160px] -translate-y-1/2 overflow-hidden rounded-[22px] border-[10px] border-white bg-white shadow-[0_8px_18px_rgba(0,0,0,0.14)] transition-transform duration-500 ease-out"
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
                 style={{
-                  transform: `translate(-50%, -50%) translateX(${image.offsetX + (isCardHovered ? hoverOffsetX : 0)}px) translateY(${isCardHovered ? hoverOffsetY : 0}px) rotate(${image.rotation}deg)`,
                   zIndex,
                 }}
               >
-                <Image
-                  src={image.url}
-                  alt={image.alt}
-                  fill
-                  className="object-cover"
-                  sizes="160px"
-                />
+                <motion.div
+                  className="relative h-[200px] w-[160px] overflow-hidden rounded-[22px] border-[10px] border-white bg-white shadow-[0_8px_18px_rgba(0,0,0,0.14)]"
+                  initial={{
+                    opacity: 0,
+                    x: baseX + entryOffsetX,
+                    y: entryOffsetY,
+                    rotate: image.rotation,
+                  }}
+                  animate={
+                    hasEnteredViewport
+                      ? {
+                          opacity: 1,
+                          x: [baseX, baseX + floatX, baseX, baseX - floatX, baseX],
+                          y: [0, -floatY, 0, floatY, 0],
+                          rotate: [
+                            image.rotation,
+                            image.rotation + floatRotate,
+                            image.rotation,
+                            image.rotation - floatRotate,
+                            image.rotation,
+                          ],
+                        }
+                      : {
+                          opacity: 0,
+                          x: baseX + entryOffsetX,
+                          y: entryOffsetY,
+                          rotate: image.rotation,
+                        }
+                  }
+                  transition={{
+                    opacity: {
+                      duration: 0.5,
+                      delay: index * 0.12,
+                    },
+                    x: {
+                      duration: 6.5,
+                      ease: "easeInOut",
+                      delay: index * 0.15,
+                      repeat: Infinity,
+                    },
+                    y: {
+                      duration: 5.8,
+                      ease: "easeInOut",
+                      delay: index * 0.18,
+                      repeat: Infinity,
+                    },
+                    rotate: {
+                      duration: 7.2,
+                      ease: "easeInOut",
+                      delay: index * 0.16,
+                      repeat: Infinity,
+                    },
+                  }}
+                >
+                  <Image
+                    src={image.url}
+                    alt={image.alt}
+                    fill
+                    className="object-cover"
+                    sizes="160px"
+                  />
+                  {index === 0 ? <FireflyOverlay /> : null}
+                </motion.div>
               </div>
             );
           })}
@@ -87,7 +170,7 @@ export default function SnapSection({ section }: SnapSectionProps) {
           <span className="text-[#a2a2a2]">{section.availableFromLabel} </span>
           <span className="text-[#b0b0b0]">{section.availableHintLabel}</span>
         </p>
-      </div>
+      </FadeInUp>
       <SnapUploadModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
