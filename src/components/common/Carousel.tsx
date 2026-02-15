@@ -216,18 +216,18 @@ export default function Carousel<T>({
             onClick={prev}
             disabled={disablePrev}
             aria-label={prevAriaLabel}
-            className="absolute left-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/70 text-wedding-brown shadow-sm transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-40"
+            className="absolute left-0 top-1/2 z-10 flex h-8 w-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-wedding-brown shadow-sm transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-40"
           >
-            <Icon icon={ChevronLeft} size="md" />
+            <Icon icon={ChevronLeft} size="sm" />
           </button>
           <button
             type="button"
             onClick={next}
             disabled={disableNext}
             aria-label={nextAriaLabel}
-            className="absolute right-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/70 text-wedding-brown shadow-sm transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-40"
+            className="absolute right-0 top-1/2 z-10 flex h-8 w-8 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-wedding-brown shadow-sm transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-40"
           >
-            <Icon icon={ChevronRight} size="md" />
+            <Icon icon={ChevronRight} size="sm" />
           </button>
         </>
       )}

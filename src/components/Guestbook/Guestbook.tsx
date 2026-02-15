@@ -2,11 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { X } from "lucide-react";
 import { getGuestMessages } from "@/lib/supabase";
 import type { GuestMessage } from "@/types";
 import { SAMPLE_GUESTBOOK_MESSAGES } from "@/constants/wedding-data";
-import Icon from "@/components/common/Icon";
+import Carousel from "@/components/common/Carousel";
 import GuestbookModal from "./GuestbookModal";
 
 export default function Guestbook() {
@@ -28,6 +27,11 @@ export default function Guestbook() {
     setLoading(false);
   };
 
+  const chunkSize = 4;
+  const messageSlides: GuestMessage[][] = [];
+  for (let index = 0; index < messages.length; index += chunkSize) {
+    messageSlides.push(messages.slice(index, index + chunkSize));
+  }
   const hasMessages = messages.length > 0;
 
   return (
@@ -55,31 +59,52 @@ export default function Guestbook() {
           </div>
         )}
 
-        <div className="mt-8 space-y-3">
+        <div className="mt-8">
           {loading ? (
             <div className="flex justify-center py-8">
               <div className="spinner h-8 w-8" />
             </div>
-          ) : (
-            messages.map((message) => (
-              <article
-                key={message.id}
-                className="rounded-xl border border-gray-200 bg-[#f7f7f7] p-4 shadow-sm"
-              >
-                <div className="flex items-center justify-between">
-                  <p className="text-sm font-semibold text-[#2f2f2f]">
-                    {message.author}
-                  </p>
-                  <Icon icon={X} size="sm" className="text-[#8b8b8b]" />
+          ) : hasMessages ? (
+            <Carousel
+              items={messageSlides}
+              getItemKey={(slide, slideIndex) =>
+                slide[0]?.id ?? `guestbook-slide-${slideIndex}`
+              }
+              showArrows={messageSlides.length > 1}
+              showDots={messageSlides.length > 1}
+              loop={false}
+              className="mx-auto max-w-md"
+              viewportClassName="rounded-xl"
+              slideClassName="px-1"
+              prevAriaLabel="이전 방명록 보기"
+              nextAriaLabel="다음 방명록 보기"
+              renderItem={(slide) => (
+                <div className="space-y-3">
+                  {slide.map((message) => (
+                    <article
+                      key={message.id}
+                      className="rounded-xl border border-gray-200 bg-[#f7f7f7] p-4 shadow-sm"
+                    >
+                      <div className="flex items-center justify-between">
+                        <p className="text-sm font-semibold text-[#2f2f2f]">
+                          {message.author}
+                        </p>
+                      </div>
+                      <p className="mt-3 whitespace-pre-wrap break-words text-sm leading-7 text-[#3e3e3e]">
+                        {message.message}
+                      </p>
+                    </article>
+                  ))}
                 </div>
-                <p className="mt-3 whitespace-pre-wrap break-words text-sm leading-7 text-[#3e3e3e]">
-                  {message.message}
-                </p>
-              </article>
-            ))
+              )}
+            />
+          ) : (
+            <div className="rounded-xl border border-wedding-brown/15 bg-[#f7f7f7] p-4 text-center text-sm text-wedding-brown-light">
+              아직 공개된 방명록이 없습니다.
+            </div>
           )}
         </div>
-
+        
         {hasMessages && (
           <div className="mt-5 flex justify-end">
             <button
