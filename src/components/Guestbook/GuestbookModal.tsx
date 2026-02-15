@@ -26,6 +26,8 @@ export default function GuestbookModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const canSubmit =
+    formData.author.trim().length > 0 && formData.message.trim().length > 0;
 
   useEffect(() => {
     if (!isOpen) {
@@ -119,7 +121,7 @@ export default function GuestbookModal({
                 setFormData((prev) => ({ ...prev, author: event.target.value }))
               }
               placeholder="이름을 입력해 주세요."
-              className="w-full px-2 border-0 border-b border-gray-300 py-3 text-sm outline-none placeholder:text-gray-400 focus:border-gray-400"
+              className="w-full px-2 border-0 border-b border-gray-300 py-3 text-sm outline-none placeholder:text-gray-400 focus:border-gray-400 text-wedding-gray"
               maxLength={20}
               required
             />
@@ -141,7 +143,7 @@ export default function GuestbookModal({
                   message: event.target.value,
                 }))
               }
-              className="w-full resize-none border-0 border-b border-gray-300 px-2 py-3 text-sm outline-none placeholder:text-gray-400 focus:border-gray-400"
+              className="w-full resize-none border-0 border-b border-gray-300 px-2 py-3 text-sm outline-none placeholder:text-gray-400 focus:border-gray-400 text-wedding-gray"
               placeholder="내용을 작성해 주세요. (최대 500자)"
               rows={4}
               maxLength={500}
@@ -150,7 +152,7 @@ export default function GuestbookModal({
           </div>
 
           <div>
-            <label className="inline-flex items-center gap-2 text-sm text-gray-700">
+            <label className="flex items-center gap-2 text-sm text-gray-700">
               <input
                 type="checkbox"
                 checked={formData.isPublic}
@@ -173,8 +175,12 @@ export default function GuestbookModal({
           <div className="mt-4 flex justify-end  pt-6 w-full">
             <button
               type="submit"
-              disabled={isSubmitting}
-              className="rounded-md w-full bg-black/10 px-8 py-3 text-base font-medium text-gray-400 disabled:opacity-50"
+              disabled={!canSubmit || isSubmitting}
+              className={`w-full rounded-md px-8 py-3 text-base font-medium transition ${
+                canSubmit && !isSubmitting
+                  ? "bg-wedding-brown-light text-wedding-beige"
+                  : "bg-black/10 text-gray-400"
+              } disabled:opacity-50`}
             >
               {isSubmitting ? "등록중" : "작성완료"}
             </button>

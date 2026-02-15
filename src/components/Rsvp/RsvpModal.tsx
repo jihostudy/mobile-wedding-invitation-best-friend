@@ -15,6 +15,13 @@ interface RsvpModalProps {
 type AttendStatus = "available" | "unavailable";
 type Side = "groom" | "bride";
 
+function formatPhoneNumber(value: string) {
+  const digits = value.replace(/\D/g, "").slice(0, 11);
+  if (digits.length <= 3) return digits;
+  if (digits.length <= 7) return `${digits.slice(0, 3)}-${digits.slice(3)}`;
+  return `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7)}`;
+}
+
 function SelectCard({
   label,
   selected,
@@ -67,7 +74,7 @@ export default function RsvpModal({
 }: RsvpModalProps) {
   const createRsvpMutation = useCreateRsvpMutation();
   const [attendStatus, setAttendStatus] = useState<AttendStatus>("available");
-  const [side, setSide] = useState<Side>("bride");
+  const [side, setSide] = useState<Side>("groom");
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
   const [extraCount, setExtraCount] = useState(0);
@@ -216,7 +223,9 @@ export default function RsvpModal({
             <input
               type="text"
               value={contact}
-              onChange={(event) => setContact(event.target.value)}
+              onChange={(event) =>
+                setContact(formatPhoneNumber(event.target.value))
+              }
               placeholder="참석자 대표 연락처를 입력해 주세요."
               className="mt-3 h-11 w-full border-0 border-b border-[#c7c7c7] bg-transparent px-1 text-sm text-[#2f2f2f] placeholder:text-[#c2c2c2] focus:outline-none"
             />

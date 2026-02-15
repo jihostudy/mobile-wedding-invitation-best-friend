@@ -42,7 +42,7 @@ export async function POST(request: Request) {
   if (extraCount < 0 || extraCount > 20) return fail(400, 'VALIDATION_ERROR', 'extraCount must be between 0 and 20');
   if (!agreePrivacy) return fail(400, 'VALIDATION_ERROR', 'agreePrivacy must be true');
 
-  const supabase = createServerSupabaseClient();
+  const supabase = createServerSupabaseClient({ serviceRole: true });
   const { data, error } = await supabase
     .from('rsvp_responses')
     .insert([
