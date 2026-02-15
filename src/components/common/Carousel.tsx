@@ -18,6 +18,7 @@ export interface CarouselProps<T> {
   items: T[];
   renderItem: (item: T, params: CarouselRenderItemParams) => ReactNode;
   getItemKey?: (item: T, index: number) => string | number;
+  index?: number;
   initialIndex?: number;
   loop?: boolean;
   showArrows?: boolean;
@@ -55,6 +56,7 @@ export default function Carousel<T>({
   items,
   renderItem,
   getItemKey,
+  index,
   initialIndex = 0,
   loop = true,
   showArrows = true,
@@ -69,10 +71,12 @@ export default function Carousel<T>({
   nextAriaLabel = "다음 슬라이드",
 }: CarouselProps<T>) {
   const itemCount = items.length;
+  const isControlled = typeof index === "number";
 
   const [currentIndex, setCurrentIndex] = useState(() =>
-    clampIndex(initialIndex, itemCount),
+    clampIndex(isControlled ? index : initialIndex, itemCount),
   );
+  const lastNotifiedIndexRef = useRef(currentIndex);
 
   const pointerStartRef = useRef<{ x: number; y: number } | null>(null);
 
@@ -92,15 +96,9 @@ export default function Carousel<T>({
   const goTo = useCallback(
     (nextIndex: number) => {
       const resolved = normalizeIndex(nextIndex);
-      setCurrentIndex((prev) => {
-        if (prev === resolved) {
-          return prev;
-        }
-        onIndexChange?.(resolved);
-        return resolved;
-      });
+      setCurrentIndex((prev) => (prev === resolved ? prev : resolved));
     },
-    [normalizeIndex, onIndexChange],
+    [normalizeIndex],
   );
 
   const next = useCallback(() => {
@@ -117,6 +115,18 @@ export default function Carousel<T>({
     }
     setCurrentIndex((prev) => normalizeIndex(prev));
   }, [itemCount, normalizeIndex]);
+
+  useEffect(() => {
+    if (!isControlled || itemCount === 0) return;
+    setCurrentIndex(normalizeIndex(index));
+  }, [index, isControlled, itemCount, normalizeIndex]);
+
+  useEffect(() => {
+    if (!onIndexChange) return;
+    if (lastNotifiedIndexRef.current === currentIndex) return;
+    lastNotifiedIndexRef.current = currentIndex;
+    onIndexChange(currentIndex);
+  }, [currentIndex, onIndexChange]);
 
   const isAtStart = currentIndex <= 0;
   const isAtEnd = currentIndex >= itemCount - 1;

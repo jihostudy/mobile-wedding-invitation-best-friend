@@ -31,7 +31,7 @@ export async function POST(request: Request) {
     return fail(400, 'VALIDATION_ERROR', 'up to 40 files are allowed');
   }
 
-  const supabase = createServerSupabaseClient();
+  const supabase = createServerSupabaseClient({ serviceRole: true });
   const { data: submission, error: submissionError } = await supabase
     .from('snap_upload_submissions')
     .insert([

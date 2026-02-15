@@ -2,9 +2,10 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import { ChevronLeft, Upload, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Upload, X } from "lucide-react";
 import Icon from "@/components/common/Icon";
 import Carousel from "@/components/common/Carousel";
+import useToast from "@/components/common/toast/useToast";
 import useModalLayer from "@/hooks/useModalLayer";
 import { useCreateSnapSubmissionMutation } from "@/lib/queries/snap";
 import type { SnapUploadModalData } from "@/types";
@@ -26,6 +27,7 @@ export default function SnapUploadModal({
   onClose,
   section,
 }: SnapUploadModalProps) {
+  const toast = useToast();
   const createSnapSubmissionMutation = useCreateSnapSubmissionMutation();
   const [name, setName] = useState("");
   const [images, setImages] = useState<SelectedImage[]>([]);
@@ -35,6 +37,7 @@ export default function SnapUploadModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const imagesRef = useRef<SelectedImage[]>([]);
 
   useEffect(() => {
     if (isOpen) {
@@ -64,15 +67,24 @@ export default function SnapUploadModal({
   });
 
   useEffect(() => {
-    return () => {
-      images.forEach((image) => URL.revokeObjectURL(image.previewUrl));
-    };
+    imagesRef.current = images;
   }, [images]);
+
+  useEffect(() => {
+    return () => {
+      imagesRef.current.forEach((image) => URL.revokeObjectURL(image.previewUrl));
+    };
+  }, []);
 
   const remainingCount = useMemo(
     () => Math.max(section.maxFiles - images.length, 0),
     [section.maxFiles, images.length],
   );
+  const canGoPrev = previewIndex !== null && previewIndex > 0;
+  const canGoNext =
+    previewIndex !== null &&
+    images.length > 0 &&
+    previewIndex < images.length - 1;
 
   if (!shouldRender) return null;
 
@@ -103,7 +115,8 @@ export default function SnapUploadModal({
         .then(() => ({ success: true as const }))
         .catch((error: unknown) => ({
           success: false as const,
-          error: error instanceof Error ? error.message : "업로드에 실패했습니다.",
+          error:
+            error instanceof Error ? error.message : "업로드에 실패했습니다.",
         }));
 
       if (!result.success) {
@@ -115,6 +128,7 @@ export default function SnapUploadModal({
       setName("");
       setImages([]);
       setPreviewIndex(null);
+      toast.success("업로드되었습니다");
       onClose();
     } finally {
       setIsSubmitting(false);
@@ -146,12 +160,12 @@ export default function SnapUploadModal({
 
   return (
     <div
-      className={`fixed inset-0 z-[9999] bg-black/60 backdrop-blur-sm transition-opacity duration-200 ${isActive ? "opacity-100" : "opacity-0"}`}
+      className={`fixed inset-0 z-[9999] backdrop-blur-sm transition-opacity duration-200 ${isActive ? "opacity-100" : "opacity-0"}`}
       role="dialog"
       aria-modal="true"
     >
       <div
-        className="modal-scrollbar mx-auto h-full w-full max-w-md overflow-y-auto overscroll-contain bg-white px-4 py-5"
+        className="modal-scrollbar mx-auto h-full w-full max-w-[430px] overflow-y-auto overscroll-contain bg-white px-4 py-5"
         onClick={(event) => event.stopPropagation()}
       >
         <button
@@ -174,18 +188,18 @@ export default function SnapUploadModal({
           />
         </div>
 
-        <div className="mt-4 rounded-[14px] bg-[#e8e8e8] px-4 py-5 text-[#1f1f1f]">
+        <div className="mt-4 rounded-[14px]  px-4 py-5 text-[#1f1f1f]">
           <p className="text-[17px] font-semibold">{section.guideTitle}</p>
           <div className="mt-4 space-y-1">
             {section.guideLines.map((line) => (
-              <p key={line} className="text-[15px] leading-7 mt-0">
+              <p key={line} className="text-sm leading-7 mt-0">
                 {line}
               </p>
             ))}
           </div>
           <div className="mt-5 space-y-1">
             {section.guideHighlightLines.map((line) => (
-              <p key={line} className="text-[15px] leading-7">
+              <p key={line} className="text-sm leading-7">
                 {line}
               </p>
             ))}
@@ -205,13 +219,13 @@ export default function SnapUploadModal({
             value={name}
             onChange={(event) => setName(event.target.value)}
             placeholder={section.namePlaceholder}
-            className="mt-2 h-12 w-full rounded-[10px] border border-transparent bg-[#e8e8e8] px-4 text-[15px] text-[#3a3a3a] placeholder:text-[#bababa] focus:outline-none"
+            className="mt-2 h-12 w-full rounded-[10px] border border-transparent bg-wedding-beige-dark px-4 text-[15px] text-[#3a3a3a] placeholder:text-[#bababa] focus:outline-none text-sm"
           />
         </div>
 
         <div className="mt-4 rounded-[12px]">
           {images.length === 0 ? (
-            <div className="flex h-[182px] flex-col items-center justify-center rounded-[10px] border border-[#d6d6d6] bg-[#f2f2f2]">
+            <div className="flex h-[240px] flex-col items-center justify-center rounded-[10px] border border-[#d6d6d6] ">
               <Icon icon={Upload} size="lg" className="text-[#8c8c8c]" />
               <p className="mt-4 text-center text-[14px] text-[#8c8c8c]">
                 {section.uploadEmptyHint}
@@ -276,14 +290,14 @@ export default function SnapUploadModal({
                   </button>
                 )}
               </div>
-              <button
+              {/* <button
                 type="button"
                 onClick={openFilePicker}
                 className="rounded-full bg-[#f4da30] px-5 py-2 text-[15px] font-medium text-[#2a2a2a]"
                 disabled={remainingCount === 0}
               >
                 {section.attachButtonLabel}
-              </button>
+              </button> */}
             </div>
           )}
 
@@ -309,22 +323,24 @@ export default function SnapUploadModal({
           <button
             type="button"
             onClick={handleSubmit}
-            disabled={isSubmitting || images.length === 0 || name.trim().length === 0}
+            disabled={
+              isSubmitting || images.length === 0 || name.trim().length === 0
+            }
             className={`h-12 w-full rounded-[10px] text-sm font-semibold ${
               isSubmitting || images.length === 0 || name.trim().length === 0
-                ? "bg-[#ececec] text-[#b1b1b1]"
-                : "bg-[#1f1f1f] text-white"
+                ? "bg-wedding-beige-dark text-[#b1b1b1]"
+                : "bg-wedding-brown text-white"
             }`}
           >
-            {isSubmitting ? "업로드 중..." : "업로드 완료"}
+            {isSubmitting ? "업로드 중..." : "업로드"}
           </button>
         </div>
 
-        <div className="mt-6 space-y-1 pb-8">
+        <div className="mt-6 space-y-0 pb-8">
           {section.policyLines.map((line, index) => (
             <p
               key={`${line}-${index}`}
-              className="text-[15px] leading-7 text-[#8a8a8a]"
+              className="text-sm leading-7 text-[#8a8a8a]"
             >
               {line.startsWith("⚠️") || line.endsWith(":") ? line : `· ${line}`}
             </p>
@@ -334,15 +350,15 @@ export default function SnapUploadModal({
 
       {previewIndex !== null && images.length > 0 && (
         <div
-          className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/70 p-4"
+          className="fixed inset-0 z-[10000] bg-white"
           role="dialog"
           aria-modal="true"
         >
-          <div className="relative h-[86dvh] w-full max-w-md">
+          <div className="relative mx-auto h-[100dvh] w-full max-w-[430px]">
             <button
               type="button"
               onClick={() => setPreviewIndex(null)}
-              className="absolute right-2 top-2 z-10 rounded-full bg-black/45 p-2 text-white"
+              className="absolute right-2 top-2 z-20 rounded-full bg-white/60 p-2 text-black"
               aria-label="사진 미리보기 닫기"
             >
               <Icon icon={X} size="md" />
@@ -350,28 +366,63 @@ export default function SnapUploadModal({
 
             <Carousel
               items={images}
+              index={previewIndex}
               initialIndex={previewIndex}
+              onIndexChange={(index) => setPreviewIndex(index)}
               getItemKey={(item) => item.id}
-              className="h-full"
-              viewportClassName="h-full"
-              slideClassName="h-full"
-              showDots={images.length > 1}
-              showArrows={images.length > 1}
+              className="h-[100dvh]"
+              viewportClassName="h-[100dvh]"
+              slideClassName="h-[100dvh]"
+              showDots={false}
+              showArrows={false}
               loop={false}
               prevAriaLabel="이전 업로드 사진 보기"
               nextAriaLabel="다음 업로드 사진 보기"
               renderItem={(item) => (
-                <div className="relative h-full w-full">
-                  <Image
+                <div className="flex h-[100dvh] w-full items-center justify-center bg-white">
+                  <img
                     src={item.previewUrl}
                     alt={item.file.name}
-                    fill
-                    className="object-contain"
-                    sizes="100vw"
+                    className="max-h-[100dvh] max-w-full object-contain object-center"
+                    draggable={false}
                   />
                 </div>
               )}
             />
+
+            {images.length > 0 && (
+              <div className="pointer-events-none absolute bottom-[max(12px,env(safe-area-inset-bottom))] left-1/2 z-20 -translate-x-1/2">
+                <div className="pointer-events-auto inline-flex gap-1 items-center rounded-lg bg-white/60 px-3 py-2 text-[13px] text-[#2a2a2a] backdrop-blur">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (!canGoPrev || previewIndex === null) return;
+                      setPreviewIndex(previewIndex - 1);
+                    }}
+                    disabled={!canGoPrev}
+                    className="inline-flex h-7 w-7 items-center justify-center rounded-full text-wedding-gray-dark disabled:opacity-35"
+                    aria-label="이전 업로드 사진 보기"
+                  >
+                    <Icon icon={ChevronLeft} size="sm" />
+                  </button>
+                  <span className="min-w-[56px] text-center font-medium text-sm tabular-nums font-mono">
+                    {previewIndex + 1} / {images.length}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (!canGoNext || previewIndex === null) return;
+                      setPreviewIndex(previewIndex + 1);
+                    }}
+                    disabled={!canGoNext}
+                    className="inline-flex h-7 w-7 items-center justify-center rounded-full text-wedding-gray-dark disabled:opacity-35"
+                    aria-label="다음 업로드 사진 보기"
+                  >
+                    <Icon icon={ChevronRight} size="sm" />
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}

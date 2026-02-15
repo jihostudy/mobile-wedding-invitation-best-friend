@@ -40,12 +40,6 @@ export default function SnapSection({ section }: SnapSectionProps) {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setTimeout(() => {
-      sectionRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }, 0);
   };
 
   return (
