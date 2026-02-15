@@ -166,6 +166,14 @@ export interface SnapUploadModalData {
   policyLines: string[];
 }
 
+export interface RsvpSectionData {
+  kicker: string;
+  title: string;
+  description: string;
+  buttonLabel: string;
+  comingSoonMessage: string;
+}
+
 export interface InterviewAnswer {
   role: string;
   name: string;

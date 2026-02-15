@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ChevronLeft, Upload, X } from "lucide-react";
 import Icon from "@/components/common/Icon";
 import Carousel from "@/components/common/Carousel";
+import useModalLayer from "@/hooks/useModalLayer";
 import type { SnapUploadModalData } from "@/types";
 
 interface SnapUploadModalProps {
@@ -47,28 +48,16 @@ export default function SnapUploadModal({
     return () => window.clearTimeout(timer);
   }, [isOpen]);
 
-  useEffect(() => {
-    if (!isOpen) return;
-
-    document.documentElement.style.overflow = "hidden";
-    document.body.style.overflow = "hidden";
-
-    const onEsc = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        if (previewIndex !== null) {
-          setPreviewIndex(null);
-          return;
-        }
-        onClose();
+  useModalLayer({
+    active: shouldRender,
+    onEscape: () => {
+      if (previewIndex !== null) {
+        setPreviewIndex(null);
+        return;
       }
-    };
-    window.addEventListener("keydown", onEsc);
-    return () => {
-      document.documentElement.style.overflow = "";
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", onEsc);
-    };
-  }, [isOpen, onClose, previewIndex]);
+      onClose();
+    },
+  });
 
   useEffect(() => {
     return () => {
@@ -120,12 +109,12 @@ export default function SnapUploadModal({
 
   return (
     <div
-      className={`fixed inset-0 z-[9999] bg-[#efefef] transition-opacity duration-200 ${isActive ? "opacity-100" : "opacity-0"}`}
+      className={`fixed inset-0 z-[9999] bg-black/60 backdrop-blur-sm transition-opacity duration-200 ${isActive ? "opacity-100" : "opacity-0"}`}
       role="dialog"
       aria-modal="true"
     >
       <div
-        className="mx-auto h-full w-full max-w-md overflow-y-auto overscroll-contain px-4 py-5"
+        className="modal-scrollbar mx-auto h-full w-full max-w-md overflow-y-auto overscroll-contain bg-white px-4 py-5"
         onClick={(event) => event.stopPropagation()}
       >
         <button

@@ -11,6 +11,7 @@ import {
   InvitationSectionData,
   CalendarSectionData,
   GallerySectionData,
+  RsvpSectionData,
   SnapSectionData,
   InterviewSectionData,
   LocationSectionData,
@@ -270,6 +271,14 @@ export const SNAP_SECTION: SnapSectionData = {
       "업로드는 예식 당일부터 다음날까지 가능합니다.",
     ],
   },
+};
+
+export const RSVP_SECTION: RsvpSectionData = {
+  kicker: "R.S.V.P.",
+  title: "참석 의사 전달",
+  description: "신랑, 신부에게 참석의사를\n미리 전달할 수 있어요.",
+  buttonLabel: "참석의사 전달하기",
+  comingSoonMessage: "참석의사 전달 기능은 준비 중입니다.",
 };
 
 export const INTERVIEW_SECTION: InterviewSectionData = {

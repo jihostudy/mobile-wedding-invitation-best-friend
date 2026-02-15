@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ChevronUp, Copy, MessageCircle } from "lucide-react";
 import Icon from "@/components/common/Icon";
+import useToast from "@/components/common/toast/useToast";
 import type { AccountSectionData } from "@/types";
 
 interface AccountSectionProps {
@@ -10,19 +11,18 @@ interface AccountSectionProps {
 }
 
 export default function AccountSection({ section }: AccountSectionProps) {
-  const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(
     Object.fromEntries(section.groups.map((group) => [group.id, true])),
   );
+  const toast = useToast();
 
-  const handleCopy = async (value: string, key: string) => {
+  const handleCopy = async (value: string) => {
     try {
       await navigator.clipboard.writeText(value);
-      setCopiedKey(key);
-      setTimeout(() => setCopiedKey(null), 1500);
+      toast.success("계좌번호가 복사되었습니다.");
     } catch (error) {
       console.error("copy failed", error);
-      alert("계좌번호 복사에 실패했습니다.");
+      toast.error("계좌번호 복사에 실패했습니다.");
     }
   };
 
@@ -37,9 +37,7 @@ export default function AccountSection({ section }: AccountSectionProps) {
           <p className="font-crimson text-xs uppercase tracking-[0.33em] text-wedding-brown-light/70">
             {section.kicker}
           </p>
-          <h2 className="mt-3 text-xl text-wedding-brown">
-            {section.title}
-          </h2>
+          <h2 className="mt-3 text-xl text-wedding-brown">{section.title}</h2>
           <p className="mt-3 whitespace-pre-line text-sm leading-7 text-wedding-brown-light">
             {section.description}
           </p>
@@ -54,7 +52,7 @@ export default function AccountSection({ section }: AccountSectionProps) {
             section.groups.map((group) => (
               <div
                 key={group.id}
-                className="overflow-hidden rounded-xl border border-gray-200 bg-[#f3f3f3]"
+                className="overflow-hidden rounded-t-xl rounded-b-none border border-gray-200 bg-[#f3f3f3]"
               >
                 <button
                   type="button"
@@ -62,7 +60,7 @@ export default function AccountSection({ section }: AccountSectionProps) {
                   className="relative flex w-full items-center justify-center bg-[#f3f3f3] px-5 py-4 text-center"
                   aria-expanded={openGroups[group.id]}
                 >
-                  <span className="text-lg font-medium text-wedding-brown">
+                  <span className="text-base font-medium text-wedding-brown">
                     {group.label}
                   </span>
                   <span
@@ -84,26 +82,19 @@ export default function AccountSection({ section }: AccountSectionProps) {
                           <div>
                             <button
                               type="button"
-                              onClick={() =>
-                                handleCopy(account.account, rowKey)
-                              }
-                              className="flex items-center gap-2 text-left text-[16px] text-wedding-brown"
+                              onClick={() => handleCopy(account.account)}
+                              className="flex items-center gap-2 text-left text-[16px] text-gray-800"
                             >
                               <Icon
                                 icon={Copy}
                                 size="sm"
-                                className="text-wedding-brown-light"
+                                className="text-gray-500"
                               />
                               {account.holder}
                             </button>
-                            <p className="mt-1 text-[15px] text-wedding-brown-light">
+                            <p className="mt-1 text-[15px] text-gray-700">
                               {account.bank} {account.account}
                             </p>
-                            {copiedKey === rowKey && (
-                              <p className="mt-1 text-xs text-wedding-brown-light">
-                                복사되었습니다
-                              </p>
-                            )}
                           </div>
 
                           {account.kakaoPayLink && (
@@ -114,7 +105,11 @@ export default function AccountSection({ section }: AccountSectionProps) {
                               className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-[#FEE500]"
                               aria-label="카카오페이로 송금하기"
                             >
-                              <Icon icon={MessageCircle} size="lg" className="text-black" />
+                              <Icon
+                                icon={MessageCircle}
+                                size="lg"
+                                className="text-black"
+                              />
                             </a>
                           )}
                         </div>

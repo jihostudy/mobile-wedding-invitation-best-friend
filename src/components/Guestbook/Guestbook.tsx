@@ -3,8 +3,13 @@
 import { useEffect, useState } from "react";
 import { getGuestMessages } from "@/lib/supabase";
 import type { GuestMessage } from "@/types";
-import { SAMPLE_GUESTBOOK_MESSAGES, SNAP_SECTION } from "@/constants/wedding-data";
+import {
+  RSVP_SECTION,
+  SAMPLE_GUESTBOOK_MESSAGES,
+  SNAP_SECTION,
+} from "@/constants/wedding-data";
 import Carousel from "@/components/common/Carousel";
+import RsvpSection from "@/components/Rsvp/RsvpSection";
 import SnapSection from "@/components/Snap/SnapSection";
 import GuestbookModal from "./GuestbookModal";
 
@@ -52,7 +57,7 @@ export default function Guestbook() {
             </p>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="mt-5 w-full rounded-lg border border-wedding-brown/25 bg-white py-3 text-sm font-medium text-wedding-brown hover:bg-wedding-beige"
+              className="mt-5 w-full rounded-[12px] border border-wedding-brown/25 bg-white/70 px-[22px] py-[10px] text-sm font-medium text-wedding-brown transition hover:bg-white"
             >
               작성하기
             </button>
@@ -109,12 +114,13 @@ export default function Guestbook() {
           <div className="mt-5 flex justify-end">
             <button
               onClick={() => setIsModalOpen(true)}
-              className="rounded-xl border border-wedding-brown/25 bg-white px-5 py-2.5 text-sm font-medium text-wedding-brown hover:bg-wedding-beige"
+              className="rounded-[12px] border border-wedding-brown/25 bg-white/70 px-[22px] py-[10px] text-sm font-medium text-wedding-brown transition hover:bg-white"
             >
               작성하기
             </button>
           </div>
         )}
+        <RsvpSection section={RSVP_SECTION} />
         <SnapSection section={SNAP_SECTION} />
       </div>
 

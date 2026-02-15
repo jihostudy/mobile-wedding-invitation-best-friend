@@ -117,7 +117,7 @@ export default function BackgroundMusicPlayer({
   return (
     <>
       <audio ref={audioRef} src={source} preload="auto" aria-hidden="true" />
-      <div className="absolute right-4 top-4 z-30">
+      <div className="absolute right-6 top-4 z-30">
         <button
           type="button"
           onClick={() => void togglePlayback()}

@@ -36,20 +36,26 @@
   }
 
   /* 모달 스크롤바 */
+  .modal-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.28) transparent;
+  }
+
   .modal-scrollbar::-webkit-scrollbar {
     width: 6px;
   }
 
   .modal-scrollbar::-webkit-scrollbar-track {
-    @apply bg-wedding-brown/50;
+    background: transparent;
   }
 
   .modal-scrollbar::-webkit-scrollbar-thumb {
-    @apply bg-wedding-beige/30 rounded-full;
+    background: rgba(0, 0, 0, 0.28);
+    border-radius: 9999px;
   }
 
   .modal-scrollbar::-webkit-scrollbar-thumb:hover {
-    @apply bg-wedding-beige/50;
+    background: rgba(0, 0, 0, 0.4);
   }
 
   /* 섹션 공통 스타일 */

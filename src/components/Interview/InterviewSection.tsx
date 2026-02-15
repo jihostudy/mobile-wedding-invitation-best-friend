@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { Mail, UserRound, X } from "lucide-react";
 import Icon from "@/components/common/Icon";
+import useModalLayer from "@/hooks/useModalLayer";
 import type { InterviewSectionData } from "@/types";
 
 interface InterviewSectionProps {
@@ -13,23 +14,10 @@ interface InterviewSectionProps {
 export default function InterviewSection({ section }: InterviewSectionProps) {
   const [isOpen, setIsOpen] = useState(false);
 
-  useEffect(() => {
-    if (!isOpen) return;
-    document.body.style.overflow = "hidden";
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setIsOpen(false);
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "unset";
-    };
-  }, [isOpen]);
+  useModalLayer({
+    active: isOpen,
+    onEscape: () => setIsOpen(false),
+  });
 
   return (
     <>
@@ -38,9 +26,7 @@ export default function InterviewSection({ section }: InterviewSectionProps) {
           <p className="font-crimson text-xs uppercase tracking-[0.33em] text-wedding-brown-light/70">
             {section.kicker}
           </p>
-          <h2 className="mt-3 text-xl text-wedding-brown">
-            {section.title}
-          </h2>
+          <h2 className="mt-3 text-xl text-wedding-brown">{section.title}</h2>
           <p className="mt-8 whitespace-pre-line text-[15px] leading-8 text-wedding-brown">
             {section.description}
           </p>
@@ -57,7 +43,7 @@ export default function InterviewSection({ section }: InterviewSectionProps) {
 
           <button
             onClick={() => setIsOpen(true)}
-            className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-[14px] border border-wedding-brown/15 bg-[#f8f8f8] px-5 py-4 text-[16px] text-wedding-brown"
+            className="mt-8 inline-flex items-center justify-center gap-2 rounded-[12px] border border-wedding-brown/25 bg-white/70 px-[22px] py-[10px] text-sm font-medium text-wedding-brown transition hover:bg-white"
             aria-label="신랑 신부 인터뷰 열기"
           >
             <Icon icon={Mail} size="md" />
@@ -68,13 +54,13 @@ export default function InterviewSection({ section }: InterviewSectionProps) {
 
       {isOpen && (
         <div
-          className="fixed inset-0 z-50 overflow-hidden overscroll-none bg-black/30"
+          className="fixed inset-0 z-50 overflow-hidden overscroll-none bg-black/60 backdrop-blur-sm"
           onClick={() => setIsOpen(false)}
           role="dialog"
           aria-modal="true"
         >
           <div
-            className="mx-auto h-[100dvh] w-full max-w-[425px] overflow-y-auto overscroll-contain bg-[#f7f7f7] px-6 pb-12 pt-6"
+            className="modal-scrollbar mx-auto h-[100dvh] w-full max-w-[425px] overflow-y-auto overscroll-contain bg-[#f7f7f7] px-6 pb-12 pt-6"
             onClick={(event) => event.stopPropagation()}
           >
             <div className="flex items-center justify-between">
@@ -96,7 +82,7 @@ export default function InterviewSection({ section }: InterviewSectionProps) {
                   key={questionItem.question}
                   className="rounded-xl border border-[#e2e2e2] bg-white px-4 py-5"
                 >
-                  <h4 className="text-[16px] font-medium text-[#333]">
+                  <h4 className="text-[16px] font-semibold text-[#333]">
                     {questionItem.question}
                   </h4>
                   <div className="mt-5 space-y-7">
@@ -105,7 +91,11 @@ export default function InterviewSection({ section }: InterviewSectionProps) {
                         key={`${questionItem.question}-${answer.role}-${answer.name}`}
                       >
                         <p className="flex items-center gap-2 text-[15px] text-[#333]">
-                          <Icon icon={UserRound} size="sm" className="text-[#666]" />
+                          <Icon
+                            icon={UserRound}
+                            size="sm"
+                            className="text-[#666]"
+                          />
                           {answer.role} {answer.name}
                         </p>
                         <div className="mt-3 space-y-4 text-[15px] leading-[1.62] text-[#333]">

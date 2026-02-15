@@ -71,7 +71,7 @@ export default function SnapSection({ section }: SnapSectionProps) {
         <button
           type="button"
           onClick={() => setIsModalOpen(true)}
-          className="mt-8 h-[52px] w-full rounded-[16px] border border-[#dddddd] bg-white text-sm font-medium text-wedding-brown"
+          className="mt-8 w-full rounded-[12px] border border-wedding-brown/25 bg-white/70 px-[22px] py-[10px] text-sm font-medium text-wedding-brown transition hover:bg-white"
           aria-label="사진 업로드 모달 열기"
         >
           {section.buttonLabel}
