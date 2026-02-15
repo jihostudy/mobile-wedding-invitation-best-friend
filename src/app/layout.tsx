@@ -4,6 +4,7 @@ import { Crimson_Pro } from "next/font/google";
 import OverlayProvider from "@/components/providers/OverlayProvider";
 import ScrollResetProvider from "@/components/providers/ScrollResetProvider";
 import ToastProvider from "@/components/common/toast/ToastProvider";
+import QueryProvider from "@/components/providers/QueryProvider";
 import "./globals.css";
 
 const tmoneyRoundWind = localFont({
@@ -62,11 +63,15 @@ export default function RootLayout({
       lang="ko"
       className={`${tmoneyRoundWind.variable} ${crimsonPro.variable} ${nanumHyejun.variable}`}
     >
-      <body className={`${tmoneyRoundWind.className} antialiased bg-[#eee]`}>
-        <ScrollResetProvider />
-        <OverlayProvider>
-          <ToastProvider>{children}</ToastProvider>
-        </OverlayProvider>
+      <body
+        className={`${tmoneyRoundWind.className} antialiased bg-wedding-beige-dark`}
+      >
+        <QueryProvider>
+          <ScrollResetProvider />
+          <OverlayProvider>
+            <ToastProvider>{children}</ToastProvider>
+          </OverlayProvider>
+        </QueryProvider>
       </body>
     </html>
   );

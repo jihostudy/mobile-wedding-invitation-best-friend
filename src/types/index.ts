@@ -192,3 +192,97 @@ export interface GuestMessageInput {
   isPublic: boolean; // true: 공개 (청첩장에 표시), false: 비공개
 }
 
+export type RsvpAttendStatus = "available" | "unavailable";
+export type RsvpSide = "groom" | "bride";
+
+export interface RsvpResponseInput {
+  attendStatus: RsvpAttendStatus;
+  side: RsvpSide;
+  name: string;
+  contact: string;
+  extraCount: number;
+  eatMeal: boolean;
+  rideBus: boolean;
+  note: string;
+  agreePrivacy: boolean;
+}
+
+export interface SnapUploadInput {
+  uploaderName: string;
+  files: File[];
+  eventSlug?: string;
+}
+
+export interface WeddingContentV1 {
+  weddingData: WeddingInfo;
+  heroSection: HeroSectionData;
+  invitationSection: InvitationSectionData;
+  gallerySection: GallerySectionData;
+  interviewSection: InterviewSectionData;
+  accountSection: AccountSectionData;
+  snapSection: SnapSectionData;
+  floatingNavItems: FloatingNavItem[];
+  sampleGuestbookMessages: GuestMessage[];
+}
+
+export interface WeddingContentResponse {
+  slug: string;
+  version: number;
+  content: WeddingContentV1;
+}
+
+export interface UpdateWeddingContentRequest {
+  content: WeddingContentV1;
+  expectedVersion: number;
+}
+
+export interface ApiErrorResponse {
+  success: false;
+  code: string;
+  message: string;
+  details?: unknown;
+  latestVersion?: number;
+}
+
+export interface GuestMessageDto {
+  id: string;
+  author: string;
+  message: string;
+  isPublic: boolean;
+  createdAt: string;
+}
+
+export interface RsvpResponseDto {
+  id: string;
+  attendStatus: RsvpAttendStatus;
+  side: RsvpSide;
+  name: string;
+  contact: string;
+  extraCount: number;
+  eatMeal: boolean;
+  rideBus: boolean;
+  note: string;
+  agreePrivacy: boolean;
+  createdAt: string;
+}
+
+export interface SnapFileDto {
+  id: string;
+  storageBucket: string;
+  storagePath: string;
+  publicUrl: string | null;
+  originalName: string;
+  mimeType: string | null;
+  sizeBytes: number;
+  createdAt: string;
+}
+
+export interface SnapSubmissionDto {
+  id: string;
+  eventSlug: string;
+  uploaderName: string;
+  status: "uploaded" | "rejected" | "approved";
+  createdAt: string;
+  files: SnapFileDto[];
+}
+
