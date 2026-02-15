@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Crimson_Pro } from "next/font/google";
+import OverlayProvider from "@/components/providers/OverlayProvider";
+import ToastProvider from "@/components/common/toast/ToastProvider";
 import "./globals.css";
 
 const tmoneyRoundWind = localFont({
@@ -50,7 +52,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko" className={`${tmoneyRoundWind.variable} ${crimsonPro.variable}`}>
-      <body className={`${tmoneyRoundWind.className} antialiased bg-[#eee]`}>{children}</body>
+      <body className={`${tmoneyRoundWind.className} antialiased bg-[#eee]`}>
+        <OverlayProvider>
+          <ToastProvider>{children}</ToastProvider>
+        </OverlayProvider>
+      </body>
     </html>
   );
 }
