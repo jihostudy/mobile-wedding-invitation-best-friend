@@ -1,12 +1,13 @@
 import { NextResponse } from 'next/server';
-import { WEDDING_DATA } from '@/constants/wedding-data';
+import { getWeddingContent } from '@/lib/wedding-content/repository';
 
 /**
  * ICS (iCalendar) 파일 생성 API
  * 캘린더 저장 기능
  */
 export async function GET() {
-  const { groom, bride, date, venue } = WEDDING_DATA;
+  const { content } = await getWeddingContent('main');
+  const { groom, bride, date, venue } = content.weddingData;
 
   // 날짜 포맷 (YYYYMMDDTHHMMSS)
   const startDate = date.fullDate;
@@ -51,5 +52,4 @@ END:VCALENDAR`;
     },
   });
 }
-
 
