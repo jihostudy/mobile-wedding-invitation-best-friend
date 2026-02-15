@@ -124,7 +124,7 @@ export default function BackgroundMusicPlayer({
           aria-label={isPlaying ? "배경음악 일시정지" : "배경음악 재생"}
           aria-pressed={isPlaying}
           title={title}
-          className="flex h-8 min-w-[48px] items-center justify-center rounded-full bg-[#a7a7a7] px-1 text-white shadow-sm transition hover:bg-[#9a9a9a] disabled:opacity-50"
+          className="flex h-8 min-w-[48px] items-center justify-center rounded-full bg-black/20 px-1 text-white shadow-sm transition hover:bg-black/40 disabled:opacity-50"
           disabled={Boolean(playbackError)}
         >
           {isPlaying ? renderPlayingBars() : renderIdleSquares()}

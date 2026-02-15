@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import { getGuestMessages } from "@/lib/supabase";
 import type { GuestMessage } from "@/types";
-import { SAMPLE_GUESTBOOK_MESSAGES } from "@/constants/wedding-data";
+import { SAMPLE_GUESTBOOK_MESSAGES, SNAP_SECTION } from "@/constants/wedding-data";
 import Carousel from "@/components/common/Carousel";
+import SnapSection from "@/components/Snap/SnapSection";
 import GuestbookModal from "./GuestbookModal";
 
 export default function Guestbook() {
@@ -38,7 +38,7 @@ export default function Guestbook() {
     <section id="guestbook" className="bg-white px-6 py-16">
       <div className="mx-auto w-full max-w-md">
         <div className="text-center">
-          <p className="text-xs uppercase tracking-[0.33em] text-wedding-brown-light/70">
+          <p className="font-crimson text-xs uppercase tracking-[0.33em] text-wedding-brown-light/70">
             GUESTBOOK
           </p>
           <h2 className="mt-3 text-xl text-wedding-brown">방명록</h2>
@@ -115,17 +115,7 @@ export default function Guestbook() {
             </button>
           </div>
         )}
-
-        <div className="relative mt-12 h-[620px] w-full overflow-hidden rounded-[14px] bg-[#f4f4f4]">
-          <Image
-            src="/images/placeholder-couple.svg"
-            alt="두 사람의 사진"
-            fill
-            className="object-cover object-center"
-            sizes="(max-width: 425px) 100vw, 425px"
-          />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-white to-transparent" />
-        </div>
+        <SnapSection section={SNAP_SECTION} />
       </div>
 
       <GuestbookModal

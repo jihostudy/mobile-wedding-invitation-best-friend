@@ -129,6 +129,43 @@ export interface GallerySectionData {
   images: GalleryImage[];
 }
 
+export interface SnapImageItem {
+  id: string;
+  url: string;
+  alt: string;
+  rotation: number;
+  offsetX: number;
+}
+
+export interface SnapSectionData {
+  kicker: string;
+  title: string;
+  description: string;
+  buttonLabel: string;
+  comingSoonMessage: string;
+  availableFromLabel: string;
+  availableHintLabel: string;
+  images: SnapImageItem[];
+  modal: SnapUploadModalData;
+}
+
+export interface SnapUploadModalData {
+  backLabel: string;
+  coverImage: ImageAsset;
+  coverKicker: string;
+  coverTitle: string;
+  coverNames: string;
+  guideTitle: string;
+  guideLines: string[];
+  guideHighlightLines: string[];
+  nameLabel: string;
+  namePlaceholder: string;
+  uploadEmptyHint: string;
+  attachButtonLabel: string;
+  maxFiles: number;
+  policyLines: string[];
+}
+
 export interface InterviewAnswer {
   role: string;
   name: string;

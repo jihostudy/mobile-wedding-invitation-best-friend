@@ -66,7 +66,7 @@ export default function AccountSection({ section }: AccountSectionProps) {
                     {group.label}
                   </span>
                   <span
-                    className={`absolute right-5 text-sm text-wedding-brown transition-transform ${openGroups[group.id] ? "rotate-180" : ""}`}
+                    className={`absolute right-5 text-sm text-wedding-brown transition-transform ${openGroups[group.id] ? "" : "rotate-180"}`}
                   >
                     <Icon icon={ChevronUp} size="sm" />
                   </span>

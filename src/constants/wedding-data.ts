@@ -11,6 +11,7 @@ import {
   InvitationSectionData,
   CalendarSectionData,
   GallerySectionData,
+  SnapSectionData,
   InterviewSectionData,
   LocationSectionData,
   AccountSectionData,
@@ -202,6 +203,73 @@ export const GALLERY_SECTION: GallerySectionData = {
   kicker: "GALLERY",
   title: "웨딩 갤러리",
   images: GALLERY_IMAGES,
+};
+
+export const SNAP_SECTION: SnapSectionData = {
+  kicker: "CAPTURE OUR MOMENTS",
+  title: "스냅",
+  description:
+    "신랑신부의 행복한 순간을 담아주세요.\n예식 당일, 아래 버튼을 통해 사진을 올려주세요.\n많은 참여 부탁드려요!",
+  buttonLabel: "사진 업로드",
+  comingSoonMessage: "",
+  availableFromLabel: "예식 당일 11:30부터",
+  availableHintLabel: "업로드 가능합니다.",
+  images: [
+    {
+      id: "snap-1",
+      url: "/images/placeholder-couple.svg",
+      alt: "스냅 예시 사진 1",
+      rotation: -16,
+      offsetX: -52,
+    },
+    {
+      id: "snap-2",
+      url: "/images/placeholder-couple.svg",
+      alt: "스냅 예시 사진 2",
+      rotation: -4,
+      offsetX: 0,
+    },
+    {
+      id: "snap-3",
+      url: "/images/placeholder-couple.svg",
+      alt: "스냅 예시 사진 3",
+      rotation: 10,
+      offsetX: 50,
+    },
+  ],
+  modal: {
+    backLabel: "청첩장 보기",
+    coverImage: {
+      url: "/images/placeholder-couple.svg",
+      alt: "스냅 업로드 커버 이미지",
+    },
+    coverKicker: "스냅",
+    coverTitle: "예식 당일, 빛나는 순간을\n공유해 주세요!",
+    coverNames: "김진호 · 이나은",
+    guideTitle: "우리의 소중한 순간을 함께 담아주세요!",
+    guideLines: [
+      "1. 설렘 가득한 신랑·신부의 모습",
+      "2. 두 사람의 빛나는 입장 & 행진",
+      "3. 가족, 친구들과 함께한 따뜻한 찰나",
+      "4. 그리고 여러분의 시선에서 담은 순간들까지!",
+    ],
+    guideHighlightLines: [
+      "📸 가장 멋진 사진을 공유해주신 분께는 신랑·신부가 직접 준비한 맛있는 한 끼를 선물로 드립니다!",
+      "✨ 예식 당일, 아래 사진 첨부하기 버튼을 눌러 사진을 업로드해주세요. 작은 순간 하나하나가 저희에게 큰 선물이 될 거예요.",
+      "여러분의 많은 참여, 기다리고 있겠습니다❤️",
+    ],
+    nameLabel: "이름",
+    namePlaceholder: "입력하신 이름으로 폴더가 생성됩니다.",
+    uploadEmptyHint: "예식 당일 촬영한 사진을 업로드해 주세요.",
+    attachButtonLabel: "사진 첨부하기",
+    maxFiles: 40,
+    policyLines: [
+      "한 번에 최대 40장까지 업로드하실 수 있습니다.",
+      "가능하면 여러 장을 한 번에 묶어서 업로드해 주세요.",
+      "업로드 가능한 파일 크기는 사진 1장당 10MB 이하입니다.",
+      "업로드는 예식 당일부터 다음날까지 가능합니다.",
+    ],
+  },
 };
 
 export const INTERVIEW_SECTION: InterviewSectionData = {
