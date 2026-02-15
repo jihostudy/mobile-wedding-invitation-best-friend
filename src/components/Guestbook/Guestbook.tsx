@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { X } from "lucide-react";
 import { getGuestMessages } from "@/lib/supabase";
 import type { GuestMessage } from "@/types";
 import { SAMPLE_GUESTBOOK_MESSAGES } from "@/constants/wedding-data";
+import Icon from "@/components/common/Icon";
 import GuestbookModal from "./GuestbookModal";
 
 export default function Guestbook() {
@@ -68,7 +70,7 @@ export default function Guestbook() {
                   <p className="text-sm font-semibold text-[#2f2f2f]">
                     {message.author}
                   </p>
-                  <span className="text-xl leading-none text-[#8b8b8b]">×</span>
+                  <Icon icon={X} size="sm" className="text-[#8b8b8b]" />
                 </div>
                 <p className="mt-3 whitespace-pre-wrap break-words text-sm leading-7 text-[#3e3e3e]">
                   {message.message}

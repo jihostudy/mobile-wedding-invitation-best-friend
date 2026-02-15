@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { ChevronDown, X } from "lucide-react";
+import Icon from "@/components/common/Icon";
 import type { GalleryImage, GallerySectionData } from "@/types";
 
 interface ImageGalleryProps {
@@ -76,7 +78,7 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
               aria-label="갤러리 이미지 더 보기"
             >
               더보기
-              <span aria-hidden="true">⌄</span>
+              <Icon icon={ChevronDown} size="sm" />
             </button>
           </div>
         )}
@@ -98,19 +100,7 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
               className="absolute right-3 top-3 z-10 rounded-full bg-black/40 p-2"
               aria-label="갤러리 확대 닫기"
             >
-              <svg
-                className="h-5 w-5 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
+              <Icon icon={X} size="md" className="text-white" />
             </button>
             <Image
               src={selectedImage.url}

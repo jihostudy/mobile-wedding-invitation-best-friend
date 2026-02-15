@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { X } from "lucide-react";
+import Icon from "@/components/common/Icon";
 import { createGuestMessage } from "@/lib/supabase";
 import type { GuestMessageInput } from "@/types";
 
@@ -91,10 +93,10 @@ export default function GuestbookModal({
           <button
             ref={closeButtonRef}
             onClick={onClose}
-            className="absolute right-6 top-6 text-xl leading-none text-gray-800"
+            className="absolute right-6 top-6 rounded-full p-1 text-gray-800 hover:bg-black/5"
             aria-label="방명록 모달 닫기"
           >
-            ×
+            <Icon icon={X} size="md" />
           </button>
           <h3 className="text-center text-xl font-semibold text-gray-900">
             방명록 작성하기

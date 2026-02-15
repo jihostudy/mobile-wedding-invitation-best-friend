@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { Check, Copy, Phone, X } from 'lucide-react';
+import Icon from '@/components/common/Icon';
 import type { Person } from '@/types';
 
 interface ContactModalProps {
@@ -72,14 +74,7 @@ export default function ContactModal({ isOpen, onClose, groom, bride }: ContactM
               className="rounded-full bg-wedding-beige/15 p-2 hover:bg-wedding-beige/25"
               aria-label={`${name}에게 전화하기`}
             >
-              <svg className="h-4 w-4 text-wedding-beige" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                />
-              </svg>
+              <Icon icon={Phone} size="sm" className="text-wedding-beige" />
             </a>
             <button
               onClick={() => copyToClipboard(phone, contactType)}
@@ -87,18 +82,9 @@ export default function ContactModal({ isOpen, onClose, groom, bride }: ContactM
               aria-label={`${name} 연락처 복사하기`}
             >
               {copiedContact === contactType ? (
-                <svg className="h-4 w-4 text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
+                <Icon icon={Check} size="sm" className="text-green-300" />
               ) : (
-                <svg className="h-4 w-4 text-wedding-beige" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                  />
-                </svg>
+                <Icon icon={Copy} size="sm" className="text-wedding-beige" />
               )}
             </button>
           </>
@@ -123,9 +109,7 @@ export default function ContactModal({ isOpen, onClose, groom, bride }: ContactM
           className="absolute right-4 top-4 z-20 rounded-full bg-wedding-beige/20 p-2 hover:bg-wedding-beige/30"
           aria-label="닫기"
         >
-          <svg className="h-5 w-5 text-wedding-beige" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
+          <Icon icon={X} size="md" className="text-wedding-beige" />
         </button>
 
         <div className="border-b border-wedding-beige/20 px-6 py-6 text-center">

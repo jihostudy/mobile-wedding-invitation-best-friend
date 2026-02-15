@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { Mail, UserRound, X } from "lucide-react";
+import Icon from "@/components/common/Icon";
 import type { InterviewSectionData } from "@/types";
 
 interface InterviewSectionProps {
@@ -14,7 +16,17 @@ export default function InterviewSection({ section }: InterviewSectionProps) {
   useEffect(() => {
     if (!isOpen) return;
     document.body.style.overflow = "hidden";
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
     return () => {
+      window.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "unset";
     };
   }, [isOpen]);
@@ -48,7 +60,7 @@ export default function InterviewSection({ section }: InterviewSectionProps) {
             className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-[14px] border border-wedding-brown/15 bg-[#f8f8f8] px-5 py-4 text-[16px] text-wedding-brown"
             aria-label="신랑 신부 인터뷰 열기"
           >
-            <span aria-hidden="true">✉</span>
+            <Icon icon={Mail} size="md" />
             {section.buttonLabel}
           </button>
         </div>
@@ -71,10 +83,10 @@ export default function InterviewSection({ section }: InterviewSectionProps) {
               </h3>
               <button
                 onClick={() => setIsOpen(false)}
-                className="ml-4 text-[24px] leading-none text-[#222]"
+                className="ml-4 rounded-full p-1 text-[#222] hover:bg-black/5"
                 aria-label="인터뷰 닫기"
               >
-                ×
+                <Icon icon={X} size="lg" />
               </button>
             </div>
 
@@ -92,10 +104,8 @@ export default function InterviewSection({ section }: InterviewSectionProps) {
                       <div
                         key={`${questionItem.question}-${answer.role}-${answer.name}`}
                       >
-                        <p className="text-[15px] text-[#333]">
-                          <span className="mr-2" aria-hidden="true">
-                            {answer.role === "신랑" ? "🤵🏻" : "👰🏻"}
-                          </span>
+                        <p className="flex items-center gap-2 text-[15px] text-[#333]">
+                          <Icon icon={UserRound} size="sm" className="text-[#666]" />
                           {answer.role} {answer.name}
                         </p>
                         <div className="mt-3 space-y-4 text-[15px] leading-[1.62] text-[#333]">
