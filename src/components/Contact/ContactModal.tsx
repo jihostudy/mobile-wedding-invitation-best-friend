@@ -129,7 +129,7 @@ export default function ContactModal({ isOpen, onClose, groom, bride }: ContactM
         </button>
 
         <div className="border-b border-wedding-beige/20 px-6 py-6 text-center">
-          <p className="font-serif text-sm tracking-[0.24em] text-wedding-beige/70">CONTACT</p>
+          <p className="text-sm tracking-[0.24em] text-wedding-beige/70">CONTACT</p>
           <h3 className="mt-2 text-lg font-semibold text-wedding-beige">양가 연락처 안내</h3>
         </div>
 

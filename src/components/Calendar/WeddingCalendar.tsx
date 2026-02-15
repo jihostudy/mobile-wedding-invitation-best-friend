@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useEffect, useMemo, useState } from 'react';
-import type { CalendarSectionData, Person, WeddingDate } from '@/types';
+import { useEffect, useMemo, useState } from "react";
+import type { CalendarSectionData, Person, WeddingDate } from "@/types";
 
 interface WeddingCalendarProps {
   section: CalendarSectionData;
@@ -10,13 +10,24 @@ interface WeddingCalendarProps {
   date: WeddingDate;
 }
 
-export default function WeddingCalendar({ section, groom, bride, date }: WeddingCalendarProps) {
+export default function WeddingCalendar({
+  section,
+  groom,
+  bride,
+  date,
+}: WeddingCalendarProps) {
+  const groomGivenName =
+    groom.name.length > 1 ? groom.name.slice(1) : groom.name;
+  const brideGivenName =
+    bride.name.length > 1 ? bride.name.slice(1) : bride.name;
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
     minutes: 0,
     seconds: 0,
   });
+  const [elapsedDays, setElapsedDays] = useState(0);
+  const [isMarried, setIsMarried] = useState(false);
 
   useEffect(() => {
     const calculateTimeLeft = () => {
@@ -24,16 +35,23 @@ export default function WeddingCalendar({ section, groom, bride, date }: Wedding
       const difference = date.fullDate.getTime() - now;
 
       if (difference <= 0) {
+        const passed = Math.floor(Math.abs(difference) / (1000 * 60 * 60 * 24));
         setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        setElapsedDays(passed);
+        setIsMarried(true);
         return;
       }
 
       setTimeLeft({
         days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+        hours: Math.floor(
+          (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+        ),
         minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
         seconds: Math.floor((difference % (1000 * 60)) / 1000),
       });
+      setElapsedDays(0);
+      setIsMarried(false);
     };
 
     calculateTimeLeft();
@@ -48,75 +66,141 @@ export default function WeddingCalendar({ section, groom, bride, date }: Wedding
     const lastDay = new Date(year, month + 1, 0);
 
     const leadingDays = Array.from({ length: firstDay.getDay() }, () => null);
-    const monthDays = Array.from({ length: lastDay.getDate() }, (_, index) => index + 1);
+    const monthDays = Array.from(
+      { length: lastDay.getDate() },
+      (_, index) => index + 1,
+    );
 
     return [...leadingDays, ...monthDays];
   }, [date.month, date.year]);
 
-  const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
+  const weekDays = ["일", "월", "화", "수", "목", "금", "토"];
 
   return (
-    <section id="calendar" className="bg-[#F9ECE3] px-6 py-16">
-      <div className="mx-auto w-full max-w-md">
-        <div className="text-center">
-          <p className="font-serif text-xs uppercase tracking-[0.32em] text-wedding-brown-light/70">{section.title}</p>
-          <p className="mt-3 text-3xl font-semibold text-wedding-brown">
-            {date.year}.{String(date.month).padStart(2, '0')}.{String(date.day).padStart(2, '0')}
-          </p>
-          <p className="mt-1 text-sm text-wedding-brown-light">{section.subtitle}</p>
-        </div>
+    <section id="calendar" className="bg-white px-6 py-16">
+      <div className="mx-auto w-full max-w-md text-center">
+        <p className="text-xl font-medium tracking-[0.01em] text-[#2f2f2f]">
+          {date.year}.{String(date.month).padStart(2, "0")}.
+          {String(date.day).padStart(2, "0")}
+        </p>
+        <p className="mt-2 text-base text-[#3f3f3f]">{section.subtitle}</p>
 
-        <div className="mt-8 rounded-2xl border border-wedding-brown/10 bg-white/40 p-5 shadow-sm">
-          <div className="mb-3 text-center text-sm font-medium text-wedding-brown-light">{section.monthLabel}</div>
-          <div className="grid grid-cols-7 gap-1">
+        <div className="mt-8 border-y border-gray-300/40 px-2 pb-4 pt-6">
+          <div className="grid grid-cols-7 text-[14px] text-[#363636]">
             {weekDays.map((day) => (
-              <div key={day} className={`py-2 text-center text-xs ${day === '일' ? 'text-red-500' : 'text-wedding-brown-light'}`}>
+              <div
+                key={day}
+                className={`py-3 text-center ${day === "일" ? "text-[#d28390]" : ""}`}
+              >
                 {day}
               </div>
             ))}
           </div>
-          <div className="grid grid-cols-7 gap-1">
+
+          <div className="grid grid-cols-7 gap-y-2 text-[15px] text-[#585858]">
             {calendarDays.map((day, index) => {
               const isSunday = day !== null && index % 7 === 0;
               const isWeddingDay = day === date.day;
               return (
                 <div
                   key={`day-${index}`}
-                  className={`aspect-square flex items-center justify-center text-sm ${
-                    isWeddingDay
-                      ? 'rounded-full bg-wedding-brown/25 font-semibold text-wedding-brown'
-                      : isSunday
-                      ? 'text-red-500'
-                      : day
-                      ? 'text-wedding-brown'
-                      : 'text-transparent'
-                  }`}
+                  className="flex h-[40px] items-center justify-center"
                 >
-                  {day}
+                  {day ? (
+                    <span
+                      className={`flex h-[40px] w-[40px] items-center justify-center ${
+                        isWeddingDay
+                          ? "rounded-full bg-[#ef9ea6] text-white"
+                          : isSunday
+                            ? "text-[#d28390]"
+                            : "text-[#585858]"
+                      }`}
+                    >
+                      {day}
+                    </span>
+                  ) : (
+                    <span className="text-transparent">0</span>
+                  )}
                 </div>
               );
             })}
           </div>
         </div>
 
-        <div className="mt-6 rounded-2xl border border-wedding-brown/10 bg-white/50 px-4 py-5">
-          <div className="grid grid-cols-4 gap-2 text-center">
-            {[
-              { label: 'DAYS', value: String(timeLeft.days).padStart(3, '0') },
-              { label: 'HOUR', value: String(timeLeft.hours).padStart(2, '0') },
-              { label: 'MIN', value: String(timeLeft.minutes).padStart(2, '0') },
-              { label: 'SEC', value: String(timeLeft.seconds).padStart(2, '0') },
-            ].map((item) => (
-              <div key={item.label}>
-                <p className="text-2xl font-bold text-wedding-brown">{item.value}</p>
-                <p className="mt-1 text-[10px] tracking-[0.2em] text-wedding-brown-light">{item.label}</p>
+        <div className="mt-8 pt-4">
+          <div className="flex items-end justify-center gap-1 text-center">
+            <div className="w-[72px]">
+              <div className="mb-1 text-[10px] tracking-[0.04em] text-[#9a9a9a]">
+                DAYS
               </div>
-            ))}
+              <span className="block min-w-[2rem] text-[31px] font-medium leading-none text-[#3c3c3c]">
+                {timeLeft.days}
+              </span>
+            </div>
+            <div className="w-[14px]">
+              <div className="mb-1 text-[10px] tracking-[0.04em] text-transparent">
+                &nbsp;
+              </div>
+              <span className="block text-[31px] leading-none text-[#7a7a7a]">
+                :
+              </span>
+            </div>
+            <div className="w-[62px]">
+              <div className="mb-1 text-[10px] tracking-[0.04em] text-[#9a9a9a]">
+                HOUR
+              </div>
+              <span className="block text-[31px] font-medium leading-none text-[#3c3c3c]">
+                {String(timeLeft.hours).padStart(2, "0")}
+              </span>
+            </div>
+            <div className="w-[14px]">
+              <div className="mb-1 text-[10px] tracking-[0.04em] text-transparent">
+                &nbsp;
+              </div>
+              <span className="block text-[31px] leading-none text-[#7a7a7a]">
+                :
+              </span>
+            </div>
+            <div className="w-[62px]">
+              <div className="mb-1 text-[10px] tracking-[0.04em] text-[#9a9a9a]">
+                MIN
+              </div>
+              <span className="block text-[31px] font-medium leading-none text-[#3c3c3c]">
+                {String(timeLeft.minutes).padStart(2, "0")}
+              </span>
+            </div>
+            <div className="w-[14px]">
+              <div className="mb-1 text-[10px] tracking-[0.04em] text-transparent">
+                &nbsp;
+              </div>
+              <span className="block text-[31px] leading-none text-[#7a7a7a]">
+                :
+              </span>
+            </div>
+            <div className="w-[62px]">
+              <div className="mb-1 text-[10px] tracking-[0.04em] text-[#9a9a9a]">
+                SEC
+              </div>
+              <span className="block text-[31px] font-medium leading-none text-[#3c3c3c]">
+                {String(timeLeft.seconds).padStart(2, "0")}
+              </span>
+            </div>
           </div>
         </div>
 
-        <p className="mt-4 text-center text-sm text-wedding-brown-light">
-          {groom.name} ♥ {bride.name}의 결혼식이 <span className="font-semibold text-wedding-brown">{timeLeft.days}일</span> 남았습니다.
+        <p className="mt-7 text-[15px] text-[#4a4a4a]">
+          {isMarried ? (
+            <>
+              {groomGivenName}, {brideGivenName} 결혼한지{" "}
+              <span className="font-semibold">{elapsedDays}</span>일 되었습니다.
+            </>
+          ) : (
+            <>
+              {groomGivenName}, {brideGivenName}의 결혼식이{" "}
+              <span className="font-semibold">{timeLeft.days}</span>일
+              남았습니다.
+            </>
+          )}
         </p>
       </div>
     </section>

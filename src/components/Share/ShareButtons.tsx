@@ -98,11 +98,11 @@ export default function ShareButtons() {
   };
 
   return (
-    <section className="section bg-wedding-beige">
+    <section className="section bg-white">
       <div className="max-w-md w-full">
         {/* 타이틀 */}
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-serif text-wedding-brown mb-2">
+          <h2 className="text-3xl text-wedding-brown mb-2">
             청첩장 공유하기
           </h2>
           <p className="text-wedding-brown-light">

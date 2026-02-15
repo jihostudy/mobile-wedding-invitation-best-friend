@@ -10,16 +10,16 @@ const config: Config = {
     extend: {
       colors: {
         wedding: {
-          beige: '#F5F1E8',
-          cream: '#FAF8F3',
+          beige: '#FFFFFF',
+          cream: '#FFFFFF',
           brown: '#8B7355',
           'brown-light': '#B4A190',
           gold: '#D4AF37',
         },
       },
       fontFamily: {
-        serif: ['var(--font-serif)', 'serif'],
-        sans: ['var(--font-sans)', 'sans-serif'],
+        sans: ['var(--font-tmoney)', 'sans-serif'],
+        crimson: ['var(--font-crimson)', 'serif'],
       },
       animation: {
         'fade-in': 'fadeIn 0.8s ease-in-out',

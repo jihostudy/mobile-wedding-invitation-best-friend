@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
-import { createGuestMessage } from '@/lib/supabase';
-import type { GuestMessageInput } from '@/types';
+import { useEffect, useRef, useState } from "react";
+import { createGuestMessage } from "@/lib/supabase";
+import type { GuestMessageInput } from "@/types";
 
 interface GuestbookModalProps {
   isOpen: boolean;
@@ -10,37 +10,41 @@ interface GuestbookModalProps {
   onSuccess: () => void;
 }
 
-export default function GuestbookModal({ isOpen, onClose, onSuccess }: GuestbookModalProps) {
+export default function GuestbookModal({
+  isOpen,
+  onClose,
+  onSuccess,
+}: GuestbookModalProps) {
   const [formData, setFormData] = useState<GuestMessageInput>({
-    author: '',
-    message: '',
+    author: "",
+    message: "",
     isPublic: true,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!isOpen) {
-      document.body.style.overflow = 'unset';
-      setFormData({ author: '', message: '', isPublic: true });
-      setErrorMessage('');
+      document.body.style.overflow = "unset";
+      setFormData({ author: "", message: "", isPublic: true });
+      setErrorMessage("");
       return;
     }
 
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
     closeButtonRef.current?.focus();
 
     const handleEsc = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         onClose();
       }
     };
 
-    window.addEventListener('keydown', handleEsc);
+    window.addEventListener("keydown", handleEsc);
     return () => {
-      document.body.style.overflow = 'unset';
-      window.removeEventListener('keydown', handleEsc);
+      document.body.style.overflow = "unset";
+      window.removeEventListener("keydown", handleEsc);
     };
   }, [isOpen, onClose]);
 
@@ -48,14 +52,14 @@ export default function GuestbookModal({ isOpen, onClose, onSuccess }: Guestbook
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    setErrorMessage('');
+    setErrorMessage("");
 
     if (!formData.author.trim()) {
-      setErrorMessage('이름 또는 닉네임을 입력해주세요.');
+      setErrorMessage("이름 또는 닉네임을 입력해주세요.");
       return;
     }
     if (!formData.message.trim()) {
-      setErrorMessage('메시지를 입력해주세요.');
+      setErrorMessage("메시지를 입력해주세요.");
       return;
     }
 
@@ -64,7 +68,7 @@ export default function GuestbookModal({ isOpen, onClose, onSuccess }: Guestbook
     setIsSubmitting(false);
 
     if (!result.success) {
-      setErrorMessage(result.error || '오류가 발생했습니다.');
+      setErrorMessage(result.error || "오류가 발생했습니다.");
       return;
     }
 
@@ -73,73 +77,106 @@ export default function GuestbookModal({ isOpen, onClose, onSuccess }: Guestbook
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 p-4 backdrop-blur-sm" onClick={onClose} role="dialog" aria-modal="true">
-      <div className="w-full max-w-md overflow-hidden rounded-2xl bg-white" onClick={(event) => event.stopPropagation()}>
-        <div className="relative border-b border-gray-200 px-6 py-5">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 p-4 backdrop-blur-sm"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+    >
+      <div
+        className="w-full max-w-md overflow-hidden rounded-xl bg-white"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <div className="relative px-6 pb-4 pt-6">
           <button
             ref={closeButtonRef}
             onClick={onClose}
-            className="absolute left-4 top-4 rounded-full p-2 hover:bg-gray-100"
+            className="absolute right-6 top-6 text-xl leading-none text-gray-800"
             aria-label="방명록 모달 닫기"
           >
-            <svg className="h-5 w-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
+            ×
           </button>
-          <h3 className="text-center text-lg font-semibold text-gray-900">신랑·신부에게 방명록을 남겨보세요</h3>
+          <h3 className="text-center text-xl font-semibold text-gray-900">
+            방명록 작성하기
+          </h3>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5 p-6">
-          <div>
-            <label htmlFor="author" className="mb-2 block text-sm font-medium text-gray-700">
-              이름 또는 닉네임
+        <form onSubmit={handleSubmit} className="px-6 pb-6 pt-2">
+          <div className="py-3">
+            <label
+              htmlFor="author"
+              className="mb-3 block text-base font-semibold text-gray-800"
+            >
+              <span className="mr-1 text-red-500">*</span>이름
             </label>
             <input
               id="author"
               type="text"
               value={formData.author}
-              onChange={(event) => setFormData((prev) => ({ ...prev, author: event.target.value }))}
-              className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none focus:border-wedding-brown focus:ring-2 focus:ring-wedding-brown/25"
+              onChange={(event) =>
+                setFormData((prev) => ({ ...prev, author: event.target.value }))
+              }
+              placeholder="이름을 입력해 주세요."
+              className="w-full px-2 border-0 border-b border-gray-300 py-3 text-sm outline-none placeholder:text-gray-400 focus:border-gray-400"
               maxLength={20}
               required
             />
           </div>
 
-          <div>
-            <label htmlFor="message" className="mb-2 block text-sm font-medium text-gray-700">
-              메시지 입력
+          <div className="py-3">
+            <label
+              htmlFor="message"
+              className="mb-3 block text-base font-semibold text-gray-800"
+            >
+              <span className="mr-1 text-red-500">*</span>내용
             </label>
             <textarea
               id="message"
               value={formData.message}
-              onChange={(event) => setFormData((prev) => ({ ...prev, message: event.target.value }))}
-              className="w-full resize-none rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none focus:border-wedding-brown focus:ring-2 focus:ring-wedding-brown/25"
+              onChange={(event) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  message: event.target.value,
+                }))
+              }
+              className="w-full resize-none border-0 border-b border-gray-300 px-2 py-3 text-sm outline-none placeholder:text-gray-400 focus:border-gray-400"
+              placeholder="내용을 작성해 주세요. (최대 500자)"
               rows={4}
-              maxLength={100}
+              maxLength={500}
               required
             />
-            <p className="mt-1 text-right text-xs text-gray-500">{formData.message.length}/100</p>
           </div>
 
-          <label className="flex items-center gap-2 text-sm text-gray-700">
-            <input
-              type="checkbox"
-              checked={formData.isPublic}
-              onChange={(event) => setFormData((prev) => ({ ...prev, isPublic: event.target.checked }))}
-              className="h-4 w-4 rounded border-gray-300 text-wedding-brown focus:ring-wedding-brown"
-            />
-            청첩장에 공개하기
-          </label>
+          <div>
+            <label className="inline-flex items-center gap-2 text-sm text-gray-700">
+              <input
+                type="checkbox"
+                checked={formData.isPublic}
+                onChange={(event) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    isPublic: event.target.checked,
+                  }))
+                }
+                className="h-4 w-4 rounded border-gray-300 text-wedding-brown focus:ring-wedding-brown"
+              />
+              청첩장에 공개하기
+            </label>
+          </div>
 
-          {errorMessage && <p className="text-sm text-red-500">{errorMessage}</p>}
+          {errorMessage && (
+            <p className="text-sm text-red-500">{errorMessage}</p>
+          )}
 
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full rounded-lg bg-gray-900 py-3 text-sm font-medium text-white hover:bg-gray-800 disabled:opacity-50"
-          >
-            {isSubmitting ? '등록 중...' : '완료'}
-          </button>
+          <div className="mt-4 flex justify-end  pt-6 w-full">
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="rounded-md w-full bg-black/10 px-8 py-3 text-base font-medium text-gray-400 disabled:opacity-50"
+            >
+              {isSubmitting ? "등록중" : "작성완료"}
+            </button>
+          </div>
         </form>
       </div>
     </div>
