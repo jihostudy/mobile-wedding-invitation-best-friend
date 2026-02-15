@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, Upload, X } from "lucide-react";
 import Icon from "@/components/common/Icon";
+import Carousel from "@/components/common/Carousel";
 import type { SnapUploadModalData } from "@/types";
 
 interface SnapUploadModalProps {
@@ -25,28 +26,39 @@ export default function SnapUploadModal({
 }: SnapUploadModalProps) {
   const [name, setName] = useState("");
   const [images, setImages] = useState<SelectedImage[]>([]);
+  const [previewIndex, setPreviewIndex] = useState<number | null>(null);
+  const [shouldRender, setShouldRender] = useState(isOpen);
+  const [isActive, setIsActive] = useState(isOpen);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const scrollYRef = useRef(0);
 
   useEffect(() => {
-    if (!isOpen) {
-      document.body.style.overflow = "";
-      document.body.style.position = "";
-      document.body.style.top = "";
-      document.body.style.width = "";
-      document.documentElement.style.overflow = "";
-      return;
+    if (isOpen) {
+      setShouldRender(true);
+      const raf = requestAnimationFrame(() => {
+        setIsActive(true);
+      });
+      return () => cancelAnimationFrame(raf);
     }
 
-    scrollYRef.current = window.scrollY;
+    setIsActive(false);
+    const timer = window.setTimeout(() => {
+      setShouldRender(false);
+    }, 200);
+    return () => window.clearTimeout(timer);
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
     document.documentElement.style.overflow = "hidden";
     document.body.style.overflow = "hidden";
-    document.body.style.position = "fixed";
-    document.body.style.top = `-${scrollYRef.current}px`;
-    document.body.style.width = "100%";
 
     const onEsc = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
+        if (previewIndex !== null) {
+          setPreviewIndex(null);
+          return;
+        }
         onClose();
       }
     };
@@ -54,13 +66,9 @@ export default function SnapUploadModal({
     return () => {
       document.documentElement.style.overflow = "";
       document.body.style.overflow = "";
-      document.body.style.position = "";
-      document.body.style.top = "";
-      document.body.style.width = "";
-      window.scrollTo(0, scrollYRef.current);
       window.removeEventListener("keydown", onEsc);
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, previewIndex]);
 
   useEffect(() => {
     return () => {
@@ -73,7 +81,7 @@ export default function SnapUploadModal({
     [section.maxFiles, images.length],
   );
 
-  if (!isOpen) return null;
+  if (!shouldRender) return null;
 
   const openFilePicker = () => {
     fileInputRef.current?.click();
@@ -112,7 +120,7 @@ export default function SnapUploadModal({
 
   return (
     <div
-      className="fixed inset-0 z-[9999] bg-[#efefef]"
+      className={`fixed inset-0 z-[9999] bg-[#efefef] transition-opacity duration-200 ${isActive ? "opacity-100" : "opacity-0"}`}
       role="dialog"
       aria-modal="true"
     >
@@ -198,16 +206,31 @@ export default function SnapUploadModal({
                     key={image.id}
                     className="relative h-[88px] w-[88px] overflow-hidden rounded-[8px] border border-[#d0d0d0] bg-white"
                   >
-                    <Image
-                      src={image.previewUrl}
-                      alt={image.file.name}
-                      fill
-                      className="object-cover"
-                      sizes="88px"
-                    />
                     <button
                       type="button"
-                      onClick={() => removeImage(image.id)}
+                      onClick={() => {
+                        const index = images.findIndex(
+                          (item) => item.id === image.id,
+                        );
+                        setPreviewIndex(index >= 0 ? index : 0);
+                      }}
+                      className="relative h-full w-full"
+                      aria-label={`${image.file.name} 크게 보기`}
+                    >
+                      <Image
+                        src={image.previewUrl}
+                        alt={image.file.name}
+                        fill
+                        className="object-cover"
+                        sizes="88px"
+                      />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        removeImage(image.id);
+                      }}
                       className="absolute right-1 top-1 rounded-full bg-black/50 p-0.5 text-white"
                       aria-label={`${image.file.name} 삭제`}
                     >
@@ -263,6 +286,50 @@ export default function SnapUploadModal({
           ))}
         </div>
       </div>
+
+      {previewIndex !== null && images.length > 0 && (
+        <div
+          className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/70 p-4"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="relative h-[86dvh] w-full max-w-md">
+            <button
+              type="button"
+              onClick={() => setPreviewIndex(null)}
+              className="absolute right-2 top-2 z-10 rounded-full bg-black/45 p-2 text-white"
+              aria-label="사진 미리보기 닫기"
+            >
+              <Icon icon={X} size="md" />
+            </button>
+
+            <Carousel
+              items={images}
+              initialIndex={previewIndex}
+              getItemKey={(item) => item.id}
+              className="h-full"
+              viewportClassName="h-full"
+              slideClassName="h-full"
+              showDots={images.length > 1}
+              showArrows={images.length > 1}
+              loop={false}
+              prevAriaLabel="이전 업로드 사진 보기"
+              nextAriaLabel="다음 업로드 사진 보기"
+              renderItem={(item) => (
+                <div className="relative h-full w-full">
+                  <Image
+                    src={item.previewUrl}
+                    alt={item.file.name}
+                    fill
+                    className="object-contain"
+                    sizes="100vw"
+                  />
+                </div>
+              )}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

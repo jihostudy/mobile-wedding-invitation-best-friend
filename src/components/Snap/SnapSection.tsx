@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import SnapUploadModal from "@/components/Snap/SnapUploadModal";
 import type { SnapSectionData } from "@/types";
@@ -12,10 +12,21 @@ interface SnapSectionProps {
 export default function SnapSection({ section }: SnapSectionProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCardHovered, setIsCardHovered] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
   const previewImages = section.images.slice(0, 3);
 
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setTimeout(() => {
+      sectionRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 0);
+  };
+
   return (
-    <section className="mt-12 rounded-[18px] bg-white px-6 py-12">
+    <section ref={sectionRef} className="mt-12 rounded-[18px] bg-white px-6 py-12">
       <div className="mx-auto w-full max-w-md text-center">
         <div
           className="relative mx-auto h-[230px] w-full max-w-[320px]"
@@ -73,7 +84,7 @@ export default function SnapSection({ section }: SnapSectionProps) {
       </div>
       <SnapUploadModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={handleCloseModal}
         section={section.modal}
       />
     </section>
