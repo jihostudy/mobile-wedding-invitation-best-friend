@@ -15,13 +15,10 @@ export function useCreateRsvpMutation() {
   });
 }
 
-export function useAdminRsvpResponsesQuery(adminPassword?: string) {
+export function useAdminRsvpResponsesQuery() {
   return useQuery({
     queryKey: queryKeys.adminRsvpResponses(),
-    queryFn: () =>
-      apiFetch<{ responses: RsvpResponseDto[] }>('/api/admin/rsvp-responses', {
-        headers: { 'x-admin-password': adminPassword || '' },
-      }),
+    queryFn: () => apiFetch<{ responses: RsvpResponseDto[] }>('/api/admin/rsvp-responses'),
     staleTime: 10 * 1000,
   });
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { getCookieValue } from '@/lib/client/cookies';
 import { apiFetch } from '@/lib/api/client';
 import { queryKeys } from '@/lib/queries/keys';
 import type { SnapSubmissionDto, SnapUploadInput } from '@/types';
@@ -25,27 +26,24 @@ export function useCreateSnapSubmissionMutation() {
   });
 }
 
-export function useAdminSnapSubmissionsQuery(adminPassword?: string, filters?: Record<string, string>) {
+export function useAdminSnapSubmissionsQuery(filters?: Record<string, string>) {
   const query = new URLSearchParams(filters ?? {});
   return useQuery({
     queryKey: queryKeys.adminSnapSubmissions(filters),
     queryFn: () =>
-      apiFetch<{ submissions: SnapSubmissionDto[] }>(`/api/admin/snap-submissions?${query.toString()}`, {
-        headers: { 'x-admin-password': adminPassword || '' },
-      }),
+      apiFetch<{ submissions: SnapSubmissionDto[] }>(`/api/admin/snap-submissions?${query.toString()}`),
     staleTime: 10 * 1000,
   });
 }
 
-export function useAdminUpdateSnapSubmissionStatusMutation(adminPassword?: string, csrfToken?: string) {
+export function useAdminUpdateSnapSubmissionStatusMutation() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (payload: { id: string; status: 'uploaded' | 'rejected' | 'approved' }) =>
       apiFetch<{ success: true }>(`/api/admin/snap-submissions/${payload.id}`, {
         method: 'PATCH',
         headers: {
-          'x-admin-password': adminPassword || '',
-          'x-csrf-token': csrfToken || '',
+          'x-csrf-token': getCookieValue('admin_csrf'),
         },
         body: JSON.stringify({ status: payload.status }),
       }),
