@@ -37,19 +37,23 @@ export default function VenueInfo({ section, venue, date }: VenueInfoProps) {
     <section id="location" className="py-16">
       <div className="mx-auto w-full max-w-[425px]">
         <div className="px-8 text-center">
-          <p className="font-crimson text-xs uppercase tracking-[0.33em] text-wedding-brown-light/70">
+          <p className="font-crimson text-sm uppercase tracking-[0.33em] text-wedding-brown">
             {section.kicker}
           </p>
-          <h2 className="mt-3 text-xl text-wedding-brown">{section.title}</h2>
+          <h2 className="mt-3 text-xl tracking-[0.04em] text-wedding-gray-dark">
+            {section.title}
+          </h2>
         </div>
 
         <div className="pt-8 pb-4 text-center">
-          <h3 className="text-xl font-semibold text-wedding-brown">
+          <h3 className="text-xl font-medium text-wedding-gray">
             {venue.name}
             {venue.floor ? ` ${venue.floor}` : ""}
           </h3>
-          <p className="mt-5 text-[15px] text-[#969696]">{venue.address}</p>
-          <p className="mt-4 text-[15px] text-[#5b5b5b]">
+          <p className="mt-5 text-[15px] text-wedding-gray-light">
+            {venue.address}
+          </p>
+          <p className="mt-4 text-[15px] font-medium text-wedding-gray-light">
             Tel. {venue.contact ?? "02-000-0000"}
           </p>
         </div>
@@ -78,8 +82,8 @@ export default function VenueInfo({ section, venue, date }: VenueInfoProps) {
         </div>
 
         <div className="mx-8 mt-2 pt-8">
-          <h4 className="text-base font-semibold text-wedding-brown">지하철</h4>
-          <div className="mt-4 space-y-2 text-[15px] text-wedding-brown">
+          <h4 className="text-base font-medium text-wedding-gray">지하철</h4>
+          <div className="mt-4 space-y-2 text-[15px] text-wedding-gray">
             {subwayLines.map((line) => (
               <p key={line.label} className="flex items-center">
                 <span
@@ -93,18 +97,16 @@ export default function VenueInfo({ section, venue, date }: VenueInfoProps) {
         </div>
 
         <div className="mx-8 mt-8 border-t border-gray-300/80 pt-8">
-          <h4 className="text-base font-semibold text-wedding-brown">
-            셔틀버스
-          </h4>
-          <p className="mt-4 text-[15px] text-wedding-brown">
+          <h4 className="text-base font-medium text-wedding-gray">셔틀버스</h4>
+          <p className="mt-4 text-[15px] text-wedding-gray">
             {venue.transport?.shuttlePickup ??
               `${date.month}월 ${date.day}일 강남구청역 인근 셔틀 탑승`}
           </p>
         </div>
 
         <div className="mx-8 mt-8 border-t border-gray-300/80 pt-8">
-          <h4 className="text-base font-semibold text-wedding-brown">버스</h4>
-          <div className="mt-4 space-y-2 text-[15px] text-wedding-brown">
+          <h4 className="text-base font-medium text-wedding-gray">버스</h4>
+          <div className="mt-4 space-y-2 text-[15px] text-wedding-gray">
             <p className="flex items-center">
               <span className="mr-2 inline-block h-3.5 w-3.5 rounded-full bg-[#1d3f8a]" />
               간선버스 : {trunkBus}

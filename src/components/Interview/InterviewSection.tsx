@@ -23,11 +23,13 @@ export default function InterviewSection({ section }: InterviewSectionProps) {
     <>
       <section id="interview" className="bg-white px-6 py-16">
         <div className="mx-auto w-full max-w-md text-center">
-          <p className="font-crimson text-xs uppercase tracking-[0.33em] text-wedding-brown-light/70">
+          <p className="font-crimson text-sm uppercase tracking-[0.33em] text-wedding-brown">
             {section.kicker}
           </p>
-          <h2 className="mt-3 text-xl text-wedding-brown">{section.title}</h2>
-          <p className="mt-8 whitespace-pre-line text-[15px] leading-8 text-wedding-brown">
+          <h2 className="mt-3 text-xl tracking-[0.04em] text-wedding-gray-dark">
+            {section.title}
+          </h2>
+          <p className="mt-8 whitespace-pre-line text-[15px] leading-8 text-wedding-gray">
             {section.description}
           </p>
 
@@ -43,7 +45,7 @@ export default function InterviewSection({ section }: InterviewSectionProps) {
 
           <button
             onClick={() => setIsOpen(true)}
-            className="mt-8 inline-flex items-center justify-center gap-2 rounded-[12px] border border-wedding-brown/25 bg-white/70 px-[22px] py-[10px] text-sm font-medium text-wedding-brown transition hover:bg-white"
+            className="mt-8 inline-flex items-center justify-center gap-2 rounded-[12px] border border-wedding-brown/25 bg-white/70 px-9 py-3 text-sm font-medium text-wedding-brown transition hover:bg-white"
             aria-label="신랑 신부 인터뷰 열기"
           >
             <Icon icon={Mail} size="md" />
@@ -64,7 +66,7 @@ export default function InterviewSection({ section }: InterviewSectionProps) {
             onClick={(event) => event.stopPropagation()}
           >
             <div className="flex items-center justify-between">
-              <h3 className="flex-1 text-center text-lg font-semibold text-[#222]">
+              <h3 className="flex-1 text-center text-lg font-semibold text-wedding-gray-dark">
                 {section.title}
               </h3>
               <button

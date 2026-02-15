@@ -2,6 +2,8 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
+import { Camera } from "lucide-react";
+import Icon from "@/components/common/Icon";
 import SnapUploadModal from "@/components/Snap/SnapUploadModal";
 import type { SnapSectionData } from "@/types";
 
@@ -26,7 +28,10 @@ export default function SnapSection({ section }: SnapSectionProps) {
   };
 
   return (
-    <section ref={sectionRef} className="mt-12 rounded-[18px] bg-white px-6 py-12">
+    <section
+      ref={sectionRef}
+      className="mt-12 rounded-[18px] bg-white px-6 py-12"
+    >
       <div className="mx-auto w-full max-w-md text-center">
         <div
           className="relative mx-auto h-[230px] w-full max-w-[320px]"
@@ -58,26 +63,27 @@ export default function SnapSection({ section }: SnapSectionProps) {
           })}
         </div>
 
-        <p className="mt-9 font-crimson text-xs uppercase tracking-[0.32em] text-wedding-brown-light/80">
+        <p className="mt-9 font-crimson text-sm uppercase tracking-[0.33em] text-wedding-brown">
           {section.kicker}
         </p>
-        <h3 className="mt-3 text-xl leading-none text-wedding-brown">
+        <h3 className="mt-3 text-xl tracking-[0.04em] text-wedding-gray-dark">
           {section.title}
         </h3>
-        <p className="mt-8 whitespace-pre-line text-[15px] leading-9 text-[#595959]">
+        <p className="mt-8 whitespace-pre-line text-[15px] leading-8 text-wedding-gray">
           {section.description}
         </p>
 
         <button
           type="button"
           onClick={() => setIsModalOpen(true)}
-          className="mt-8 w-full rounded-[12px] border border-wedding-brown/25 bg-white/70 px-[22px] py-[10px] text-sm font-medium text-wedding-brown transition hover:bg-white"
+          className="mt-8 inline-flex  items-center justify-center gap-2 rounded-[12px] border border-wedding-brown/25 bg-white/70 px-9 py-3 text-sm font-medium text-wedding-brown transition hover:bg-white"
           aria-label="사진 업로드 모달 열기"
         >
+          <Icon icon={Camera} size="sm" className="text-wedding-brown" />
           {section.buttonLabel}
         </button>
 
-        <p className="mt-6 text-[12px] leading-[1.5]">
+        <p className="mt-6 text-sm leading-[1.5]">
           <span className="text-[#a2a2a2]">{section.availableFromLabel} </span>
           <span className="text-[#b0b0b0]">{section.availableHintLabel}</span>
         </p>

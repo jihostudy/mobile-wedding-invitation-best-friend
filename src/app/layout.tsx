@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Crimson_Pro } from "next/font/google";
 import OverlayProvider from "@/components/providers/OverlayProvider";
+import ScrollResetProvider from "@/components/providers/ScrollResetProvider";
 import ToastProvider from "@/components/common/toast/ToastProvider";
 import "./globals.css";
 
@@ -53,6 +54,7 @@ export default function RootLayout({
   return (
     <html lang="ko" className={`${tmoneyRoundWind.variable} ${crimsonPro.variable}`}>
       <body className={`${tmoneyRoundWind.className} antialiased bg-[#eee]`}>
+        <ScrollResetProvider />
         <OverlayProvider>
           <ToastProvider>{children}</ToastProvider>
         </OverlayProvider>

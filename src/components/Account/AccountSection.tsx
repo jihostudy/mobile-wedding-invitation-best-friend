@@ -34,11 +34,13 @@ export default function AccountSection({ section }: AccountSectionProps) {
     <section id="account" className="bg-white px-6 py-16">
       <div className="mx-auto w-full max-w-md">
         <div className="text-center">
-          <p className="font-crimson text-xs uppercase tracking-[0.33em] text-wedding-brown-light/70">
+          <p className="font-crimson text-sm uppercase tracking-[0.33em] text-wedding-brown">
             {section.kicker}
           </p>
-          <h2 className="mt-3 text-xl text-wedding-brown">{section.title}</h2>
-          <p className="mt-3 whitespace-pre-line text-sm leading-7 text-wedding-brown-light">
+          <h2 className="mt-3 text-xl tracking-[0.04em] text-wedding-gray-dark">
+            {section.title}
+          </h2>
+          <p className="mt-3 whitespace-pre-line text-sm leading-8 text-wedding-gray">
             {section.description}
           </p>
         </div>
@@ -79,7 +81,7 @@ export default function AccountSection({ section }: AccountSectionProps) {
                           key={rowKey}
                           className={`flex items-center justify-between px-5 py-4`}
                         >
-                          <div>
+                          <div className="flex flex-col gap-2">
                             <button
                               type="button"
                               onClick={() => handleCopy(account.account)}
@@ -92,7 +94,7 @@ export default function AccountSection({ section }: AccountSectionProps) {
                               />
                               {account.holder}
                             </button>
-                            <p className="mt-1 text-[15px] text-gray-700">
+                            <p className="mt-1 text-sm text-gray-700">
                               {account.bank} {account.account}
                             </p>
                           </div>

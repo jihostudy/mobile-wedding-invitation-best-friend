@@ -21,7 +21,7 @@ import {
 
 export default function HomePage() {
   return (
-    <main className="relative mx-auto w-[425px] max-w-[425px] bg-white">
+    <main className="relative mx-auto w-full max-w-[425px] bg-white">
       <MainHero section={HERO_SECTION} groom={WEDDING_DATA.groom} bride={WEDDING_DATA.bride} />
       <div className="relative z-10 bg-white">
         <InvitationMessage section={INVITATION_SECTION} groom={WEDDING_DATA.groom} bride={WEDDING_DATA.bride} />

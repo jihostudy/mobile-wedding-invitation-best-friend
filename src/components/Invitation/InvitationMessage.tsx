@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { Phone } from "lucide-react";
 import ContactModal from "@/components/Contact/ContactModal";
+import Icon from "@/components/common/Icon";
 import type { InvitationSectionData, Person } from "@/types";
 
 interface InvitationMessageProps {
@@ -21,13 +23,13 @@ export default function InvitationMessage({
     <section id="invitation" className="relative z-10 bg-white px-6 py-16">
       <div className="mx-auto w-full max-w-md space-y-10">
         <div className="text-center">
-          <p className="font-crimson text-xs uppercase tracking-[0.33em] text-wedding-brown-light/70">
+          <p className="font-crimson text-sm uppercase tracking-[0.33em] text-wedding-brown">
             {section.kicker}
           </p>
-          <h2 className="mt-3 text-xl text-wedding-brown">
+          <h2 className="mt-3 text-xl tracking-[0.04em] text-wedding-gray-dark">
             {section.title}
           </h2>
-          <p className="mt-8 whitespace-pre-line text-[15px] leading-8 text-wedding-brown">
+          <p className="mt-8 whitespace-pre-line text-[15px] leading-8 text-wedding-gray">
             {section.message}
           </p>
         </div>
@@ -35,22 +37,18 @@ export default function InvitationMessage({
         <div className="mx-auto h-px w-11 bg-wedding-brown/15" />
 
         <div className="mx-auto w-fit text-wedding-brown-light">
-          <div className="grid grid-cols-[max-content_max-content] items-baseline gap-x-3 gap-y-3 text-lg">
-            <p className="text-right">
-              <span className="font-medium">{groom.parents?.father || "-"}</span>{" "}
-              ·{" "}
-              <span className="font-medium">{groom.parents?.mother || "-"}</span>
-              <span className="text-sm text-wedding-brown-light/70"> 의 아들</span>
+          <div className="grid grid-cols-[max-content_max-content] items-baseline gap-x-3 gap-y-3 text-base">
+            <p className="text-right text-wedding-gray font-medium">
+              {groom.parents?.father || "-"} · {groom.parents?.mother || "-"}
+              <span className="text-sm text-wedding-gray-light"> 의 아들</span>
             </p>
             <span className="text-right font-semibold text-wedding-brown">
               {groom.name}
             </span>
 
-            <p className="text-right">
-              <span className="font-medium">{bride.parents?.father || "-"}</span>{" "}
-              ·{" "}
-              <span className="font-medium">{bride.parents?.mother || "-"}</span>
-              <span className="text-sm text-wedding-brown-light/70"> 의 딸</span>
+            <p className="text-right text-wedding-gray font-medium">
+              {bride.parents?.father || "-"} · {bride.parents?.mother || "-"}
+              <span className="text-sm text-wedding-gray-light"> 의 딸</span>
             </p>
             <span className="text-right font-semibold text-wedding-brown">
               {bride.name}
@@ -61,9 +59,10 @@ export default function InvitationMessage({
         <div className="flex justify-center rounded-[12px]">
           <button
             onClick={() => setIsContactModalOpen(true)}
-            className="rounded-[12px] border border-wedding-brown/25 bg-white/70 px-[22px] py-[10px] text-sm font-medium text-wedding-brown transition hover:bg-white"
+            className="inline-flex items-center gap-1.5 rounded-[12px] border border-wedding-brown/25 bg-white/70 px-9 py-3 text-sm font-medium text-wedding-brown transition hover:bg-white"
             aria-label="연락처 모달 열기"
           >
+            <Icon icon={Phone} size="sm" className="text-wedding-gray-light" />
             {section.contactCtaLabel}
           </button>
         </div>

@@ -7,6 +7,7 @@ import {
   openRsvpEntryPromptOverlay,
   openRsvpFormOverlay,
 } from "@/overlays/rsvpOverlay";
+import { WEDDING_DATA } from "@/constants/wedding-data";
 import type { RsvpSectionData } from "@/types";
 
 interface RsvpSectionProps {
@@ -23,6 +24,18 @@ export default function RsvpSection({ section }: RsvpSectionProps) {
     const m = String(today.getMonth() + 1).padStart(2, "0");
     const d = String(today.getDate()).padStart(2, "0");
     return `${y}-${m}-${d}`;
+  }, []);
+
+  const entryPromptDateLine = useMemo(() => {
+    const { year, month, day, dayOfWeek, time } = WEDDING_DATA.date;
+    const normalizedDay = dayOfWeek.replace("요일", "");
+    const dayLabel = normalizedDay[0] ?? dayOfWeek;
+    return `${year}.${String(month).padStart(2, "0")}.${String(day).padStart(2, "0")} (${dayLabel}) ${time}`;
+  }, []);
+
+  const entryPromptVenueLine = useMemo(() => {
+    const { name, floor } = WEDDING_DATA.venue;
+    return floor ? `${name}, ${floor}` : name;
   }, []);
 
   const hidePromptToday = useCallback(() => {
@@ -49,27 +62,38 @@ export default function RsvpSection({ section }: RsvpSectionProps) {
       openRsvpEntryPromptOverlay({
         onHideToday: hidePromptToday,
         onOpenRsvp: openRsvpForm,
+        title: section.title,
+        dateLine: entryPromptDateLine,
+        venueLine: entryPromptVenueLine,
+        addressLine: WEDDING_DATA.venue.address,
       });
     }
-  }, [hidePromptToday, openRsvpForm, todayLabel]);
+  }, [
+    entryPromptDateLine,
+    entryPromptVenueLine,
+    hidePromptToday,
+    openRsvpForm,
+    section.title,
+    todayLabel,
+  ]);
 
   return (
     <section className="mt-12 rounded-[18px]  px-6 py-14">
       <div className="mx-auto w-full max-w-md text-center">
-        <p className="font-crimson text-xs uppercase tracking-[0.35em] text-wedding-brown-light/75">
+        <p className="font-crimson text-sm uppercase tracking-[0.33em] text-wedding-brown">
           {section.kicker}
         </p>
-        <h3 className="mt-4 text-xl font-medium text-[#242424]">
+        <h3 className="mt-3 text-xl tracking-[0.04em] text-wedding-gray-dark">
           {section.title}
         </h3>
-        <p className="mt-9 whitespace-pre-line text-[15px] leading-[2] text-[#555555]">
+        <p className="mt-9 whitespace-pre-line text-[15px] leading-8 text-wedding-gray">
           {section.description}
         </p>
 
         <button
           type="button"
           onClick={openRsvpForm}
-          className="mt-9 inline-flex items-center justify-center gap-2 rounded-[12px] border border-wedding-brown/25 bg-white/70 px-[22px] py-[10px] text-sm font-medium text-wedding-brown transition hover:bg-white"
+          className="mt-9 inline-flex items-center justify-center gap-2 rounded-[12px] border border-wedding-brown/25 bg-white/70 px-9 py-3 text-sm font-medium text-wedding-brown transition hover:bg-white"
           aria-label="참석의사 전달 모달 열기"
         >
           <Icon icon={Armchair} size="sm" className="text-wedding-brown" />

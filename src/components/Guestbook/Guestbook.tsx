@@ -43,7 +43,7 @@ export default function Guestbook() {
     <section id="guestbook" className="bg-white px-6 py-16">
       <div className="mx-auto w-full max-w-md">
         <div className="text-center">
-          <p className="font-crimson text-xs uppercase tracking-[0.33em] text-wedding-brown-light/70">
+          <p className="font-crimson text-sm uppercase tracking-[0.33em] text-wedding-brown-light/70">
             GUESTBOOK
           </p>
           <h2 className="mt-3 text-xl text-wedding-brown">방명록</h2>
@@ -109,7 +109,7 @@ export default function Guestbook() {
             </div>
           )}
         </div>
-        
+
         {hasMessages && (
           <div className="mt-5 flex justify-end">
             <button

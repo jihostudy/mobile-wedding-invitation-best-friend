@@ -43,7 +43,7 @@ export const WEDDING_DATA: WeddingInfo = {
     month: 6,
     day: 20,
     dayOfWeek: "토요일",
-    time: "오후 12시 30분",
+    time: "낮 12시 30분",
     fullDate: new Date(2026, 5, 2, 12, 30), // month는 0부터 시작 (5 = 6월), 12:30
   },
   venue: {

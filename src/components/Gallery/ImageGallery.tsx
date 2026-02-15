@@ -42,10 +42,10 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
     <section id="gallery" className="bg-white py-16">
       <div className="mx-auto flex w-full max-w-md flex-col">
         <div className="mb-8 text-center">
-          <p className="font-crimson text-xs uppercase tracking-[0.33em] text-wedding-brown-light/70">
+          <p className="font-crimson text-sm uppercase tracking-[0.33em] text-wedding-brown">
             {section.kicker}
           </p>
-          <h2 className="mt-3 text-xl text-wedding-brown">
+          <h2 className="mt-3 text-xl tracking-[0.04em] text-wedding-gray-dark">
             {section.title}
           </h2>
         </div>
@@ -80,7 +80,7 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
           <div className="mt-8 flex justify-center">
             <button
               onClick={handleLoadMore}
-              className="inline-flex items-center gap-1 text-base font-medium text-wedding-brown"
+              className="inline-flex items-center gap-1 text-base font-medium text-wedding-gray-dark"
               aria-label="갤러리 이미지 더 보기"
             >
               더보기

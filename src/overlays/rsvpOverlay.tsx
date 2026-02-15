@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import type { FC } from "react";
 import { overlay } from "overlay-kit";
-import RsvpEntryPromptModal from "@/components/Rsvp/RsvpEntryPromptModal";
+import RsvpEntryPromptOverlay from "@/components/Rsvp/RsvpEntryPromptOverlay";
 import RsvpModal from "@/components/Rsvp/RsvpModal";
 
 const RSVP_ENTRY_PROMPT_OVERLAY_ID = "rsvp-entry-prompt";
@@ -21,6 +21,10 @@ interface OpenRsvpEntryPromptOverlayParams {
   onOpenRsvp: () => void;
   onHideToday: () => void;
   onClose?: () => void;
+  title: string;
+  dateLine: string;
+  venueLine: string;
+  addressLine: string;
 }
 
 interface OpenRsvpFormOverlayParams {
@@ -31,6 +35,10 @@ interface RsvpEntryPromptOverlayViewProps extends OverlayControllerProps {
   onOpenRsvp: () => void;
   onHideToday: () => void;
   onClose?: () => void;
+  title: string;
+  dateLine: string;
+  venueLine: string;
+  addressLine: string;
 }
 
 function RsvpEntryPromptOverlayView({
@@ -40,6 +48,10 @@ function RsvpEntryPromptOverlayView({
   onOpenRsvp,
   onHideToday,
   onClose,
+  title,
+  dateLine,
+  venueLine,
+  addressLine,
 }: RsvpEntryPromptOverlayViewProps) {
   const hasOpenedRef = useRef(false);
 
@@ -56,7 +68,7 @@ function RsvpEntryPromptOverlayView({
   }, [isOpen, unmount]);
 
   return (
-    <RsvpEntryPromptModal
+    <RsvpEntryPromptOverlay
       isOpen={isOpen}
       onClose={() => {
         onClose?.();
@@ -70,6 +82,10 @@ function RsvpEntryPromptOverlayView({
         close();
         onOpenRsvp();
       }}
+      title={title}
+      dateLine={dateLine}
+      venueLine={venueLine}
+      addressLine={addressLine}
     />
   );
 }
@@ -104,6 +120,10 @@ export function openRsvpEntryPromptOverlay({
   onOpenRsvp,
   onHideToday,
   onClose,
+  title,
+  dateLine,
+  venueLine,
+  addressLine,
 }: OpenRsvpEntryPromptOverlayParams) {
   const controller: FC<OverlayControllerProps> = (overlayProps) => (
     <RsvpEntryPromptOverlayView
@@ -111,6 +131,10 @@ export function openRsvpEntryPromptOverlay({
       onOpenRsvp={onOpenRsvp}
       onHideToday={onHideToday}
       onClose={onClose}
+      title={title}
+      dateLine={dateLine}
+      venueLine={venueLine}
+      addressLine={addressLine}
     />
   );
 
