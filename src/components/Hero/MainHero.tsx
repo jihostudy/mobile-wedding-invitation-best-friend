@@ -55,8 +55,8 @@ export default function MainHero({ section, groom, bride }: MainHeroProps) {
         </div>
 
         <div className="mt-auto flex items-end justify-between text-white">
-          <p className="font-serif text-[1.45rem] font-semibold uppercase tracking-[0.02em]">TO BE</p>
-          <p className="font-serif text-[1.45rem] font-semibold uppercase tracking-[0.02em]">TOGETHER</p>
+          <p className="text-[1.45rem] font-semibold uppercase tracking-[0.02em]">TO BE</p>
+          <p className="text-[1.45rem] font-semibold uppercase tracking-[0.02em]">TOGETHER</p>
         </div>
       </div>
     </section>

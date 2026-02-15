@@ -33,10 +33,10 @@ export default function VenueInfo({ section, venue, date }: VenueInfoProps) {
     <section id="location" className="py-16">
       <div className="mx-auto w-full max-w-[425px]">
         <div className="px-8 text-center">
-          <p className="font-serif text-xs uppercase tracking-[0.33em] text-wedding-brown-light/70">
+          <p className="font-crimson text-xs uppercase tracking-[0.33em] text-wedding-brown-light/70">
             {section.kicker}
           </p>
-          <h2 className="mt-3 text-xl font-serif text-wedding-brown">
+          <h2 className="mt-3 text-xl text-wedding-brown">
             {section.title}
           </h2>
         </div>
@@ -74,11 +74,11 @@ export default function VenueInfo({ section, venue, date }: VenueInfoProps) {
           </a>
         </div>
 
-        <div className="mx-8 mt-10 border-t border-gray-300/80 pt-8">
+        <div className="mx-8 mt-2 pt-8">
           <h4 className="text-base font-semibold text-wedding-brown">지하철</h4>
           <div className="mt-4 space-y-2 text-[15px] text-wedding-brown">
             {subwayLines.map((line) => (
-              <p key={line.label}>
+              <p key={line.label} className="flex items-center">
                 <span
                   className="mr-2 inline-block h-3.5 w-3.5 rounded-full"
                   style={{ backgroundColor: line.color }}

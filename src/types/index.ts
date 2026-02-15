@@ -82,6 +82,13 @@ export interface AccountItem {
   account: string;
   holder: string;
   label?: string;
+  kakaoPayLink?: string;
+}
+
+export interface AccountGroup {
+  id: string;
+  label: string;
+  accounts: AccountItem[];
 }
 
 export interface HeroSectionData {
@@ -142,7 +149,7 @@ export interface AccountSectionData {
   kicker: string;
   title: string;
   description: string;
-  accounts: AccountItem[];
+  groups: AccountGroup[];
 }
 
 export interface FloatingNavItem {

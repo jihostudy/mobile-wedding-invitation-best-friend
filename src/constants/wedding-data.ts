@@ -6,6 +6,7 @@
 import {
   WeddingInfo,
   GalleryImage,
+  GuestMessage,
   HeroSectionData,
   InvitationSectionData,
   CalendarSectionData,
@@ -261,10 +262,54 @@ export const LOCATION_SECTION: LocationSectionData = {
 export const ACCOUNT_SECTION: AccountSectionData = {
   kicker: "ACCOUNT",
   title: "마음 전하실 곳",
-  description: "참석이 어려우신 분들을 위해 계좌번호를 안내드립니다.",
-  accounts: WEDDING_DATA.account
-    ? [WEDDING_DATA.account.groom, WEDDING_DATA.account.bride]
-    : [],
+  description:
+    "참석이 어려우신 분들을 위해\n계좌번호를 기재하였습니다.\n너그러운 마음으로 양해 부탁드립니다.",
+  groups: [
+    {
+      id: "groom",
+      label: "신랑측",
+      accounts: [
+        {
+          holder: WEDDING_DATA.groom.name,
+          bank: WEDDING_DATA.account?.groom.bank || "신한은행",
+          account: WEDDING_DATA.account?.groom.account || "110-000-000000",
+          kakaoPayLink: "https://pay.kakao.com",
+        },
+        {
+          holder: WEDDING_DATA.groom.parents?.father || "신랑 아버지",
+          bank: "우리은행",
+          account: "110-000-000001",
+        },
+        {
+          holder: WEDDING_DATA.groom.parents?.mother || "신랑 어머니",
+          bank: "국민은행",
+          account: "110-000-000002",
+        },
+      ],
+    },
+    {
+      id: "bride",
+      label: "신부측",
+      accounts: [
+        {
+          holder: WEDDING_DATA.bride.name,
+          bank: WEDDING_DATA.account?.bride.bank || "하나은행",
+          account: WEDDING_DATA.account?.bride.account || "110-000-000003",
+          kakaoPayLink: "https://pay.kakao.com",
+        },
+        {
+          holder: WEDDING_DATA.bride.parents?.father || "신부 아버지",
+          bank: "토스뱅크",
+          account: "110-000-000004",
+        },
+        {
+          holder: WEDDING_DATA.bride.parents?.mother || "신부 어머니",
+          bank: "카카오뱅크",
+          account: "110-000-000005",
+        },
+      ],
+    },
+  ],
 };
 
 export const FLOATING_NAV_ITEMS: FloatingNavItem[] = [
@@ -275,4 +320,39 @@ export const FLOATING_NAV_ITEMS: FloatingNavItem[] = [
   { id: "location", label: "오시는 길" },
   { id: "account", label: "계좌" },
   { id: "guestbook", label: "방명록" },
+];
+
+export const SAMPLE_GUESTBOOK_MESSAGES: GuestMessage[] = [
+  {
+    id: "sample-1",
+    author: "해니",
+    message:
+      "🎀💘 결혼 너무 축하해요 💗💞🎉🎊 새로운 인생 시작 🔥 앞날이 행복으로 가득하길 바래요!!!!",
+    createdAt: new Date("2026-03-10T10:20:00+09:00"),
+    isPublic: true,
+  },
+  {
+    id: "sample-2",
+    author: "김현우",
+    message:
+      "🎉 진호님! 나은님! 드디어 현실판 로맨스 영화 개봉인가요?! 🎬 두 분, 진짜 천생연분이니까 행복만 하세요~ 쪽쪽쪽! 💖",
+    createdAt: new Date("2026-03-11T12:05:00+09:00"),
+    isPublic: true,
+  },
+  {
+    id: "sample-3",
+    author: "윤미",
+    message:
+      "이나은, 결혼 그거 나랑 하기로 했었잖아. 그래도 너의 행복을 위해 보내줄게~ 사랑하는 우리 나은 결혼 너무 너무 축하해!!!💖👰🏻🤵🏻💖",
+    createdAt: new Date("2026-03-12T09:35:00+09:00"),
+    isPublic: true,
+  },
+  {
+    id: "sample-4",
+    author: "유인",
+    message:
+      "진호형, 나은누나! 두 분의 결혼을 진심으로 축하드립니다💐 언제나 지금처럼 사랑 가득한 날들 보내세요!",
+    createdAt: new Date("2026-03-12T20:10:00+09:00"),
+    isPublic: true,
+  },
 ];

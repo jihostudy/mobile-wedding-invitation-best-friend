@@ -93,6 +93,10 @@
 }
 
 @layer utilities {
+  .font-crimson {
+    font-family: var(--font-crimson), serif;
+  }
+
   /* 텍스트 섀도우 */
   .text-shadow {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

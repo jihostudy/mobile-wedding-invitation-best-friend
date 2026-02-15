@@ -16,8 +16,10 @@ export default function WeddingCalendar({
   bride,
   date,
 }: WeddingCalendarProps) {
-  const groomGivenName = groom.name.length > 1 ? groom.name.slice(1) : groom.name;
-  const brideGivenName = bride.name.length > 1 ? bride.name.slice(1) : bride.name;
+  const groomGivenName =
+    groom.name.length > 1 ? groom.name.slice(1) : groom.name;
+  const brideGivenName =
+    bride.name.length > 1 ? bride.name.slice(1) : bride.name;
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -83,7 +85,7 @@ export default function WeddingCalendar({
         </p>
         <p className="mt-2 text-base text-[#3f3f3f]">{section.subtitle}</p>
 
-        <div className="mt-8 border border-[rgb(238,238,238)] px-2 pb-4 pt-6">
+        <div className="mt-8 border-y border-gray-300/40 px-2 pb-4 pt-6">
           <div className="grid grid-cols-7 text-[14px] text-[#363636]">
             {weekDays.map((day) => (
               <div
@@ -128,32 +130,60 @@ export default function WeddingCalendar({
         <div className="mt-8 pt-4">
           <div className="flex items-end justify-center gap-1 text-center">
             <div className="w-[72px]">
-              <div className="mb-1 text-[10px] tracking-[0.04em] text-[#9a9a9a]">DAYS</div>
-              <span className="block min-w-[2rem] text-[31px] font-medium leading-none text-[#3c3c3c]">{timeLeft.days}</span>
+              <div className="mb-1 text-[10px] tracking-[0.04em] text-[#9a9a9a]">
+                DAYS
+              </div>
+              <span className="block min-w-[2rem] text-[31px] font-medium leading-none text-[#3c3c3c]">
+                {timeLeft.days}
+              </span>
             </div>
             <div className="w-[14px]">
-              <div className="mb-1 text-[10px] tracking-[0.04em] text-transparent">&nbsp;</div>
-              <span className="block text-[31px] leading-none text-[#7a7a7a]">:</span>
+              <div className="mb-1 text-[10px] tracking-[0.04em] text-transparent">
+                &nbsp;
+              </div>
+              <span className="block text-[31px] leading-none text-[#7a7a7a]">
+                :
+              </span>
             </div>
             <div className="w-[62px]">
-              <div className="mb-1 text-[10px] tracking-[0.04em] text-[#9a9a9a]">HOUR</div>
-              <span className="block text-[31px] font-medium leading-none text-[#3c3c3c]">{String(timeLeft.hours).padStart(2, "0")}</span>
+              <div className="mb-1 text-[10px] tracking-[0.04em] text-[#9a9a9a]">
+                HOUR
+              </div>
+              <span className="block text-[31px] font-medium leading-none text-[#3c3c3c]">
+                {String(timeLeft.hours).padStart(2, "0")}
+              </span>
             </div>
             <div className="w-[14px]">
-              <div className="mb-1 text-[10px] tracking-[0.04em] text-transparent">&nbsp;</div>
-              <span className="block text-[31px] leading-none text-[#7a7a7a]">:</span>
+              <div className="mb-1 text-[10px] tracking-[0.04em] text-transparent">
+                &nbsp;
+              </div>
+              <span className="block text-[31px] leading-none text-[#7a7a7a]">
+                :
+              </span>
             </div>
             <div className="w-[62px]">
-              <div className="mb-1 text-[10px] tracking-[0.04em] text-[#9a9a9a]">MIN</div>
-              <span className="block text-[31px] font-medium leading-none text-[#3c3c3c]">{String(timeLeft.minutes).padStart(2, "0")}</span>
+              <div className="mb-1 text-[10px] tracking-[0.04em] text-[#9a9a9a]">
+                MIN
+              </div>
+              <span className="block text-[31px] font-medium leading-none text-[#3c3c3c]">
+                {String(timeLeft.minutes).padStart(2, "0")}
+              </span>
             </div>
             <div className="w-[14px]">
-              <div className="mb-1 text-[10px] tracking-[0.04em] text-transparent">&nbsp;</div>
-              <span className="block text-[31px] leading-none text-[#7a7a7a]">:</span>
+              <div className="mb-1 text-[10px] tracking-[0.04em] text-transparent">
+                &nbsp;
+              </div>
+              <span className="block text-[31px] leading-none text-[#7a7a7a]">
+                :
+              </span>
             </div>
             <div className="w-[62px]">
-              <div className="mb-1 text-[10px] tracking-[0.04em] text-[#9a9a9a]">SEC</div>
-              <span className="block text-[31px] font-medium leading-none text-[#3c3c3c]">{String(timeLeft.seconds).padStart(2, "0")}</span>
+              <div className="mb-1 text-[10px] tracking-[0.04em] text-[#9a9a9a]">
+                SEC
+              </div>
+              <span className="block text-[31px] font-medium leading-none text-[#3c3c3c]">
+                {String(timeLeft.seconds).padStart(2, "0")}
+              </span>
             </div>
           </div>
         </div>
@@ -161,11 +191,14 @@ export default function WeddingCalendar({
         <p className="mt-7 text-[15px] text-[#4a4a4a]">
           {isMarried ? (
             <>
-              {groomGivenName}, {brideGivenName} 결혼한지 <span className="font-semibold">{elapsedDays}</span>일 되었습니다.
+              {groomGivenName}, {brideGivenName} 결혼한지{" "}
+              <span className="font-semibold">{elapsedDays}</span>일 되었습니다.
             </>
           ) : (
             <>
-              {groomGivenName}, {brideGivenName}의 결혼식이 <span className="font-semibold">{timeLeft.days}</span>일 남았습니다.
+              {groomGivenName}, {brideGivenName}의 결혼식이{" "}
+              <span className="font-semibold">{timeLeft.days}</span>일
+              남았습니다.
             </>
           )}
         </p>

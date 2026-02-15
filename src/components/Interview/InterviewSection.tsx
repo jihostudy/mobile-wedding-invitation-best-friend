@@ -23,10 +23,10 @@ export default function InterviewSection({ section }: InterviewSectionProps) {
     <>
       <section id="interview" className="bg-white px-6 py-16">
         <div className="mx-auto w-full max-w-md text-center">
-          <p className="font-serif text-xs uppercase tracking-[0.33em] text-wedding-brown-light/70">
+          <p className="font-crimson text-xs uppercase tracking-[0.33em] text-wedding-brown-light/70">
             {section.kicker}
           </p>
-          <h2 className="mt-3 text-xl font-serif text-wedding-brown">
+          <h2 className="mt-3 text-xl text-wedding-brown">
             {section.title}
           </h2>
           <p className="mt-8 whitespace-pre-line text-[15px] leading-8 text-wedding-brown">
@@ -56,17 +56,17 @@ export default function InterviewSection({ section }: InterviewSectionProps) {
 
       {isOpen && (
         <div
-          className="fixed inset-0 z-50 bg-black/30"
+          className="fixed inset-0 z-50 overflow-hidden overscroll-none bg-black/30"
           onClick={() => setIsOpen(false)}
           role="dialog"
           aria-modal="true"
         >
           <div
-            className="mx-auto min-h-screen w-full max-w-[425px] bg-[#f7f7f7] px-6 pb-12 pt-6"
+            className="mx-auto h-[100dvh] w-full max-w-[425px] overflow-y-auto overscroll-contain bg-[#f7f7f7] px-6 pb-12 pt-6"
             onClick={(event) => event.stopPropagation()}
           >
             <div className="flex items-center justify-between">
-              <h3 className="flex-1 text-center text-[24px] font-semibold text-[#222]">
+              <h3 className="flex-1 text-center text-lg font-semibold text-[#222]">
                 {section.title}
               </h3>
               <button
@@ -80,11 +80,18 @@ export default function InterviewSection({ section }: InterviewSectionProps) {
 
             <div className="mt-8 space-y-7">
               {section.questions.map((questionItem) => (
-                <section key={questionItem.question} className="rounded-xl border border-[#e2e2e2] bg-white px-4 py-5">
-                  <h4 className="text-[16px] font-medium text-[#333]">{questionItem.question}</h4>
+                <section
+                  key={questionItem.question}
+                  className="rounded-xl border border-[#e2e2e2] bg-white px-4 py-5"
+                >
+                  <h4 className="text-[16px] font-medium text-[#333]">
+                    {questionItem.question}
+                  </h4>
                   <div className="mt-5 space-y-7">
                     {questionItem.answers.map((answer) => (
-                      <div key={`${questionItem.question}-${answer.role}-${answer.name}`}>
+                      <div
+                        key={`${questionItem.question}-${answer.role}-${answer.name}`}
+                      >
                         <p className="text-[15px] text-[#333]">
                           <span className="mr-2" aria-hidden="true">
                             {answer.role === "신랑" ? "🤵🏻" : "👰🏻"}

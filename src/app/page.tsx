@@ -6,6 +6,7 @@ import ImageGallery from '@/components/Gallery/ImageGallery';
 import VenueInfo from '@/components/Location/VenueInfo';
 import Guestbook from '@/components/Guestbook/Guestbook';
 import AccountSection from '@/components/Account/AccountSection';
+import FinalThanksSection from '@/components/Closing/FinalThanksSection';
 import FloatingNav from '@/components/Navigation/FloatingNav';
 import {
   WEDDING_DATA,
@@ -36,6 +37,7 @@ export default function HomePage() {
         <VenueInfo section={LOCATION_SECTION} venue={WEDDING_DATA.venue} date={WEDDING_DATA.date} />
         <Guestbook />
         <AccountSection section={ACCOUNT_SECTION} />
+        <FinalThanksSection />
         <FloatingNav items={FLOATING_NAV_ITEMS} />
       </div>
     </main>

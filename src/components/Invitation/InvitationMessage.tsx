@@ -21,10 +21,10 @@ export default function InvitationMessage({
     <section id="invitation" className="relative z-10 bg-white px-6 py-16">
       <div className="mx-auto w-full max-w-md space-y-10">
         <div className="text-center">
-          <p className="font-serif text-xs uppercase tracking-[0.33em] text-wedding-brown-light/70">
+          <p className="font-crimson text-xs uppercase tracking-[0.33em] text-wedding-brown-light/70">
             {section.kicker}
           </p>
-          <h2 className="mt-3 text-xl font-serif text-wedding-brown">
+          <h2 className="mt-3 text-xl text-wedding-brown">
             {section.title}
           </h2>
           <p className="mt-8 whitespace-pre-line text-[15px] leading-8 text-wedding-brown">
@@ -34,26 +34,25 @@ export default function InvitationMessage({
 
         <div className="mx-auto h-px w-11 bg-wedding-brown/15" />
 
-        <div className="mx-auto max-w-[340px] space-y-3 text-wedding-brown-light">
-          <div className="grid grid-cols-[1fr_auto_72px] items-center gap-2 text-lg">
-            <p className="justify-self-end">
+        <div className="mx-auto w-fit text-wedding-brown-light">
+          <div className="grid grid-cols-[max-content_max-content] items-baseline gap-x-3 gap-y-3 text-lg">
+            <p className="text-right">
               <span className="font-medium">{groom.parents?.father || "-"}</span>{" "}
               ·{" "}
               <span className="font-medium">{groom.parents?.mother || "-"}</span>
+              <span className="text-sm text-wedding-brown-light/70"> 의 아들</span>
             </p>
-            <span className="text-sm text-wedding-brown-light/70">의 아들</span>
-            <span className="w-[72px] text-right font-semibold text-wedding-brown">
+            <span className="text-right font-semibold text-wedding-brown">
               {groom.name}
             </span>
-          </div>
-          <div className="grid grid-cols-[1fr_auto_72px] items-center gap-2 text-lg">
-            <p className="justify-self-end">
+
+            <p className="text-right">
               <span className="font-medium">{bride.parents?.father || "-"}</span>{" "}
               ·{" "}
               <span className="font-medium">{bride.parents?.mother || "-"}</span>
+              <span className="text-sm text-wedding-brown-light/70"> 의 딸</span>
             </p>
-            <span className="text-sm text-wedding-brown-light/70">의 딸</span>
-            <span className="w-[72px] text-right font-semibold text-wedding-brown">
+            <span className="text-right font-semibold text-wedding-brown">
               {bride.name}
             </span>
           </div>

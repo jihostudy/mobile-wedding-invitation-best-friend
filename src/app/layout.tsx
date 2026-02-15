@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
-import { Noto_Serif_KR, Noto_Sans_KR } from "next/font/google";
+import localFont from "next/font/local";
+import { Crimson_Pro } from "next/font/google";
 import "./globals.css";
 
-const notoSerif = Noto_Serif_KR({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-serif",
+const tmoneyRoundWind = localFont({
+  src: "../../public/fonts/TmoneyRoundWindRegular.ttf",
+  variable: "--font-tmoney",
   display: "swap",
 });
 
-const notoSans = Noto_Sans_KR({
+const crimsonPro = Crimson_Pro({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "700"],
-  variable: "--font-sans",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-crimson",
   display: "swap",
 });
 
@@ -49,8 +49,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ko" className={`${notoSerif.variable} ${notoSans.variable}`}>
-      <body className="font-sans antialiased bg-[#eee]">{children}</body>
+    <html lang="ko" className={`${tmoneyRoundWind.variable} ${crimsonPro.variable}`}>
+      <body className={`${tmoneyRoundWind.className} antialiased bg-[#eee]`}>{children}</body>
     </html>
   );
 }

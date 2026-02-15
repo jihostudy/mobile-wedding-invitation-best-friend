@@ -18,8 +18,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        serif: ['var(--font-serif)', 'serif'],
-        sans: ['var(--font-sans)', 'sans-serif'],
+        sans: ['var(--font-tmoney)', 'sans-serif'],
+        crimson: ['var(--font-crimson)', 'serif'],
       },
       animation: {
         'fade-in': 'fadeIn 0.8s ease-in-out',
