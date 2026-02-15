@@ -128,7 +128,7 @@ export default function WeddingCalendar({
         </div>
 
         <div className="mt-8 pt-4">
-          <div className="flex items-end justify-center gap-1 text-center">
+          <div className="font-crimson flex items-end justify-center gap-1 text-center">
             <div className="w-[72px]">
               <div className="mb-1 text-[10px] tracking-[0.04em] text-[#9a9a9a]">
                 DAYS
