@@ -103,6 +103,10 @@
     font-family: var(--font-crimson), serif;
   }
 
+  .font-hyejun {
+    font-family: var(--font-hyejun), sans-serif;
+  }
+
   /* 텍스트 섀도우 */
   .text-shadow {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -205,7 +209,89 @@
   }
 }
 
+@keyframes weddingDayPulse {
+  0%,
+  100% {
+    background-color: #ef8d98;
+    box-shadow: 0 0 0 0 rgba(239, 141, 152, 0.5);
+    transform: scale(1);
+  }
+  50% {
+    background-color: #dc6e7d;
+    box-shadow: 0 0 0 10px rgba(239, 141, 152, 0);
+    transform: scale(1.08);
+  }
+}
+
+@keyframes heroSnowFall {
+  0% {
+    transform: translate3d(
+        var(--snow-drift-start, -72px),
+        -14%,
+        var(--snow-depth, -40px)
+      )
+      scale(calc(var(--snow-scale, 1) * 0.82));
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  24% {
+    transform: translate3d(
+        var(--snow-drift-mid, 0px),
+        24vh,
+        calc(var(--snow-depth, -40px) * 0.7)
+      )
+      scale(calc(var(--snow-scale, 1) * 0.9));
+  }
+  49% {
+    transform: translate3d(
+        calc(var(--snow-drift-mid, 0px) + 36px),
+        52vh,
+        calc(var(--snow-depth, -40px) * 0.35)
+      )
+      scale(calc(var(--snow-scale, 1) * 0.98));
+  }
+  74% {
+    transform: translate3d(
+        calc(var(--snow-drift-end, 24px) * 0.72),
+        80vh,
+        calc(var(--snow-depth, -40px) * 0.12)
+      )
+      scale(calc(var(--snow-scale, 1) * 1.05));
+  }
+  100% {
+    transform: translate3d(var(--snow-drift-end, 24px), 118vh, 0)
+      scale(calc(var(--snow-scale, 1) * 1.12));
+    opacity: 0;
+  }
+}
+
 @layer utilities {
+  .hero-snow-layer {
+    mix-blend-mode: normal;
+    perspective: 680px;
+    transform-style: preserve-3d;
+  }
+
+  .hero-snowflake {
+    position: absolute;
+    top: -8%;
+    border-radius: 9999px;
+    background: rgba(236, 145, 161, 0.92);
+    box-shadow: 0 0 10px rgba(236, 145, 161, 0.72);
+    animation-name: heroSnowFall;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    transform-style: preserve-3d;
+    will-change: transform, opacity, filter;
+  }
+
+  .wedding-day-pulse {
+    animation: weddingDayPulse 1.8s ease-in-out infinite;
+    will-change: transform, background-color, box-shadow;
+  }
+
   .music-eq-bar {
     transform-origin: center;
     animation: musicEqPulse 0.9s ease-in-out infinite;
@@ -221,6 +307,17 @@
 
   .music-eq-bar-delay-3 {
     animation-delay: 0.36s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-snowflake {
+    animation: none;
+    opacity: 0;
+  }
+
+  .wedding-day-pulse {
+    animation: none;
   }
 }
 

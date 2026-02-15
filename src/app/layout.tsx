@@ -19,6 +19,12 @@ const crimsonPro = Crimson_Pro({
   display: "swap",
 });
 
+const nanumHyejun = localFont({
+  src: "../../public/fonts/Nanum_HyeJun.ttf",
+  variable: "--font-hyejun",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "김민섭 ♥ 전이서 결혼합니다",
   description: "2025년 3월 1일 토요일 오후 2시 50분",
@@ -52,7 +58,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ko" className={`${tmoneyRoundWind.variable} ${crimsonPro.variable}`}>
+    <html
+      lang="ko"
+      className={`${tmoneyRoundWind.variable} ${crimsonPro.variable} ${nanumHyejun.variable}`}
+    >
       <body className={`${tmoneyRoundWind.className} antialiased bg-[#eee]`}>
         <ScrollResetProvider />
         <OverlayProvider>

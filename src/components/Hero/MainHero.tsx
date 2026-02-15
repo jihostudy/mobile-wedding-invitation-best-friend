@@ -1,7 +1,8 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import type { HeroSectionData, Person } from '@/types';
+import Image from "next/image";
+import type { CSSProperties } from "react";
+import type { HeroSectionData, Person } from "@/types";
 
 interface MainHeroProps {
   section: HeroSectionData;
@@ -11,52 +12,109 @@ interface MainHeroProps {
 
 export default function MainHero({ section, groom, bride }: MainHeroProps) {
   const dateParts = section.dateLine.match(/\d+/g) ?? [];
-  const yearShort = (dateParts[0] ? dateParts[0] : String(new Date().getFullYear())).slice(-2);
-  const month = dateParts[1] ? dateParts[1].padStart(2, '0') : '06';
-  const day = dateParts[2] ? dateParts[2].padStart(2, '0') : '02';
+  const yearShort = (
+    dateParts[0] ? dateParts[0] : String(new Date().getFullYear())
+  ).slice(-2);
+  const month = dateParts[1] ? dateParts[1].padStart(2, "0") : "06";
+  const day = dateParts[2] ? dateParts[2].padStart(2, "0") : "02";
+  const displayDate = `${yearShort}.${month}.${day}`;
+  const snowflakes = Array.from({ length: 26 }, (_, index) => ({
+    id: index,
+    left: ((index * 37) % 100) + ((index % 3) * 2.1),
+    size:
+      2 +
+      (index % 4) * 1.2 +
+      (index % 11 === 0 ? 2.3 : 0) +
+      (index % 17 === 0 ? 1.4 : 0),
+    duration: 8 + (index % 5) * 1.3,
+    delay: (index % 7) * -1.1,
+    driftStart: -110 + (index % 6) * 14,
+    driftMid: 24 + (index % 7) * 18,
+    driftEnd: 96 + (index % 8) * 20,
+    opacity: 0.26 + (index % 5) * 0.08,
+    depth: -120 + (index % 9) * 28,
+    blur: 0.3 + (index % 4) * 0.35,
+    scale: 0.72 + (index % 6) * 0.1,
+    timing:
+      index % 2 === 0
+        ? "cubic-bezier(0.33, 0, 0.67, 1)"
+        : "cubic-bezier(0.24, 0.08, 0.42, 1)",
+  }));
 
   return (
-    <section id="hero" className="sticky top-0 h-[600px] overflow-hidden bg-white">
+    <section
+      id="hero"
+      className="sticky top-0 min-h-[640px] overflow-hidden bg-white"
+    >
       <Image
         src={section.mainImage.url}
         alt={section.mainImage.alt}
         fill
         priority
-        className="object-cover saturate-50 brightness-75 contrast-105"
+        className="object-cover opacity-25 saturate-0 blur-[1px] scale-[1.04]"
         sizes="100vw"
       />
-
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(188,197,224,0.56),rgba(61,66,85,0.48)_58%,rgba(25,27,35,0.62))]" />
-
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(221,232,255,0.2),transparent_55%)]" />
-        <span className="absolute left-[8%] top-[18%] h-2 w-2 rounded-full bg-white/55 blur-[1px]" />
-        <span className="absolute left-[22%] top-[40%] h-1.5 w-1.5 rounded-full bg-white/60" />
-        <span className="absolute right-[18%] top-[33%] h-2 w-2 rounded-full bg-white/45 blur-[1px]" />
-        <span className="absolute right-[28%] bottom-[25%] h-3 w-3 rounded-full bg-lime-200/70 blur-[1px]" />
-        <span className="absolute left-[15%] bottom-[17%] h-3 w-3 rounded-full bg-yellow-200/65 blur-[1px]" />
+      <div className="absolute inset-0 bg-white" />
+      <div className="hero-snow-layer absolute inset-0 z-20 pointer-events-none overflow-hidden">
+        {snowflakes.map((flake) => (
+          <span
+            key={flake.id}
+            className="hero-snowflake"
+            style={
+              {
+                left: `${flake.left}%`,
+                width: `${flake.size}px`,
+                height: `${flake.size}px`,
+                opacity: flake.opacity,
+                animationDuration: `${flake.duration}s`,
+                animationDelay: `${flake.delay}s`,
+                animationTimingFunction: flake.timing,
+                filter: `blur(${flake.blur}px)`,
+                "--snow-drift-start": `${flake.driftStart}px`,
+                "--snow-drift-mid": `${flake.driftMid}px`,
+                "--snow-drift-end": `${flake.driftEnd}px`,
+                "--snow-depth": `${flake.depth}px`,
+                "--snow-scale": `${flake.scale}`,
+              } as CSSProperties
+            }
+          />
+        ))}
       </div>
 
-      <div className="relative z-10 flex h-full flex-col px-5 pb-10 pt-7 text-white safe-top safe-bottom">
-        <div className="flex items-start justify-between">
-          <p className="text-[0.76rem] font-semibold uppercase tracking-[0.12em] text-white/90">SIMPLY</p>
-          <p className="text-[0.76rem] font-semibold uppercase tracking-[0.12em] text-white/90">MEANT</p>
+      <div className="relative z-10 mx-auto flex min-h-[640px] w-full max-w-[425px] flex-col px-6 pb-14 pt-6">
+        <h1 className="sr-only">
+          {groom.name} 그리고 {bride.name} 결혼합니다. {displayDate}
+        </h1>
+
+        <div className="relative z-10 mx-auto mt-3 w-full max-w-[300px]">
+          <div className="relative h-[240px] w-[220px] overflow-hidden rounded-[6px] border border-black/5 shadow-[0_10px_24px_rgba(0,0,0,0.12)]">
+            <Image
+              src="/images/placeholder-couple.svg"
+              alt="신랑 사진 플레이스홀더"
+              fill
+              className="object-cover"
+              sizes="220px"
+            />
+          </div>
+
+          <div className="relative -mt-5 ml-auto h-[215px] w-[235px] overflow-hidden rounded-[6px] border border-black/5 shadow-[0_10px_24px_rgba(0,0,0,0.12)]">
+            <Image
+              src="/images/placeholder-couple.svg"
+              alt="신부 사진 플레이스홀더"
+              fill
+              className="object-cover"
+              sizes="235px"
+            />
+          </div>
         </div>
 
-        <div className="mt-auto mb-[20vh] flex justify-center">
-          <h1 className="sr-only">
-            {groom.name} 그리고 {bride.name}
-          </h1>
-          <p className="w-[180px] text-center text-[7.7rem] font-black leading-[0.74] tracking-[-0.06em] text-white drop-shadow-[0_6px_24px_rgba(0,0,0,0.32)]">
-            <span className="block">{yearShort}</span>
-            <span className="block">{month}</span>
-            <span className="block">{day}</span>
+        <div className="relative z-30 mt-8 ml-6 w-fit text-left text-[#202020]">
+          <p className="font-hyejun ml-14 text-7xl font-medium leading-[0.98] tracking-wider -rotate-[8deg]">
+            결혼합니다
           </p>
-        </div>
-
-        <div className="mt-auto flex items-end justify-between text-white">
-          <p className="text-[1.45rem] font-semibold uppercase tracking-[0.02em]">TO BE</p>
-          <p className="text-[1.45rem] font-semibold uppercase tracking-[0.02em]">TOGETHER</p>
+          <p className="font-hyejun -mt-4 text-4xl ml-56 font-semibold leading-[0.98] tracking-normal -rotate-[8deg]">
+            {displayDate}
+          </p>
         </div>
       </div>
     </section>

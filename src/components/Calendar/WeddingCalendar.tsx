@@ -110,7 +110,7 @@ export default function WeddingCalendar({
                     <span
                       className={`flex h-[40px] w-[40px] items-center justify-center ${
                         isWeddingDay
-                          ? "rounded-full bg-[#ef9ea6] text-white"
+                          ? "wedding-day-pulse rounded-full text-white"
                           : isSunday
                             ? "text-[#d28390]"
                             : "text-[#585858]"
