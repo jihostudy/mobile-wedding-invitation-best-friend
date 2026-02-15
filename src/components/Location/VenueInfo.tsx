@@ -16,7 +16,6 @@ export default function VenueInfo({ section, venue, date }: VenueInfoProps) {
 
   const hasNaverMapKey = Boolean(process.env.NEXT_PUBLIC_NAVER_MAP_CLIENT_ID);
   const mapUrl = `https://map.naver.com/v5/search/${encodeURIComponent(venue.address)}`;
-  const staticMapUrl = `https://staticmap.openstreetmap.de/staticmap.php?center=${venue.coordinates.lat},${venue.coordinates.lng}&zoom=16&size=900x420&maptype=mapnik&markers=${venue.coordinates.lat},${venue.coordinates.lng},lightblue1`;
   const subwayLines = venue.transport?.subwayDetails?.length
     ? venue.transport.subwayDetails
     : (venue.transport?.subway ?? []).map((label, index) => ({
@@ -45,9 +44,20 @@ export default function VenueInfo({ section, venue, date }: VenueInfoProps) {
           <h2 className="mt-3 text-xl text-wedding-brown">{section.title}</h2>
         </div>
 
-        <div className="rounded-2xl border border-wedding-brown/15 bg-white/50 p-6 text-center shadow-sm">
+        <div className="pt-8 pb-4 text-center">
+          <h3 className="text-xl font-semibold text-wedding-brown">
+            {venue.name}
+            {venue.floor ? ` ${venue.floor}` : ""}
+          </h3>
+          <p className="mt-5 text-[15px] text-[#969696]">{venue.address}</p>
+          <p className="mt-4 text-[15px] text-[#5b5b5b]">
+            Tel. {venue.contact ?? "02-000-0000"}
+          </p>
+        </div>
+
+        <div className="text-center shadow-sm">
           {hasNaverMapKey && !isMapLoadFailed && (
-            <div className="mb-5">
+            <div>
               <NaverMap
                 lat={venue.coordinates.lat}
                 lng={venue.coordinates.lng}
@@ -58,32 +68,14 @@ export default function VenueInfo({ section, venue, date }: VenueInfoProps) {
           )}
 
           {(!hasNaverMapKey || isMapLoadFailed) && (
-            <p className="mb-5 rounded-xl border border-wedding-brown/15 bg-wedding-beige/60 px-4 py-3 text-sm text-wedding-brown-light">
-              {!hasNaverMapKey
-                ? "네이버 지도 키가 설정되지 않아 지도 미리보기를 표시할 수 없어요. 아래 버튼에서 네이버지도를 열어주세요."
-                : "지도 정보를 불러오지 못했어요. 아래 버튼에서 네이버지도를 열어주세요."}
-            </p>
+            <div className="px-4 py-6">
+              <p className="rounded-xl border border-wedding-brown/15 bg-wedding-beige/60 px-4 py-3 text-sm text-wedding-brown-light">
+                {!hasNaverMapKey
+                  ? "네이버 지도 키가 설정되지 않아 지도 미리보기를 표시할 수 없어요. 아래 버튼에서 네이버지도를 열어주세요."
+                  : "지도 정보를 불러오지 못했어요. 아래 버튼에서 네이버지도를 열어주세요."}
+              </p>
+            </div>
           )}
-
-          <h3 className="text-xl font-semibold text-wedding-brown">
-            {venue.name}
-            {venue.floor ? ` ${venue.floor}` : ""}
-          </h3>
-          <p className="mt-2 text-[15px] text-wedding-brown-light">
-            {venue.address}
-          </p>
-          <p className="mt-2 text-[15px] text-wedding-brown-light">
-            Tel. {venue.contact ?? "02-000-0000"}
-          </p>
-        </div>
-
-        <div className="mt-8 overflow-hidden border-y border-gray-300/70">
-          <img
-            src={staticMapUrl}
-            alt={`${venue.name} 지도`}
-            className="h-[230px] w-full object-cover"
-            loading="lazy"
-          />
         </div>
 
         <div className="px-8">
@@ -93,7 +85,7 @@ export default function VenueInfo({ section, venue, date }: VenueInfoProps) {
             rel="noopener noreferrer"
             className="mt-6 inline-flex w-full items-center justify-center rounded-xl border border-gray-300 bg-transparent px-6 py-3 text-[15px] font-medium text-wedding-brown"
           >
-            약도 이미지 보기
+            {section.mapCtaLabel}
           </a>
         </div>
 
@@ -125,7 +117,7 @@ export default function VenueInfo({ section, venue, date }: VenueInfoProps) {
         <div className="mx-8 mt-8 border-t border-gray-300/80 pt-8">
           <h4 className="text-base font-semibold text-wedding-brown">버스</h4>
           <div className="mt-4 space-y-2 text-[15px] text-wedding-brown">
-            <p>
+            <p className="flex items-center">
               <span className="mr-2 inline-block h-3.5 w-3.5 rounded-full bg-[#1d3f8a]" />
               간선버스 : {trunkBus}
             </p>

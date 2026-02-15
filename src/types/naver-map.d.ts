@@ -28,6 +28,19 @@ declare namespace naver {
       setMap(map: Map | null): void;
     }
 
+    interface InfoWindowOptions {
+      content?: string;
+      disableAnchor?: boolean;
+      borderWidth?: number;
+      backgroundColor?: string;
+    }
+
+    class InfoWindow {
+      constructor(options?: InfoWindowOptions);
+      open(map: Map, anchor?: Marker): void;
+      close(): void;
+    }
+
     const Position: {
       TOP_RIGHT: number;
     };
