@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import type { FC } from "react";
 import { overlay } from "overlay-kit";
 import RsvpEntryPromptModal from "@/components/Rsvp/RsvpEntryPromptModal";
@@ -41,8 +41,15 @@ function RsvpEntryPromptOverlayView({
   onHideToday,
   onClose,
 }: RsvpEntryPromptOverlayViewProps) {
+  const hasOpenedRef = useRef(false);
+
   useEffect(() => {
-    if (!isOpen) {
+    if (isOpen) {
+      hasOpenedRef.current = true;
+      return;
+    }
+
+    if (hasOpenedRef.current) {
       const timer = window.setTimeout(unmount, ENTRY_PROMPT_EXIT_DURATION_MS);
       return () => window.clearTimeout(timer);
     }
@@ -77,8 +84,15 @@ function RsvpFormOverlayView({
   unmount,
   onComplete,
 }: RsvpFormOverlayViewProps) {
+  const hasOpenedRef = useRef(false);
+
   useEffect(() => {
-    if (!isOpen) {
+    if (isOpen) {
+      hasOpenedRef.current = true;
+      return;
+    }
+
+    if (hasOpenedRef.current) {
       unmount();
     }
   }, [isOpen, unmount]);

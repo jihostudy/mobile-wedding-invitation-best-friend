@@ -83,9 +83,8 @@ export default function RsvpModal({
       role="dialog"
       aria-modal="true"
     >
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
-      <div className="relative mx-auto h-full w-full max-w-[425px]">
-        <div className="modal-scrollbar absolute inset-x-0 bottom-0 max-h-[84dvh] overflow-y-auto rounded-t-2xl bg-white px-5 pb-10 pt-8">
+      <div className="mx-auto h-full w-full max-w-[425px] bg-[#ececec]">
+        <div className="modal-scrollbar h-full overflow-y-auto bg-white px-5 pb-10 pt-8">
         <div className="relative">
           <h3 className="text-center text-xl font-semibold text-[#202020]">
             참석 의사 전달

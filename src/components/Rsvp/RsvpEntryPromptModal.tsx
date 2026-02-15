@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Building2,
@@ -37,25 +36,13 @@ export default function RsvpEntryPromptModal({
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
         >
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
-          <div className="relative mx-auto h-full w-full max-w-[425px] overflow-hidden bg-[#ececec]">
-            <div className="absolute inset-0">
-              <Image
-                src="/images/placeholder-couple.svg"
-                alt="참석 의사 전달 안내 배경 이미지"
-                fill
-                className="object-cover"
-                sizes="(max-width: 425px) 100vw, 425px"
-              />
-              <div className="absolute inset-0 bg-[#8f9bb3]/55" />
-            </div>
-
+          <div className="relative mx-auto h-full w-full max-w-[425px] bg-[#ececec]">
             <motion.div
-              className="modal-scrollbar absolute inset-x-0 bottom-0 z-10 max-h-[85dvh] overflow-y-auto rounded-t-2xl bg-[#f6f4f2] px-8 pb-4 pt-14"
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "100%" }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="modal-scrollbar h-full overflow-y-auto bg-[#f6f4f2] px-8 pb-4 pt-14"
+              initial={{ y: 8, opacity: 0.98 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 8, opacity: 0.98 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
             >
               <button
                 type="button"
@@ -104,14 +91,14 @@ export default function RsvpEntryPromptModal({
                 <button
                   type="button"
                   onClick={onHideToday}
-                  className="h-14 rounded-lg text-sm font-medium text-[#7b7b7b]"
+                  className="h-14 rounded-lg text-sm font-medium text-[#7b7b7b] transition-all duration-200 hover:bg-black/5 hover:font-semibold hover:text-[#4a4a4a] active:scale-[0.99]"
                 >
                   오늘 하루 보지 않기
                 </button>
                 <button
                   type="button"
                   onClick={onOpenRsvp}
-                  className="h-14 rounded-lg border border-[#2f2f2f] text-sm font-semibold text-[#222222]"
+                  className="h-14 rounded-lg border border-[#2f2f2f] text-sm font-semibold text-[#222222] transition-all duration-200 hover:bg-[#2f2f2f] hover:font-bold hover:text-white active:scale-[0.99]"
                 >
                   참석의사 전달하기
                 </button>
