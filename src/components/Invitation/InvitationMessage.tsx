@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Phone } from "lucide-react";
 import ContactModal from "@/components/Contact/ContactModal";
+import FadeInUp from "@/components/common/FadeInUp";
 import Icon from "@/components/common/Icon";
 import type { InvitationSectionData, Person } from "@/types";
 
@@ -36,36 +37,38 @@ export default function InvitationMessage({
 
         <div className="mx-auto h-px w-11 bg-wedding-brown/15" />
 
-        <div className="mx-auto w-fit text-wedding-brown-light">
-          <div className="grid grid-cols-[max-content_max-content] items-baseline gap-x-3 gap-y-3 text-base">
-            <p className="text-right text-wedding-gray font-medium">
-              {groom.parents?.father || "-"} · {groom.parents?.mother || "-"}
-              <span className="text-sm text-wedding-gray-light"> 의 아들</span>
-            </p>
-            <span className="text-right font-semibold text-wedding-brown">
-              {groom.name}
-            </span>
+        <FadeInUp className="space-y-8">
+          <div className="mx-auto w-fit text-wedding-brown-light">
+            <div className="grid grid-cols-[max-content_max-content] items-baseline gap-x-3 gap-y-3 text-base">
+              <p className="text-right text-wedding-gray font-medium">
+                {groom.parents?.father || "-"} · {groom.parents?.mother || "-"}
+                <span className="text-sm text-wedding-gray-light"> 의 아들</span>
+              </p>
+              <span className="text-right font-semibold text-wedding-brown">
+                {groom.name}
+              </span>
 
-            <p className="text-right text-wedding-gray font-medium">
-              {bride.parents?.father || "-"} · {bride.parents?.mother || "-"}
-              <span className="text-sm text-wedding-gray-light"> 의 딸</span>
-            </p>
-            <span className="text-right font-semibold text-wedding-brown">
-              {bride.name}
-            </span>
+              <p className="text-right text-wedding-gray font-medium">
+                {bride.parents?.father || "-"} · {bride.parents?.mother || "-"}
+                <span className="text-sm text-wedding-gray-light"> 의 딸</span>
+              </p>
+              <span className="text-right font-semibold text-wedding-brown">
+                {bride.name}
+              </span>
+            </div>
           </div>
-        </div>
 
-        <div className="flex justify-center rounded-[12px]">
-          <button
-            onClick={() => setIsContactModalOpen(true)}
-            className="inline-flex items-center gap-1.5 rounded-[12px] border border-wedding-brown/25 bg-white/70 px-9 py-3 text-sm font-medium text-wedding-brown transition hover:bg-white"
-            aria-label="연락처 모달 열기"
-          >
-            <Icon icon={Phone} size="sm" className="text-wedding-gray-light" />
-            {section.contactCtaLabel}
-          </button>
-        </div>
+          <div className="flex justify-center rounded-[12px]">
+            <button
+              onClick={() => setIsContactModalOpen(true)}
+              className="inline-flex items-center gap-1.5 rounded-[12px] border border-wedding-brown/25 bg-white/70 px-9 py-3 text-sm font-medium text-wedding-brown transition hover:bg-white"
+              aria-label="연락처 모달 열기"
+            >
+              <Icon icon={Phone} size="sm" className="text-wedding-gray-light" />
+              {section.contactCtaLabel}
+            </button>
+          </div>
+        </FadeInUp>
       </div>
 
       <ContactModal

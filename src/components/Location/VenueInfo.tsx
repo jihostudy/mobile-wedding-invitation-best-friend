@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import FadeInUp from "@/components/common/FadeInUp";
 import NaverMap from "@/components/Location/NaverMap";
 import type { LocationSectionData, Venue, WeddingDate } from "@/types";
 
@@ -81,7 +82,7 @@ export default function VenueInfo({ section, venue, date }: VenueInfoProps) {
           )}
         </div>
 
-        <div className="mx-8 mt-2 pt-8">
+        <FadeInUp className="mx-8 mt-2 pt-8">
           <h4 className="text-base font-medium text-wedding-gray">지하철</h4>
           <div className="mt-4 space-y-2 text-[15px] text-wedding-gray">
             {subwayLines.map((line) => (
@@ -94,17 +95,17 @@ export default function VenueInfo({ section, venue, date }: VenueInfoProps) {
               </p>
             ))}
           </div>
-        </div>
+        </FadeInUp>
 
-        <div className="mx-8 mt-8 border-t border-gray-300/80 pt-8">
+        <FadeInUp className="mx-8 mt-8 border-t border-gray-300/80 pt-8" delay={0.12}>
           <h4 className="text-base font-medium text-wedding-gray">셔틀버스</h4>
           <p className="mt-4 text-[15px] text-wedding-gray">
             {venue.transport?.shuttlePickup ??
               `${date.month}월 ${date.day}일 강남구청역 인근 셔틀 탑승`}
           </p>
-        </div>
+        </FadeInUp>
 
-        <div className="mx-8 mt-8 border-t border-gray-300/80 pt-8">
+        <FadeInUp className="mx-8 mt-8 border-t border-gray-300/80 pt-8" delay={0.24}>
           <h4 className="text-base font-medium text-wedding-gray">버스</h4>
           <div className="mt-4 space-y-2 text-[15px] text-wedding-gray">
             <p className="flex items-center">
@@ -116,7 +117,7 @@ export default function VenueInfo({ section, venue, date }: VenueInfoProps) {
               지선버스 : {branchBus}
             </p>
           </div>
-        </div>
+        </FadeInUp>
       </div>
     </section>
   );

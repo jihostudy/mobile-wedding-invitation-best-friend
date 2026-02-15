@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { Mail, UserRound, X } from "lucide-react";
 import Icon from "@/components/common/Icon";
+import FadeInUp from "@/components/common/FadeInUp";
 import useModalLayer from "@/hooks/useModalLayer";
 import type { InterviewSectionData } from "@/types";
 
@@ -33,24 +34,26 @@ export default function InterviewSection({ section }: InterviewSectionProps) {
             {section.description}
           </p>
 
-          <div className="relative mt-8 h-[210px] w-full overflow-hidden rounded-xl">
-            <Image
-              src={section.image.url}
-              alt={section.image.alt}
-              fill
-              className="object-cover"
-              sizes="(max-width: 425px) 100vw, 425px"
-            />
-          </div>
+          <FadeInUp className="mt-8">
+            <div className="relative h-[210px] w-full overflow-hidden rounded-xl">
+              <Image
+                src={section.image.url}
+                alt={section.image.alt}
+                fill
+                className="object-cover"
+                sizes="(max-width: 425px) 100vw, 425px"
+              />
+            </div>
 
-          <button
-            onClick={() => setIsOpen(true)}
-            className="mt-8 inline-flex items-center justify-center gap-2 rounded-[12px] border border-wedding-brown/25 bg-white/70 px-9 py-3 text-sm font-medium text-wedding-brown transition hover:bg-white"
-            aria-label="신랑 신부 인터뷰 열기"
-          >
-            <Icon icon={Mail} size="md" />
-            {section.buttonLabel}
-          </button>
+            <button
+              onClick={() => setIsOpen(true)}
+              className="mt-8 inline-flex items-center justify-center gap-2 rounded-[12px] border border-wedding-brown/25 bg-white/70 px-9 py-3 text-sm font-medium text-wedding-brown transition hover:bg-white"
+              aria-label="신랑 신부 인터뷰 열기"
+            >
+              <Icon icon={Mail} size="md" />
+              {section.buttonLabel}
+            </button>
+          </FadeInUp>
         </div>
       </section>
 

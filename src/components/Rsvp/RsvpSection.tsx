@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo } from "react";
 import { Armchair } from "lucide-react";
+import FadeInUp from "@/components/common/FadeInUp";
 import Icon from "@/components/common/Icon";
 import {
   openRsvpEntryPromptOverlay,
@@ -79,7 +80,7 @@ export default function RsvpSection({ section }: RsvpSectionProps) {
 
   return (
     <section className="mt-12 rounded-[18px]  px-6 py-14">
-      <div className="mx-auto w-full max-w-md text-center">
+      <FadeInUp className="mx-auto w-full max-w-md text-center">
         <p className="font-crimson text-sm uppercase tracking-[0.33em] text-wedding-brown">
           {section.kicker}
         </p>
@@ -99,7 +100,7 @@ export default function RsvpSection({ section }: RsvpSectionProps) {
           <Icon icon={Armchair} size="sm" className="text-wedding-brown" />
           {section.buttonLabel}
         </button>
-      </div>
+      </FadeInUp>
     </section>
   );
 }

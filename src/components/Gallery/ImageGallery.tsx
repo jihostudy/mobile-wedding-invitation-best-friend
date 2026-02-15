@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { ChevronDown, X } from "lucide-react";
+import FadeInUp from "@/components/common/FadeInUp";
 import Icon from "@/components/common/Icon";
 import Carousel from "@/components/common/Carousel";
 import type { GallerySectionData } from "@/types";
@@ -41,16 +42,16 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
   return (
     <section id="gallery" className="bg-white py-16">
       <div className="mx-auto flex w-full max-w-md flex-col">
-        <div className="mb-8 text-center">
+        <FadeInUp className="mb-8 text-center">
           <p className="font-crimson text-sm uppercase tracking-[0.33em] text-wedding-brown">
             {section.kicker}
           </p>
           <h2 className="mt-3 text-xl tracking-[0.04em] text-wedding-gray-dark">
             {section.title}
           </h2>
-        </div>
+        </FadeInUp>
 
-        <div className="px-[20px] py-[5px]">
+        <FadeInUp className="px-[20px] py-[5px]" delay={0.1}>
           <div className="grid grid-cols-2 gap-2">
             {visibleImages.map((image) => (
               <button
@@ -74,10 +75,10 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
               </button>
             ))}
           </div>
-        </div>
+        </FadeInUp>
 
         {hasMore && (
-          <div className="mt-8 flex justify-center">
+          <FadeInUp className="mt-8 flex justify-center" delay={0.18}>
             <button
               onClick={handleLoadMore}
               className="inline-flex items-center gap-1 text-base font-medium text-wedding-gray-dark"
@@ -86,7 +87,7 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
               더보기
               <Icon icon={ChevronDown} size="sm" />
             </button>
-          </div>
+          </FadeInUp>
         )}
       </div>
 
