@@ -2,16 +2,15 @@
 
 import Image from "next/image";
 import type { CSSProperties } from "react";
-import type { HeroSectionData, Person, WeddingDate } from "@/types";
+import type { Person, WeddingDate } from "@/types";
 
 interface MainHeroProps {
-  section: HeroSectionData;
   groom: Person;
   bride: Person;
   date: WeddingDate;
 }
 
-export default function MainHero({ section, groom, bride, date }: MainHeroProps) {
+export default function MainHero({ groom, bride, date }: MainHeroProps) {
   const yearShort = String(date.year).slice(-2);
   const month = String(date.month).padStart(2, "0");
   const day = String(date.day).padStart(2, "0");
@@ -42,17 +41,8 @@ export default function MainHero({ section, groom, bride, date }: MainHeroProps)
   return (
     <section
       id="hero"
-      className="sticky top-0 min-h-[640px] overflow-hidden bg-white"
+      className="relative min-h-[640px] overflow-hidden bg-white"
     >
-      <Image
-        src={section.mainImage.url}
-        alt={section.mainImage.alt}
-        fill
-        priority
-        className="object-cover opacity-25 saturate-0 blur-[1px] scale-[1.04]"
-        sizes="100vw"
-      />
-      <div className="absolute inset-0 bg-white" />
       <div className="hero-snow-layer absolute inset-0 z-20 pointer-events-none overflow-hidden">
         {snowflakes.map((flake) => (
           <span

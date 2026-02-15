@@ -3,19 +3,20 @@
 import { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 import Icon from "@/components/common/Icon";
-import { createGuestMessage } from "@/lib/supabase";
 import type { GuestMessageInput } from "@/types";
 
 interface GuestbookModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSuccess: () => void;
+  onSubmit: (
+    payload: GuestMessageInput,
+  ) => Promise<{ success: boolean; error?: string }>;
 }
 
 export default function GuestbookModal({
   isOpen,
   onClose,
-  onSuccess,
+  onSubmit,
 }: GuestbookModalProps) {
   const [formData, setFormData] = useState<GuestMessageInput>({
     author: "",
@@ -66,7 +67,7 @@ export default function GuestbookModal({
     }
 
     setIsSubmitting(true);
-    const result = await createGuestMessage(formData);
+    const result = await onSubmit(formData);
     setIsSubmitting(false);
 
     if (!result.success) {
@@ -74,7 +75,6 @@ export default function GuestbookModal({
       return;
     }
 
-    onSuccess();
     onClose();
   };
 

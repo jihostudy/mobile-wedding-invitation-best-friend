@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Circle, CircleCheckBig, CircleX, Minus, Plus, X } from "lucide-react";
 import Icon from "@/components/common/Icon";
+import useModalLayer from "@/hooks/useModalLayer";
+import { useCreateRsvpMutation } from "@/lib/queries/rsvp";
 
 interface RsvpModalProps {
   isOpen: boolean;
@@ -63,6 +65,7 @@ export default function RsvpModal({
   onClose,
   onComplete,
 }: RsvpModalProps) {
+  const createRsvpMutation = useCreateRsvpMutation();
   const [attendStatus, setAttendStatus] = useState<AttendStatus>("available");
   const [side, setSide] = useState<Side>("bride");
   const [name, setName] = useState("");
@@ -72,6 +75,14 @@ export default function RsvpModal({
   const [rideBus, setRideBus] = useState(true);
   const [note, setNote] = useState("");
   const [agreePrivacy, setAgreePrivacy] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+
+  useModalLayer({
+    active: isOpen,
+    onEscape: onClose,
+  });
+
   const canSubmit =
     agreePrivacy && name.trim().length > 0 && contact.trim().length > 0;
 
@@ -123,9 +134,38 @@ export default function RsvpModal({
 
         <form
           className="mt-8 space-y-10"
-          onSubmit={(event) => {
+          onSubmit={async (event) => {
             event.preventDefault();
             if (!canSubmit) return;
+            setSubmitError("");
+            setIsSubmitting(true);
+            const result = await createRsvpMutation
+              .mutateAsync({
+                attendStatus,
+                side,
+                name: name.trim(),
+                contact: contact.trim(),
+                extraCount,
+                eatMeal,
+                rideBus,
+                note: note.trim(),
+                agreePrivacy,
+              })
+              .then(() => ({ success: true as const }))
+              .catch((error: unknown) => ({
+                success: false as const,
+                error:
+                  error instanceof Error
+                    ? error.message
+                    : "참석의사 저장에 실패했습니다.",
+              }));
+            setIsSubmitting(false);
+
+            if (!result.success) {
+              setSubmitError(result.error || "참석의사 저장에 실패했습니다.");
+              return;
+            }
+
             onComplete?.();
             onClose();
           }}
@@ -292,16 +332,20 @@ export default function RsvpModal({
             </span>
           </label>
 
+          {submitError && (
+            <p className="text-xs text-[#d62020]">{submitError}</p>
+          )}
+
           <button
             type="submit"
-            disabled={!canSubmit}
+            disabled={!canSubmit || isSubmitting}
             className={`h-14 w-full rounded-[12px] border text-sm font-semibold ${
-              canSubmit
+              canSubmit && !isSubmitting
                 ? "border-[#2a2a2a] bg-white text-[#1f1f1f]"
                 : "border-[#d6d6d6] bg-[#f2f2f2] text-[#c6c6c6]"
             }`}
           >
-            신랑 & 신부에게 전달하기
+            {isSubmitting ? "전달 중..." : "신랑 & 신부에게 전달하기"}
           </button>
         </form>
         </div>

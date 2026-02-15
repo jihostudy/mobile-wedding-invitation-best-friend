@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { getGuestMessages } from "@/lib/supabase";
+import { useState } from "react";
 import type { GuestMessage } from "@/types";
 import {
   SAMPLE_GUESTBOOK_MESSAGES,
   SNAP_SECTION,
 } from "@/constants/wedding-data";
+import { useCreateGuestMessageMutation, useGuestMessagesQuery } from "@/lib/queries/guest-messages";
 import Carousel from "@/components/common/Carousel";
 import RsvpSection from "@/components/Rsvp/RsvpSection";
 import SnapSection from "@/components/Snap/SnapSection";
@@ -14,22 +14,19 @@ import GuestbookModal from "./GuestbookModal";
 
 export default function Guestbook() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [messages, setMessages] = useState<GuestMessage[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data, isLoading } = useGuestMessagesQuery(true);
+  const createMutation = useCreateGuestMessageMutation();
 
-  useEffect(() => {
-    void loadMessages();
-  }, []);
-
-  const loadMessages = async () => {
-    setLoading(true);
-    const data = await getGuestMessages();
-    const publicMessages = data.filter((message) => message.isPublic);
-    setMessages(
-      publicMessages.length > 0 ? publicMessages : SAMPLE_GUESTBOOK_MESSAGES,
-    );
-    setLoading(false);
-  };
+  const messages: GuestMessage[] =
+    data && data.messages.length > 0
+      ? data.messages.map((message) => ({
+          id: message.id,
+          author: message.author,
+          message: message.message,
+          createdAt: new Date(message.createdAt),
+          isPublic: message.isPublic,
+        }))
+      : SAMPLE_GUESTBOOK_MESSAGES;
 
   const chunkSize = 4;
   const messageSlides: GuestMessage[][] = [];
@@ -64,7 +61,7 @@ export default function Guestbook() {
         )}
 
         <div className="mt-8">
-          {loading ? (
+          {isLoading ? (
             <div className="flex justify-center py-8">
               <div className="spinner h-8 w-8" />
             </div>
@@ -126,7 +123,15 @@ export default function Guestbook() {
       <GuestbookModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onSuccess={loadMessages}
+        onSubmit={async (input) => {
+          const result = await createMutation.mutateAsync(input).then(() => ({
+            success: true as const,
+          })).catch((error: unknown) => ({
+            success: false as const,
+            error: error instanceof Error ? error.message : "오류가 발생했습니다.",
+          }));
+          return result;
+        }}
       />
     </section>
   );

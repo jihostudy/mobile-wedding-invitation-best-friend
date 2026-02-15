@@ -6,6 +6,7 @@ import { ChevronLeft, Upload, X } from "lucide-react";
 import Icon from "@/components/common/Icon";
 import Carousel from "@/components/common/Carousel";
 import useModalLayer from "@/hooks/useModalLayer";
+import { useCreateSnapSubmissionMutation } from "@/lib/queries/snap";
 import type { SnapUploadModalData } from "@/types";
 
 interface SnapUploadModalProps {
@@ -25,11 +26,14 @@ export default function SnapUploadModal({
   onClose,
   section,
 }: SnapUploadModalProps) {
+  const createSnapSubmissionMutation = useCreateSnapSubmissionMutation();
   const [name, setName] = useState("");
   const [images, setImages] = useState<SelectedImage[]>([]);
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
   const [shouldRender, setShouldRender] = useState(isOpen);
   const [isActive, setIsActive] = useState(isOpen);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -82,6 +86,39 @@ export default function SnapUploadModal({
       if (target) URL.revokeObjectURL(target.previewUrl);
       return prev.filter((item) => item.id !== id);
     });
+  };
+
+  const handleSubmit = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    setSubmitError("");
+
+    try {
+      const result = await createSnapSubmissionMutation
+        .mutateAsync({
+          uploaderName: name,
+          files: images.map((item) => item.file),
+          eventSlug: "main",
+        })
+        .then(() => ({ success: true as const }))
+        .catch((error: unknown) => ({
+          success: false as const,
+          error: error instanceof Error ? error.message : "업로드에 실패했습니다.",
+        }));
+
+      if (!result.success) {
+        setSubmitError(result.error || "업로드에 실패했습니다.");
+        return;
+      }
+
+      images.forEach((image) => URL.revokeObjectURL(image.previewUrl));
+      setName("");
+      setImages([]);
+      setPreviewIndex(null);
+      onClose();
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleFiles = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -263,6 +300,25 @@ export default function SnapUploadModal({
         <p className="mt-3 text-right text-[13px] text-[#7f7f7f]">
           {images.length}/{section.maxFiles}장 업로드
         </p>
+
+        {submitError && (
+          <p className="mt-3 text-sm text-[#d62020]">{submitError}</p>
+        )}
+
+        <div className="mt-4">
+          <button
+            type="button"
+            onClick={handleSubmit}
+            disabled={isSubmitting || images.length === 0 || name.trim().length === 0}
+            className={`h-12 w-full rounded-[10px] text-sm font-semibold ${
+              isSubmitting || images.length === 0 || name.trim().length === 0
+                ? "bg-[#ececec] text-[#b1b1b1]"
+                : "bg-[#1f1f1f] text-white"
+            }`}
+          >
+            {isSubmitting ? "업로드 중..." : "업로드 완료"}
+          </button>
+        </div>
 
         <div className="mt-6 space-y-1 pb-8">
           {section.policyLines.map((line, index) => (
