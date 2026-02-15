@@ -147,10 +147,10 @@ export default function SnapSection({ section }: SnapSectionProps) {
         </div>
 
         <p className="mt-9 font-crimson text-sm uppercase tracking-[0.33em] text-wedding-brown">
-          {section.kicker}
+          CAPTURE OUR MOMENTS
         </p>
         <h3 className="mt-3 text-xl tracking-[0.04em] text-wedding-gray-dark">
-          {section.title}
+          스냅
         </h3>
         <p className="mt-8 whitespace-pre-line text-[15px] leading-8 text-wedding-gray">
           {section.description}
@@ -163,12 +163,12 @@ export default function SnapSection({ section }: SnapSectionProps) {
           aria-label="사진 업로드 모달 열기"
         >
           <Icon icon={Camera} size="sm" className="text-wedding-brown" />
-          {section.buttonLabel}
+          사진 업로드
         </button>
 
         <p className="mt-6 text-sm leading-[1.5]">
-          <span className="text-[#a2a2a2]">{section.availableFromLabel} </span>
-          <span className="text-[#b0b0b0]">{section.availableHintLabel}</span>
+          <span className="text-[#a2a2a2]">예식 당일 11:30부터 </span>
+          <span className="text-[#b0b0b0]">업로드 가능합니다.</span>
         </p>
       </FadeInUp>
       <SnapUploadModal

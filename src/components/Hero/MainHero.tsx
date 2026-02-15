@@ -2,21 +2,19 @@
 
 import Image from "next/image";
 import type { CSSProperties } from "react";
-import type { HeroSectionData, Person } from "@/types";
+import type { HeroSectionData, Person, WeddingDate } from "@/types";
 
 interface MainHeroProps {
   section: HeroSectionData;
   groom: Person;
   bride: Person;
+  date: WeddingDate;
 }
 
-export default function MainHero({ section, groom, bride }: MainHeroProps) {
-  const dateParts = section.dateLine.match(/\d+/g) ?? [];
-  const yearShort = (
-    dateParts[0] ? dateParts[0] : String(new Date().getFullYear())
-  ).slice(-2);
-  const month = dateParts[1] ? dateParts[1].padStart(2, "0") : "06";
-  const day = dateParts[2] ? dateParts[2].padStart(2, "0") : "02";
+export default function MainHero({ section, groom, bride, date }: MainHeroProps) {
+  const yearShort = String(date.year).slice(-2);
+  const month = String(date.month).padStart(2, "0");
+  const day = String(date.day).padStart(2, "0");
   const displayDate = `${yearShort}.${month}.${day}`;
   const snowflakes = Array.from({ length: 26 }, (_, index) => ({
     id: index,

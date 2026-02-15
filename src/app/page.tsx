@@ -14,16 +14,19 @@ import {
   HERO_SECTION,
   INVITATION_SECTION,
   INTERVIEW_SECTION,
-  CALENDAR_SECTION,
   GALLERY_SECTION,
-  LOCATION_SECTION,
   ACCOUNT_SECTION,
 } from '@/constants/wedding-data';
 
 export default function HomePage() {
   return (
     <main className="relative mx-auto w-full max-w-[425px] bg-white">
-      <MainHero section={HERO_SECTION} groom={WEDDING_DATA.groom} bride={WEDDING_DATA.bride} />
+      <MainHero
+        section={HERO_SECTION}
+        groom={WEDDING_DATA.groom}
+        bride={WEDDING_DATA.bride}
+        date={WEDDING_DATA.date}
+      />
       <div className="relative z-10 bg-white">
         <FadeInUp delay={0.05} amount={0.15}>
           <InvitationMessage section={INVITATION_SECTION} groom={WEDDING_DATA.groom} bride={WEDDING_DATA.bride} />
@@ -34,13 +37,12 @@ export default function HomePage() {
         </FadeInUp>
         <FadeInUp delay={0.2} amount={0.15}>
           <WeddingCalendar
-            section={CALENDAR_SECTION}
             groom={WEDDING_DATA.groom}
             bride={WEDDING_DATA.bride}
             date={WEDDING_DATA.date}
           />
         </FadeInUp>
-        <VenueInfo section={LOCATION_SECTION} venue={WEDDING_DATA.venue} date={WEDDING_DATA.date} />
+        <VenueInfo venue={WEDDING_DATA.venue} date={WEDDING_DATA.date} />
         <FadeInUp delay={0.3} amount={0.15}>
           <Guestbook />
         </FadeInUp>

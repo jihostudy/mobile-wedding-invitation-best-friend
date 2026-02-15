@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { getGuestMessages } from "@/lib/supabase";
 import type { GuestMessage } from "@/types";
 import {
-  RSVP_SECTION,
   SAMPLE_GUESTBOOK_MESSAGES,
   SNAP_SECTION,
 } from "@/constants/wedding-data";
@@ -120,7 +119,7 @@ export default function Guestbook() {
             </button>
           </div>
         )}
-        <RsvpSection section={RSVP_SECTION} />
+        <RsvpSection />
         <SnapSection section={SNAP_SECTION} />
       </div>
 

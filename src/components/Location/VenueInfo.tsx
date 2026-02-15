@@ -4,15 +4,14 @@ import { useState } from "react";
 
 import FadeInUp from "@/components/common/FadeInUp";
 import NaverMap from "@/components/Location/NaverMap";
-import type { LocationSectionData, Venue, WeddingDate } from "@/types";
+import type { Venue, WeddingDate } from "@/types";
 
 interface VenueInfoProps {
-  section: LocationSectionData;
   venue: Venue;
   date: WeddingDate;
 }
 
-export default function VenueInfo({ section, venue, date }: VenueInfoProps) {
+export default function VenueInfo({ venue, date }: VenueInfoProps) {
   const [isMapLoadFailed, setIsMapLoadFailed] = useState(false);
 
   const hasNaverMapKey = Boolean(process.env.NEXT_PUBLIC_NAVER_MAP_CLIENT_ID);
@@ -39,10 +38,10 @@ export default function VenueInfo({ section, venue, date }: VenueInfoProps) {
       <div className="mx-auto w-full max-w-[425px]">
         <div className="px-8 text-center">
           <p className="font-crimson text-sm uppercase tracking-[0.33em] text-wedding-brown">
-            {section.kicker}
+            LOCATION
           </p>
           <h2 className="mt-3 text-xl tracking-[0.04em] text-wedding-gray-dark">
-            {section.title}
+            오시는 길
           </h2>
         </div>
 

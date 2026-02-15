@@ -44,10 +44,10 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
       <div className="mx-auto flex w-full max-w-md flex-col">
         <FadeInUp className="mb-8 text-center">
           <p className="font-crimson text-sm uppercase tracking-[0.33em] text-wedding-brown">
-            {section.kicker}
+            GALLERY
           </p>
           <h2 className="mt-3 text-xl tracking-[0.04em] text-wedding-gray-dark">
-            {section.title}
+            웨딩 갤러리
           </h2>
         </FadeInUp>
 

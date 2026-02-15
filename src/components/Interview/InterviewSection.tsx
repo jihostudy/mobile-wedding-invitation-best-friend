@@ -25,10 +25,10 @@ export default function InterviewSection({ section }: InterviewSectionProps) {
       <section id="interview" className="bg-white px-6 py-16">
         <div className="mx-auto w-full max-w-md text-center">
           <p className="font-crimson text-sm uppercase tracking-[0.33em] text-wedding-brown">
-            {section.kicker}
+            INTERVIEW
           </p>
           <h2 className="mt-3 text-xl tracking-[0.04em] text-wedding-gray-dark">
-            {section.title}
+            우리 두 사람의 이야기
           </h2>
           <p className="mt-8 whitespace-pre-line text-[15px] leading-8 text-wedding-gray">
             {section.description}
@@ -51,7 +51,7 @@ export default function InterviewSection({ section }: InterviewSectionProps) {
               aria-label="신랑 신부 인터뷰 열기"
             >
               <Icon icon={Mail} size="md" />
-              {section.buttonLabel}
+              신랑 & 신부의 인터뷰 읽어보기
             </button>
           </FadeInUp>
         </div>
@@ -66,11 +66,11 @@ export default function InterviewSection({ section }: InterviewSectionProps) {
         >
           <div
             className="modal-scrollbar mx-auto h-[100dvh] w-full max-w-[425px] overflow-y-auto overscroll-contain bg-[#f7f7f7] px-6 pb-12 pt-6"
-            onClick={(event) => event.stopPropagation()}
+              onClick={(event) => event.stopPropagation()}
           >
             <div className="flex items-center justify-between">
               <h3 className="flex-1 text-center text-lg font-semibold text-wedding-gray-dark">
-                {section.title}
+                우리 두 사람의 이야기
               </h3>
               <button
                 onClick={() => setIsOpen(false)}

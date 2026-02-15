@@ -1,17 +1,15 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import type { CalendarSectionData, Person, WeddingDate } from "@/types";
+import type { Person, WeddingDate } from "@/types";
 
 interface WeddingCalendarProps {
-  section: CalendarSectionData;
   groom: Person;
   bride: Person;
   date: WeddingDate;
 }
 
 export default function WeddingCalendar({
-  section,
   groom,
   bride,
   date,
@@ -83,7 +81,9 @@ export default function WeddingCalendar({
           {date.year}.{String(date.month).padStart(2, "0")}.
           {String(date.day).padStart(2, "0")}
         </p>
-        <p className="mt-2 text-base text-[#3f3f3f]">{section.subtitle}</p>
+        <p className="mt-2 text-base text-[#3f3f3f]">
+          {date.dayOfWeek} {date.time}
+        </p>
 
         <div className="mt-8 border-y border-gray-300/40 px-2 pb-4 pt-6">
           <div className="grid grid-cols-7 text-[14px] text-[#363636]">

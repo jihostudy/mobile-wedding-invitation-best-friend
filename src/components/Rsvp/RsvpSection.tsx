@@ -9,13 +9,8 @@ import {
   openRsvpFormOverlay,
 } from "@/overlays/rsvpOverlay";
 import { WEDDING_DATA } from "@/constants/wedding-data";
-import type { RsvpSectionData } from "@/types";
 
-interface RsvpSectionProps {
-  section: RsvpSectionData;
-}
-
-export default function RsvpSection({ section }: RsvpSectionProps) {
+export default function RsvpSection() {
   const HIDE_KEY = "rsvp_prompt_hide_until";
   const SUBMITTED_KEY = "rsvp_submitted_at";
 
@@ -63,7 +58,7 @@ export default function RsvpSection({ section }: RsvpSectionProps) {
       openRsvpEntryPromptOverlay({
         onHideToday: hidePromptToday,
         onOpenRsvp: openRsvpForm,
-        title: section.title,
+        title: "참석 의사 전달",
         dateLine: entryPromptDateLine,
         venueLine: entryPromptVenueLine,
         addressLine: WEDDING_DATA.venue.address,
@@ -74,7 +69,6 @@ export default function RsvpSection({ section }: RsvpSectionProps) {
     entryPromptVenueLine,
     hidePromptToday,
     openRsvpForm,
-    section.title,
     todayLabel,
   ]);
 
@@ -82,13 +76,13 @@ export default function RsvpSection({ section }: RsvpSectionProps) {
     <section className="mt-12 rounded-[18px]  px-6 py-14">
       <FadeInUp className="mx-auto w-full max-w-md text-center">
         <p className="font-crimson text-sm uppercase tracking-[0.33em] text-wedding-brown">
-          {section.kicker}
+          R.S.V.P.
         </p>
         <h3 className="mt-3 text-xl tracking-[0.04em] text-wedding-gray-dark">
-          {section.title}
+          참석 의사 전달
         </h3>
         <p className="mt-9 whitespace-pre-line text-[15px] leading-8 text-wedding-gray">
-          {section.description}
+          신랑, 신부에게 참석의사를{"\n"}미리 전달할 수 있어요.
         </p>
 
         <button
@@ -98,7 +92,7 @@ export default function RsvpSection({ section }: RsvpSectionProps) {
           aria-label="참석의사 전달 모달 열기"
         >
           <Icon icon={Armchair} size="sm" className="text-wedding-brown" />
-          {section.buttonLabel}
+          참석의사 전달하기
         </button>
       </FadeInUp>
     </section>

@@ -9,10 +9,6 @@ export interface WeddingInfo {
   date: WeddingDate;
   venue: Venue;
   backgroundMusic?: BackgroundMusicConfig;
-  account?: {
-    groom: AccountItem;
-    bride: AccountItem;
-  };
 }
 
 export interface BackgroundMusicConfig {
@@ -102,30 +98,18 @@ export interface AccountGroup {
 }
 
 export interface HeroSectionData {
-  kicker: string;
-  title: string;
-  scriptLine: string;
-  dateLine: string;
-  venueLine: string;
   mainImage: ImageAsset;
 }
 
 export interface InvitationSectionData {
-  kicker: string;
-  title: string;
   message: string;
-  contactCtaLabel: string;
 }
 
 export interface CalendarSectionData {
-  title: string;
-  subtitle: string;
-  monthLabel: string;
+  subtitle?: string;
 }
 
 export interface GallerySectionData {
-  kicker: string;
-  title: string;
   images: GalleryImage[];
 }
 
@@ -138,13 +122,7 @@ export interface SnapImageItem {
 }
 
 export interface SnapSectionData {
-  kicker: string;
-  title: string;
   description: string;
-  buttonLabel: string;
-  comingSoonMessage: string;
-  availableFromLabel: string;
-  availableHintLabel: string;
   images: SnapImageItem[];
   modal: SnapUploadModalData;
 }
@@ -167,11 +145,7 @@ export interface SnapUploadModalData {
 }
 
 export interface RsvpSectionData {
-  kicker: string;
-  title: string;
-  description: string;
-  buttonLabel: string;
-  comingSoonMessage: string;
+  description?: string;
 }
 
 export interface InterviewAnswer {
@@ -186,24 +160,16 @@ export interface InterviewQuestion {
 }
 
 export interface InterviewSectionData {
-  kicker: string;
-  title: string;
   description: string;
   image: ImageAsset;
-  buttonLabel: string;
   questions: InterviewQuestion[];
 }
 
 export interface LocationSectionData {
-  kicker: string;
-  title: string;
-  mapCtaLabel: string;
+  mapCtaLabel?: string;
 }
 
 export interface AccountSectionData {
-  kicker: string;
-  title: string;
-  description: string;
   groups: AccountGroup[];
 }
 

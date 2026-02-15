@@ -1,6 +1,13 @@
 /**
- * 청첩장 정적 데이터
- * 실제 정보로 교체 필요
+ * 청첩장 데이터 원본
+ *
+ * 나는 admin 기능을 만들어서 친구가 이 사이트의 데이터들을 수정할 수 있는 admin 기능을 제공할거야.
+ * 따라서, 동적으로 수정할 수 있는 부분과 수정 불가능한 부분을 잘 나눠서 데이터로 저장해야 한다.
+ *
+ * 원칙:
+ * - 이 파일에는 admin에서 수정할 데이터만 저장한다.
+ * - 섹션 제목/버튼 라벨 같은 고정 UI 문구는 각 컴포넌트 JSX에 둔다.
+ * - 중복 파생 데이터(예: dateLine, title 조합문)는 저장하지 않고 화면에서 조합한다.
  */
 
 import {
@@ -9,16 +16,14 @@ import {
   GuestMessage,
   HeroSectionData,
   InvitationSectionData,
-  CalendarSectionData,
   GallerySectionData,
-  RsvpSectionData,
   SnapSectionData,
   InterviewSectionData,
-  LocationSectionData,
   AccountSectionData,
   FloatingNavItem,
 } from "@/types";
 
+// 1) Core wedding profile
 export const WEDDING_DATA: WeddingInfo = {
   groom: {
     name: "김동현",
@@ -44,13 +49,12 @@ export const WEDDING_DATA: WeddingInfo = {
     day: 20,
     dayOfWeek: "토요일",
     time: "낮 12시 30분",
-    fullDate: new Date(2026, 5, 2, 12, 30), // month는 0부터 시작 (5 = 6월), 12:30
+    fullDate: new Date(2026, 5, 20, 12, 30), // month는 0부터 시작 (5 = 6월)
   },
   venue: {
     name: "루클라비더화이트",
     address: "서울 강남구 논현로 742",
     floor: "2층, 4층",
-
     coordinates: {
       lat: 37.518468,
       lng: 127.029789,
@@ -78,23 +82,34 @@ export const WEDDING_DATA: WeddingInfo = {
     volume: 0.4,
     title: "웨딩 배경음악",
   },
-  account: {
-    groom: {
-      bank: "신한은행",
-      account: "110-123-456789",
-      holder: "김민섭",
-      label: "신랑측",
-    },
-    bride: {
-      bank: "카카오뱅크",
-      account: "3333-01-1234567",
-      holder: "전이서",
-      label: "신부측",
-    },
+};
+
+// 2) Hero
+export const HERO_SECTION: HeroSectionData = {
+  mainImage: {
+    url: "/images/placeholder-couple.svg",
+    alt: `${WEDDING_DATA.groom.name}과 ${WEDDING_DATA.bride.name}의 결혼식`,
   },
 };
 
-export const GALLERY_IMAGES: GalleryImage[] = [
+// 3) Invitation
+export const INVITATION_SECTION: InvitationSectionData = {
+  message: `
+저희 두 사람의 작은 만남이
+사랑의 결실을 이루어
+소중한 결혼식을 올리게 되었습니다.
+
+평생 서로 귀하게 여기며
+첫 마음 그대로 존중하고 배려하며 살겠습니다.
+
+오로지 믿음과 사랑을 약속하는 날
+오셔서 축복해 주시면 더 없는 기쁨으로
+간직하겠습니다.
+`.trim(),
+};
+
+// 4) Gallery
+const GALLERY_IMAGES: GalleryImage[] = [
   {
     id: "1",
     url: "/images/placeholder-couple.svg",
@@ -160,61 +175,119 @@ export const GALLERY_IMAGES: GalleryImage[] = [
   },
 ];
 
-export const MAIN_IMAGE_URL = "/images/placeholder-couple.svg";
-
-export const INVITATION_MESSAGE = `
-저희 두 사람의 작은 만남이
-사랑의 결실을 이루어
-소중한 결혼식을 올리게 되었습니다.
-
-평생 서로 귀하게 여기며
-첫 마음 그대로 존중하고 배려하며 살겠습니다.
-
-오로지 믿음과 사랑을 약속하는 날
-오셔서 축복해 주시면 더 없는 기쁨으로
-간직하겠습니다.
-`.trim();
-
-export const HERO_SECTION: HeroSectionData = {
-  kicker: "THE WEDDING OF",
-  title: `${WEDDING_DATA.groom.name} 그리고 ${WEDDING_DATA.bride.name}`,
-  scriptLine: "We are getting married",
-  dateLine: `${WEDDING_DATA.date.year}년 ${WEDDING_DATA.date.month}월 ${WEDDING_DATA.date.day}일 ${WEDDING_DATA.date.dayOfWeek} ${WEDDING_DATA.date.time}`,
-  venueLine: WEDDING_DATA.venue.name,
-  mainImage: {
-    url: MAIN_IMAGE_URL,
-    alt: `${WEDDING_DATA.groom.name}과 ${WEDDING_DATA.bride.name}의 결혼식`,
-  },
-};
-
-export const INVITATION_SECTION: InvitationSectionData = {
-  kicker: "INVITATION",
-  title: "소중한 분들을 초대합니다",
-  message: INVITATION_MESSAGE,
-  contactCtaLabel: "연락하기",
-};
-
-export const CALENDAR_SECTION: CalendarSectionData = {
-  title: "WEDDING DAY",
-  subtitle: `${WEDDING_DATA.date.dayOfWeek} ${WEDDING_DATA.date.time}`,
-  monthLabel: `${WEDDING_DATA.date.year}.${String(WEDDING_DATA.date.month).padStart(2, "0")}`,
-};
-
 export const GALLERY_SECTION: GallerySectionData = {
-  kicker: "GALLERY",
-  title: "웨딩 갤러리",
   images: GALLERY_IMAGES,
 };
 
+// 5) Interview
+export const INTERVIEW_SECTION: InterviewSectionData = {
+  description: "결혼을 앞두고 저희 두 사람의\n인터뷰를 준비했습니다.",
+  image: {
+    url: "/images/placeholder-couple.svg",
+    alt: "신랑 신부 인터뷰 대표 사진",
+  },
+  questions: [
+    {
+      question: "Q1. 결혼을 앞둔 소감",
+      answers: [
+        {
+          role: "신랑",
+          name: WEDDING_DATA.groom.name,
+          paragraphs: [
+            "드디어 장가갑니다! 먼저 인생에서 가장 큰 결심을 할 수 있게 해준 예비 신부에게 정말 고맙습니다.",
+            "가족이라는 단어를 함께 한다는 것은 정말 설레고 아름다운 일이지만 그만큼 책임감을 더 갖고 살아야겠다고 다짐했습니다.",
+            "저희 부부가 한걸음 한걸음 성장해 나가는 모습을 지켜봐주시고 응원해주세요.",
+          ],
+        },
+        {
+          role: "신부",
+          name: WEDDING_DATA.bride.name,
+          paragraphs: [
+            "오래된 연인에서 이제는 서로의 부부가 되기로 약속했습니다.",
+            "아직은 남자친구라는 말이 더 익숙하지만, 그동안 제 옆을 든든하게 지켜주면서 큰 행복을 준 예비 신랑에게 고맙습니다.",
+            "이제는 저의 평생의 반려자가 될 신랑에게 좋은 아내로서 더욱 배려하며 큰 힘이 되는 존재로 살겠습니다.",
+          ],
+        },
+      ],
+    },
+    {
+      question: "Q2. 앞으로의 우리",
+      answers: [
+        {
+          role: "신랑",
+          name: WEDDING_DATA.groom.name,
+          paragraphs: [
+            "서로의 다름을 존중하면서 같은 방향을 바라보는 부부가 되고 싶습니다.",
+            "사소한 일상에서도 감사함을 잊지 않고, 웃음이 많은 가정을 만들어가겠습니다.",
+          ],
+        },
+        {
+          role: "신부",
+          name: WEDDING_DATA.bride.name,
+          paragraphs: [
+            "서로에게 가장 편안한 쉼이 되는 사람이 되고 싶습니다.",
+            "좋은 날도 어려운 날도 손을 놓지 않고, 함께 성장하는 부부로 살아가겠습니다.",
+          ],
+        },
+      ],
+    },
+  ],
+};
+
+// 6) Account
+export const ACCOUNT_SECTION: AccountSectionData = {
+  groups: [
+    {
+      id: "groom",
+      label: "신랑측",
+      accounts: [
+        {
+          holder: WEDDING_DATA.groom.name,
+          bank: "신한은행",
+          account: "110-123-456789",
+          kakaoPayLink: "https://pay.kakao.com",
+        },
+        {
+          holder: WEDDING_DATA.groom.parents?.father || "신랑 아버지",
+          bank: "우리은행",
+          account: "110-000-000001",
+        },
+        {
+          holder: WEDDING_DATA.groom.parents?.mother || "신랑 어머니",
+          bank: "국민은행",
+          account: "110-000-000002",
+        },
+      ],
+    },
+    {
+      id: "bride",
+      label: "신부측",
+      accounts: [
+        {
+          holder: WEDDING_DATA.bride.name,
+          bank: "카카오뱅크",
+          account: "3333-01-1234567",
+          kakaoPayLink: "https://pay.kakao.com",
+        },
+        {
+          holder: WEDDING_DATA.bride.parents?.father || "신부 아버지",
+          bank: "토스뱅크",
+          account: "110-000-000004",
+        },
+        {
+          holder: WEDDING_DATA.bride.parents?.mother || "신부 어머니",
+          bank: "카카오뱅크",
+          account: "110-000-000005",
+        },
+      ],
+    },
+  ],
+};
+
+// 7) RSVP + Snap
 export const SNAP_SECTION: SnapSectionData = {
-  kicker: "CAPTURE OUR MOMENTS",
-  title: "스냅",
   description:
     "신랑신부의 행복한 순간을 담아주세요.\n예식 당일, 아래 버튼을 통해 사진을 올려주세요.\n많은 참여 부탁드려요!",
-  buttonLabel: "사진 업로드",
-  comingSoonMessage: "",
-  availableFromLabel: "예식 당일 11:30부터",
-  availableHintLabel: "업로드 가능합니다.",
   images: [
     {
       id: "snap-1",
@@ -271,130 +344,6 @@ export const SNAP_SECTION: SnapSectionData = {
       "업로드는 예식 당일부터 다음날까지 가능합니다.",
     ],
   },
-};
-
-export const RSVP_SECTION: RsvpSectionData = {
-  kicker: "R.S.V.P.",
-  title: "참석 의사 전달",
-  description: "신랑, 신부에게 참석의사를\n미리 전달할 수 있어요.",
-  buttonLabel: "참석의사 전달하기",
-  comingSoonMessage: "참석의사 전달 기능은 준비 중입니다.",
-};
-
-export const INTERVIEW_SECTION: InterviewSectionData = {
-  kicker: "INTERVIEW",
-  title: "우리 두 사람의 이야기",
-  description: "결혼을 앞두고 저희 두 사람의\n인터뷰를 준비했습니다.",
-  image: {
-    url: MAIN_IMAGE_URL,
-    alt: "신랑 신부 인터뷰 대표 사진",
-  },
-  buttonLabel: "신랑 & 신부의 인터뷰 읽어보기",
-  questions: [
-    {
-      question: "Q1. 결혼을 앞둔 소감",
-      answers: [
-        {
-          role: "신랑",
-          name: WEDDING_DATA.groom.name,
-          paragraphs: [
-            "드디어 장가갑니다! 먼저 인생에서 가장 큰 결심을 할 수 있게 해준 예비 신부에게 정말 고맙습니다.",
-            "가족이라는 단어를 함께 한다는 것은 정말 설레고 아름다운 일이지만 그만큼 책임감을 더 갖고 살아야겠다고 다짐했습니다.",
-            "저희 부부가 한걸음 한걸음 성장해 나가는 모습을 지켜봐주시고 응원해주세요.",
-          ],
-        },
-        {
-          role: "신부",
-          name: WEDDING_DATA.bride.name,
-          paragraphs: [
-            "오래된 연인에서 이제는 서로의 부부가 되기로 약속했습니다.",
-            "아직은 남자친구라는 말이 더 익숙하지만, 그동안 제 옆을 든든하게 지켜주면서 큰 행복을 준 예비 신랑에게 고맙습니다.",
-            "이제는 저의 평생의 반려자가 될 신랑에게 좋은 아내로서 더욱 배려하며 큰 힘이 되는 존재로 살겠습니다.",
-          ],
-        },
-      ],
-    },
-    {
-      question: "Q2. 앞으로의 우리",
-      answers: [
-        {
-          role: "신랑",
-          name: WEDDING_DATA.groom.name,
-          paragraphs: [
-            "서로의 다름을 존중하면서 같은 방향을 바라보는 부부가 되고 싶습니다.",
-            "사소한 일상에서도 감사함을 잊지 않고, 웃음이 많은 가정을 만들어가겠습니다.",
-          ],
-        },
-        {
-          role: "신부",
-          name: WEDDING_DATA.bride.name,
-          paragraphs: [
-            "서로에게 가장 편안한 쉼이 되는 사람이 되고 싶습니다.",
-            "좋은 날도 어려운 날도 손을 놓지 않고, 함께 성장하는 부부로 살아가겠습니다.",
-          ],
-        },
-      ],
-    },
-  ],
-};
-
-export const LOCATION_SECTION: LocationSectionData = {
-  kicker: "LOCATION",
-  title: "오시는 길",
-  mapCtaLabel: "네이버지도에서 보기",
-};
-
-export const ACCOUNT_SECTION: AccountSectionData = {
-  kicker: "ACCOUNT",
-  title: "마음 전하실 곳",
-  description:
-    "참석이 어려우신 분들을 위해\n계좌번호를 기재하였습니다.\n너그러운 마음으로 양해 부탁드립니다.",
-  groups: [
-    {
-      id: "groom",
-      label: "신랑측",
-      accounts: [
-        {
-          holder: WEDDING_DATA.groom.name,
-          bank: WEDDING_DATA.account?.groom.bank || "신한은행",
-          account: WEDDING_DATA.account?.groom.account || "110-000-000000",
-          kakaoPayLink: "https://pay.kakao.com",
-        },
-        {
-          holder: WEDDING_DATA.groom.parents?.father || "신랑 아버지",
-          bank: "우리은행",
-          account: "110-000-000001",
-        },
-        {
-          holder: WEDDING_DATA.groom.parents?.mother || "신랑 어머니",
-          bank: "국민은행",
-          account: "110-000-000002",
-        },
-      ],
-    },
-    {
-      id: "bride",
-      label: "신부측",
-      accounts: [
-        {
-          holder: WEDDING_DATA.bride.name,
-          bank: WEDDING_DATA.account?.bride.bank || "하나은행",
-          account: WEDDING_DATA.account?.bride.account || "110-000-000003",
-          kakaoPayLink: "https://pay.kakao.com",
-        },
-        {
-          holder: WEDDING_DATA.bride.parents?.father || "신부 아버지",
-          bank: "토스뱅크",
-          account: "110-000-000004",
-        },
-        {
-          holder: WEDDING_DATA.bride.parents?.mother || "신부 어머니",
-          bank: "카카오뱅크",
-          account: "110-000-000005",
-        },
-      ],
-    },
-  ],
 };
 
 export const FLOATING_NAV_ITEMS: FloatingNavItem[] = [
