@@ -26,6 +26,12 @@ const nanumHyejun = localFont({
   display: "swap",
 });
 
+const pretendard = localFont({
+  src: "../../public/fonts/PretendardVariable.ttf",
+  variable: "--font-pretendard",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "김민섭 ♥ 전이서 결혼합니다",
   description: "2025년 3월 1일 토요일 오후 2시 50분",
@@ -61,16 +67,16 @@ export default function RootLayout({
   return (
     <html
       lang="ko"
-      className={`${tmoneyRoundWind.variable} ${crimsonPro.variable} ${nanumHyejun.variable}`}
+      className={`${tmoneyRoundWind.variable} ${crimsonPro.variable} ${nanumHyejun.variable} ${pretendard.variable}`}
     >
       <body
         className={`${tmoneyRoundWind.className} antialiased bg-wedding-beige-dark`}
       >
         <QueryProvider>
           <ScrollResetProvider />
-          <OverlayProvider>
-            <ToastProvider>{children}</ToastProvider>
-          </OverlayProvider>
+          <ToastProvider>
+            <OverlayProvider>{children}</OverlayProvider>
+          </ToastProvider>
         </QueryProvider>
       </body>
     </html>

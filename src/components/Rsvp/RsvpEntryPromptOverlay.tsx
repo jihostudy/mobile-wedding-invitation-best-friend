@@ -10,6 +10,7 @@ import {
   X,
 } from "lucide-react";
 import Icon from "@/components/common/Icon";
+import useModalLayer from "@/hooks/useModalLayer";
 import useKeyPressCallback from "@/hooks/useKeyPressCallback";
 
 interface RsvpEntryPromptOverlayProps {
@@ -37,6 +38,10 @@ export default function RsvpEntryPromptOverlay({
     key: "Escape",
     enabled: isOpen,
     callback: onClose,
+  });
+  useModalLayer({
+    active: isOpen,
+    onEscape: onClose,
   });
 
   return (

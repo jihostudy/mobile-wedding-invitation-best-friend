@@ -8,11 +8,13 @@ import {
   useGuestMessagesQuery,
 } from "@/lib/queries/guest-messages";
 import Carousel from "@/components/common/Carousel";
+import useToast from "@/components/common/toast/useToast";
 import RsvpSection from "@/components/Rsvp/RsvpSection";
 import SnapSection from "@/components/Snap/SnapSection";
 import GuestbookModal from "./GuestbookModal";
 
 export default function Guestbook() {
+  const toast = useToast();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { data, isLoading } = useGuestMessagesQuery(true);
   const createMutation = useCreateGuestMessageMutation();
@@ -132,6 +134,9 @@ export default function Guestbook() {
               error:
                 error instanceof Error ? error.message : "오류가 발생했습니다.",
             }));
+          if (result.success) {
+            toast.success("작성되었습니다");
+          }
           return result;
         }}
       />

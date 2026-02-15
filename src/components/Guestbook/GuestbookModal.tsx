@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 import Icon from "@/components/common/Icon";
+import useModalLayer from "@/hooks/useModalLayer";
 import type { GuestMessageInput } from "@/types";
 
 interface GuestbookModalProps {
@@ -29,28 +30,19 @@ export default function GuestbookModal({
   const canSubmit =
     formData.author.trim().length > 0 && formData.message.trim().length > 0;
 
+  useModalLayer({
+    active: isOpen,
+    onEscape: onClose,
+  });
+
   useEffect(() => {
     if (!isOpen) {
-      document.body.style.overflow = "unset";
       setFormData({ author: "", message: "", isPublic: true });
       setErrorMessage("");
       return;
     }
 
-    document.body.style.overflow = "hidden";
     closeButtonRef.current?.focus();
-
-    const handleEsc = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        onClose();
-      }
-    };
-
-    window.addEventListener("keydown", handleEsc);
-    return () => {
-      document.body.style.overflow = "unset";
-      window.removeEventListener("keydown", handleEsc);
-    };
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
@@ -82,13 +74,13 @@ export default function GuestbookModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/65 p-4 backdrop-blur-sm"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
     >
       <div
-        className="w-full max-w-md overflow-hidden rounded-xl bg-white"
+        className="max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto rounded-xl bg-white"
         onClick={(event) => event.stopPropagation()}
       >
         <div className="relative px-6 pb-4 pt-6">

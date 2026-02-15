@@ -31,7 +31,7 @@ export default function ToastViewport({ toasts }: ToastViewportProps) {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 8 }}
           transition={{ duration: 0.2, ease: "easeOut" }}
-          className={`rounded-xl border px-4 py-3 text-sm shadow-lg backdrop-blur-sm ${variantClassMap[toast.variant]}`}
+          className={`rounded-xl border px-4 py-3 text-center text-sm shadow-lg backdrop-blur-sm ${variantClassMap[toast.variant]}`}
         >
           {toast.message}
         </motion.div>

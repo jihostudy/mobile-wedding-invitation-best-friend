@@ -23,6 +23,7 @@ const config: Config = {
       fontFamily: {
         sans: ["var(--fontc-tmoney)", "sans-serif"],
         crimson: ["var(--font-crimson)", "serif"],
+        pretendard: ["var(--font-pretendard)", "sans-serif"],
       },
       animation: {
         "fade-in": "fadeIn 0.8s ease-in-out",
