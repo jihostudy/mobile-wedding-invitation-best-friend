@@ -5,7 +5,6 @@ import {
   HERO_SECTION,
   INTERVIEW_SECTION,
   INVITATION_SECTION,
-  SAMPLE_GUESTBOOK_MESSAGES,
   SNAP_SECTION,
   WEDDING_DATA,
 } from '@/constants/wedding-data';
@@ -20,5 +19,4 @@ export const FALLBACK_WEDDING_CONTENT: WeddingContentV1 = {
   accountSection: ACCOUNT_SECTION,
   snapSection: SNAP_SECTION,
   floatingNavItems: FLOATING_NAV_ITEMS,
-  sampleGuestbookMessages: SAMPLE_GUESTBOOK_MESSAGES,
 };

@@ -137,16 +137,7 @@ const weddingContentSchema = z.object({
     }),
   }),
   floatingNavItems: z.array(z.object({ id: z.string(), label: z.string() })),
-  sampleGuestbookMessages: z.array(
-    z.object({
-      id: z.string(),
-      author: z.string(),
-      message: z.string(),
-      createdAt: z.union([z.string(), z.date()]),
-      isPublic: z.boolean(),
-    }),
-  ),
-});
+}).strict();
 
 export function parseWeddingContent(input: unknown): WeddingContentV1 {
   return weddingContentSchema.parse(input) as WeddingContentV1;

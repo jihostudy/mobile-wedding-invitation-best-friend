@@ -222,7 +222,6 @@ export interface WeddingContentV1 {
   accountSection: AccountSectionData;
   snapSection: SnapSectionData;
   floatingNavItems: FloatingNavItem[];
-  sampleGuestbookMessages: GuestMessage[];
 }
 
 export interface WeddingContentResponse {

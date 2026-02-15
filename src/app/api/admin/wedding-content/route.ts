@@ -38,6 +38,10 @@ export async function PATCH(request: NextRequest) {
     });
   }
 
+  if (!result.success && result.code === 'VALIDATION_ERROR') {
+    return fail(400, 'VALIDATION_ERROR', result.message, result.details);
+  }
+
   if (!result.success) {
     return fail(500, result.code, result.message);
   }

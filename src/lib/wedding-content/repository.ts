@@ -44,7 +44,28 @@ export async function updateWeddingContent(params: {
   slug: string;
   expectedVersion: number;
   content: WeddingContentV1;
-}): Promise<{ success: true; version: number } | { success: false; code: 'VERSION_CONFLICT' | 'UPDATE_FAILED'; latestVersion?: number; message: string; }> {
+}): Promise<
+  | { success: true; version: number }
+  | {
+      success: false;
+      code: 'VERSION_CONFLICT' | 'UPDATE_FAILED' | 'VALIDATION_ERROR';
+      latestVersion?: number;
+      message: string;
+      details?: unknown;
+    }
+> {
+  let validatedContent: WeddingContentV1;
+  try {
+    validatedContent = parseWeddingContent(params.content);
+  } catch (error) {
+    return {
+      success: false,
+      code: 'VALIDATION_ERROR',
+      message: 'Invalid wedding content payload',
+      details: error,
+    };
+  }
+
   const supabase = createServerSupabaseClient({ serviceRole: true });
 
   const { data: current, error: readError } = await supabase
@@ -74,7 +95,7 @@ export async function updateWeddingContent(params: {
       {
         slug: params.slug,
         version: nextVersion,
-        content: params.content,
+        content: validatedContent,
       },
     ], { onConflict: 'slug' });
 

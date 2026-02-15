@@ -13,12 +13,5 @@ export function toViewWeddingContent(content: WeddingContentV1): WeddingContentV
         fullDate: convertedDate,
       },
     },
-    sampleGuestbookMessages: content.sampleGuestbookMessages.map((message) => ({
-      ...message,
-      createdAt:
-        typeof message.createdAt === 'string'
-          ? new Date(message.createdAt)
-          : message.createdAt,
-    })),
   };
 }

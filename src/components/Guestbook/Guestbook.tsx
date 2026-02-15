@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import type { GuestMessage } from "@/types";
+import { SNAP_SECTION } from "@/constants/wedding-data";
 import {
-  SAMPLE_GUESTBOOK_MESSAGES,
-  SNAP_SECTION,
-} from "@/constants/wedding-data";
-import { useCreateGuestMessageMutation, useGuestMessagesQuery } from "@/lib/queries/guest-messages";
+  useCreateGuestMessageMutation,
+  useGuestMessagesQuery,
+} from "@/lib/queries/guest-messages";
 import Carousel from "@/components/common/Carousel";
 import RsvpSection from "@/components/Rsvp/RsvpSection";
 import SnapSection from "@/components/Snap/SnapSection";
@@ -26,7 +26,7 @@ export default function Guestbook() {
           createdAt: new Date(message.createdAt),
           isPublic: message.isPublic,
         }))
-      : SAMPLE_GUESTBOOK_MESSAGES;
+      : [];
 
   const chunkSize = 4;
   const messageSlides: GuestMessage[][] = [];
@@ -39,15 +39,17 @@ export default function Guestbook() {
     <section id="guestbook" className="bg-white px-6 py-16">
       <div className="mx-auto w-full max-w-md">
         <div className="text-center">
-          <p className="font-crimson text-sm uppercase tracking-[0.33em] text-wedding-brown-light/70">
+          <p className="font-crimson text-sm uppercase tracking-[0.33em] text-wedding-brown">
             GUESTBOOK
           </p>
-          <h2 className="mt-3 text-xl text-wedding-brown">방명록</h2>
+          <h2 className="mt-3 text-xl tracking-[0.04em] text-wedding-gray-dark">
+            방명록
+          </h2>
         </div>
 
         {!hasMessages && (
           <div className="mt-7 rounded-2xl border border-wedding-brown/10 bg-white/50 p-6 text-wedding-brown">
-            <p className="leading-7">
+            <p className="whitespace-pre-line leading-7 text-wedding-gray text-sm">
               결혼을 진심으로 축하해 주시는 모든 마음에 감사드립니다. 두
               사람에게 따뜻한 한 마디를 남겨주세요.
             </p>
@@ -99,11 +101,7 @@ export default function Guestbook() {
                 </div>
               )}
             />
-          ) : (
-            <div className="rounded-xl border border-wedding-brown/15 bg-[#f7f7f7] p-4 text-center text-sm text-wedding-brown-light">
-              아직 공개된 방명록이 없습니다.
-            </div>
-          )}
+          ) : null}
         </div>
 
         {hasMessages && (
@@ -124,12 +122,16 @@ export default function Guestbook() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={async (input) => {
-          const result = await createMutation.mutateAsync(input).then(() => ({
-            success: true as const,
-          })).catch((error: unknown) => ({
-            success: false as const,
-            error: error instanceof Error ? error.message : "오류가 발생했습니다.",
-          }));
+          const result = await createMutation
+            .mutateAsync(input)
+            .then(() => ({
+              success: true as const,
+            }))
+            .catch((error: unknown) => ({
+              success: false as const,
+              error:
+                error instanceof Error ? error.message : "오류가 발생했습니다.",
+            }));
           return result;
         }}
       />
