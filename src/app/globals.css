@@ -187,3 +187,34 @@
   animation: fadeInUp 0.8s ease-out;
 }
 
+@keyframes musicEqPulse {
+  0%,
+  100% {
+    transform: scaleY(0.45);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+@layer utilities {
+  .music-eq-bar {
+    transform-origin: center;
+    animation: musicEqPulse 0.9s ease-in-out infinite;
+  }
+
+  .music-eq-bar-delay-1 {
+    animation-delay: 0.12s;
+  }
+
+  .music-eq-bar-delay-2 {
+    animation-delay: 0.24s;
+  }
+
+  .music-eq-bar-delay-3 {
+    animation-delay: 0.36s;
+  }
+}
+

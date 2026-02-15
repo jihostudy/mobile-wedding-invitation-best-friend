@@ -68,6 +68,14 @@ export const WEDDING_DATA: WeddingInfo = {
       shuttlePickup: "학동역 8번 출구 앞 셔틀 탑승",
     },
   },
+  backgroundMusic: {
+    enabled: true,
+    src: "/audio/sound_test.mp3",
+    autoplay: false,
+    loop: true,
+    volume: 0.4,
+    title: "웨딩 배경음악",
+  },
   account: {
     groom: {
       bank: "신한은행",

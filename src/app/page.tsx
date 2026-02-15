@@ -1,4 +1,5 @@
 import MainHero from '@/components/Hero/MainHero';
+import BackgroundMusicPlayer from '@/components/Audio/BackgroundMusicPlayer';
 import InvitationMessage from '@/components/Invitation/InvitationMessage';
 import InterviewSection from '@/components/Interview/InterviewSection';
 import WeddingCalendar from '@/components/Calendar/WeddingCalendar';
@@ -37,6 +38,7 @@ export default function HomePage() {
         <AccountSection section={ACCOUNT_SECTION} />
         <FinalThanksSection />
       </div>
+      <BackgroundMusicPlayer config={WEDDING_DATA.backgroundMusic} />
     </main>
   );
 }

@@ -8,10 +8,20 @@ export interface WeddingInfo {
   bride: Person;
   date: WeddingDate;
   venue: Venue;
+  backgroundMusic?: BackgroundMusicConfig;
   account?: {
     groom: AccountItem;
     bride: AccountItem;
   };
+}
+
+export interface BackgroundMusicConfig {
+  enabled: boolean;
+  src?: string;
+  volume?: number;
+  loop?: boolean;
+  autoplay?: boolean;
+  title?: string;
 }
 
 export interface Person {
