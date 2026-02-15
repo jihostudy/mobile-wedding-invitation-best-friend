@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { ChevronUp, Copy, MessageCircle } from "lucide-react";
 import Icon from "@/components/common/Icon";
 import useToast from "@/components/common/toast/useToast";
@@ -72,14 +73,34 @@ export default function AccountSection({ section }: AccountSectionProps) {
                   </span>
                 </button>
 
-                {openGroups[group.id] && (
+                <motion.div
+                  initial={false}
+                  animate={
+                    openGroups[group.id]
+                      ? { height: "auto", opacity: 1 }
+                      : { height: 0, opacity: 0 }
+                  }
+                  transition={{
+                    height: {
+                      duration: 0.34,
+                      ease: [0.22, 1, 0.36, 1],
+                    },
+                    opacity: {
+                      duration: 0.22,
+                      ease: "easeOut",
+                    },
+                  }}
+                  style={{ willChange: "height, opacity" }}
+                  className="overflow-hidden"
+                  aria-hidden={!openGroups[group.id]}
+                >
                   <div className="border-t border-gray-200 bg-white">
                     {group.accounts.map((account, index) => {
                       const rowKey = `${group.id}-${index}`;
                       return (
                         <div
                           key={rowKey}
-                          className={`flex items-center justify-between px-5 py-4`}
+                          className="flex items-center justify-between px-5 py-4"
                         >
                           <div className="flex flex-col gap-2">
                             <button
@@ -118,7 +139,7 @@ export default function AccountSection({ section }: AccountSectionProps) {
                       );
                     })}
                   </div>
-                )}
+                </motion.div>
               </div>
             ))
           )}
