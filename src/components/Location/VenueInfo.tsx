@@ -15,7 +15,6 @@ export default function VenueInfo({ section, venue, date }: VenueInfoProps) {
   const [isMapLoadFailed, setIsMapLoadFailed] = useState(false);
 
   const hasNaverMapKey = Boolean(process.env.NEXT_PUBLIC_NAVER_MAP_CLIENT_ID);
-  const mapUrl = `https://map.naver.com/v5/search/${encodeURIComponent(venue.address)}`;
   const subwayLines = venue.transport?.subwayDetails?.length
     ? venue.transport.subwayDetails
     : (venue.transport?.subway ?? []).map((label, index) => ({
@@ -76,17 +75,6 @@ export default function VenueInfo({ section, venue, date }: VenueInfoProps) {
               </p>
             </div>
           )}
-        </div>
-
-        <div className="px-8">
-          <a
-            href={mapUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-6 inline-flex w-full items-center justify-center rounded-xl border border-gray-300 bg-transparent px-6 py-3 text-[15px] font-medium text-wedding-brown"
-          >
-            {section.mapCtaLabel}
-          </a>
         </div>
 
         <div className="mx-8 mt-2 pt-8">

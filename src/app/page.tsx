@@ -7,7 +7,6 @@ import VenueInfo from '@/components/Location/VenueInfo';
 import Guestbook from '@/components/Guestbook/Guestbook';
 import AccountSection from '@/components/Account/AccountSection';
 import FinalThanksSection from '@/components/Closing/FinalThanksSection';
-import FloatingNav from '@/components/Navigation/FloatingNav';
 import {
   WEDDING_DATA,
   HERO_SECTION,
@@ -17,7 +16,6 @@ import {
   GALLERY_SECTION,
   LOCATION_SECTION,
   ACCOUNT_SECTION,
-  FLOATING_NAV_ITEMS,
 } from '@/constants/wedding-data';
 
 export default function HomePage() {
@@ -38,7 +36,6 @@ export default function HomePage() {
         <Guestbook />
         <AccountSection section={ACCOUNT_SECTION} />
         <FinalThanksSection />
-        <FloatingNav items={FLOATING_NAV_ITEMS} />
       </div>
     </main>
   );

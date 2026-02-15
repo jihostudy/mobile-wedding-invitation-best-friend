@@ -4,14 +4,15 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { ChevronDown, X } from "lucide-react";
 import Icon from "@/components/common/Icon";
-import type { GalleryImage, GallerySectionData } from "@/types";
+import Carousel from "@/components/common/Carousel";
+import type { GallerySectionData } from "@/types";
 
 interface ImageGalleryProps {
   section: GallerySectionData;
 }
 
 export default function ImageGallery({ section }: ImageGalleryProps) {
-  const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [visibleCount, setVisibleCount] = useState(6);
   const visibleImages = section.images.slice(0, visibleCount);
   const hasMore = visibleCount < section.images.length;
@@ -21,12 +22,12 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
   };
 
   useEffect(() => {
-    if (!selectedImage) return;
+    if (selectedIndex === null) return;
 
     document.body.style.overflow = "hidden";
     const onEsc = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        setSelectedImage(null);
+        setSelectedIndex(null);
       }
     };
 
@@ -35,7 +36,7 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
       document.body.style.overflow = "unset";
       window.removeEventListener("keydown", onEsc);
     };
-  }, [selectedImage]);
+  }, [selectedIndex]);
 
   return (
     <section id="gallery" className="bg-white py-16">
@@ -55,7 +56,12 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
               <button
                 key={image.id}
                 className="relative aspect-square w-full overflow-hidden rounded-md text-left"
-                onClick={() => setSelectedImage(image)}
+                onClick={() => {
+                  const index = section.images.findIndex(
+                    (galleryImage) => galleryImage.id === image.id,
+                  );
+                  setSelectedIndex(index >= 0 ? index : 0);
+                }}
                 aria-label={`${image.alt} 크게 보기`}
               >
                 <Image
@@ -84,10 +90,10 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
         )}
       </div>
 
-      {selectedImage && (
+      {selectedIndex !== null && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4"
-          onClick={() => setSelectedImage(null)}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+          onClick={() => setSelectedIndex(null)}
           role="dialog"
           aria-modal="true"
         >
@@ -96,19 +102,33 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
             onClick={(event) => event.stopPropagation()}
           >
             <button
-              onClick={() => setSelectedImage(null)}
+              onClick={() => setSelectedIndex(null)}
               className="absolute right-3 top-3 z-10 rounded-full bg-black/40 p-2"
               aria-label="갤러리 확대 닫기"
             >
               <Icon icon={X} size="md" className="text-white" />
             </button>
-            <Image
-              src={selectedImage.url}
-              alt={selectedImage.alt}
-              fill
-              className="object-contain"
-              sizes="90vw"
-              priority
+            <Carousel
+              items={section.images}
+              initialIndex={selectedIndex}
+              getItemKey={(item) => item.id}
+              className="h-full"
+              viewportClassName="h-full"
+              slideClassName="h-full"
+              prevAriaLabel="이전 사진 보기"
+              nextAriaLabel="다음 사진 보기"
+              renderItem={(image) => (
+                <div className="relative h-full w-full">
+                  <Image
+                    src={image.url}
+                    alt={image.alt}
+                    fill
+                    className="object-contain"
+                    sizes="90vw"
+                    priority
+                  />
+                </div>
+              )}
             />
           </div>
         </div>
