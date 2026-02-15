@@ -56,6 +56,9 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 # 카카오 지도 API (선택사항)
 
 NEXT_PUBLIC_KAKAO_MAP_KEY=your_kakao_map_key
+
+# 네이버 지도 API (선택사항)
+NEXT_PUBLIC_NAVER_MAP_CLIENT_ID=your_naver_map_client_id
 \`\`\`
 
 ### 3. Supabase 테이블 생성
@@ -176,6 +179,7 @@ Vercel 대시보드에서 다음 환경 변수를 추가하세요:
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `NEXT_PUBLIC_KAKAO_MAP_KEY` (선택사항)
+- `NEXT_PUBLIC_NAVER_MAP_CLIENT_ID` (선택사항)
 
 ## 📱 모바일 최적화
 

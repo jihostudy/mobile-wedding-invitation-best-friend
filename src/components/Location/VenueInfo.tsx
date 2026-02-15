@@ -1,5 +1,8 @@
 'use client';
 
+import { useState } from 'react';
+
+import NaverMap from '@/components/Location/NaverMap';
 import type { LocationSectionData, Venue, WeddingDate } from '@/types';
 
 interface VenueInfoProps {
@@ -9,6 +12,9 @@ interface VenueInfoProps {
 }
 
 export default function VenueInfo({ section, venue, date }: VenueInfoProps) {
+  const [isMapLoadFailed, setIsMapLoadFailed] = useState(false);
+
+  const hasNaverMapKey = Boolean(process.env.NEXT_PUBLIC_NAVER_MAP_CLIENT_ID);
   const mapUrl = `https://map.naver.com/v5/search/${encodeURIComponent(venue.address)}`;
 
   return (
@@ -23,6 +29,25 @@ export default function VenueInfo({ section, venue, date }: VenueInfoProps) {
         </div>
 
         <div className="rounded-2xl border border-wedding-brown/15 bg-white/50 p-6 text-center shadow-sm">
+          {hasNaverMapKey && !isMapLoadFailed && (
+            <div className="mb-5">
+              <NaverMap
+                lat={venue.coordinates.lat}
+                lng={venue.coordinates.lng}
+                markerTitle={venue.name}
+                onError={() => setIsMapLoadFailed(true)}
+              />
+            </div>
+          )}
+
+          {(!hasNaverMapKey || isMapLoadFailed) && (
+            <p className="mb-5 rounded-xl border border-wedding-brown/15 bg-wedding-beige/60 px-4 py-3 text-sm text-wedding-brown-light">
+              {!hasNaverMapKey
+                ? '네이버 지도 키가 설정되지 않아 지도 미리보기를 표시할 수 없어요. 아래 버튼에서 네이버지도를 열어주세요.'
+                : '지도 정보를 불러오지 못했어요. 아래 버튼에서 네이버지도를 열어주세요.'}
+            </p>
+          )}
+
           <h3 className="text-xl font-semibold text-wedding-brown">
             {venue.name}
             {venue.floor ? ` ${venue.floor}` : ''}
