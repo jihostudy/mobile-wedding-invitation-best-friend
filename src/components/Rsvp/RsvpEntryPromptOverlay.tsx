@@ -10,6 +10,7 @@ import {
   X,
 } from "lucide-react";
 import Icon from "@/components/common/Icon";
+import useKeyPressCallback from "@/hooks/useKeyPressCallback";
 
 interface RsvpEntryPromptOverlayProps {
   isOpen: boolean;
@@ -32,6 +33,12 @@ export default function RsvpEntryPromptOverlay({
   venueLine,
   addressLine,
 }: RsvpEntryPromptOverlayProps) {
+  useKeyPressCallback({
+    key: "Escape",
+    enabled: isOpen,
+    callback: onClose,
+  });
+
   return (
     <AnimatePresence>
       {isOpen && (
