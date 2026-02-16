@@ -46,12 +46,24 @@ function SelectCard({
       } ${centerContent ? "justify-center" : "justify-between"}`}
       aria-pressed={selected}
     >
-      <span className="inline-flex items-center gap-3 text-sm font-medium text-[#212121]">
+      <span
+        className={`inline-flex items-center gap-3 text-sm font-medium ${
+          selected ? "text-[#212121]" : "text-[#8f8f8f]"
+        }`}
+      >
         {leadingIcon === "check" ? (
-          <Icon icon={CircleCheckBig} size="sm" className="text-[#2f2f2f]" />
+          <Icon
+            icon={CircleCheckBig}
+            size="sm"
+            className={selected ? "text-[#2f2f2f]" : "text-[#a8a8a8]"}
+          />
         ) : null}
         {leadingIcon === "x" ? (
-          <Icon icon={CircleX} size="sm" className="text-[#2f2f2f]" />
+          <Icon
+            icon={CircleX}
+            size="sm"
+            className={selected ? "text-[#2f2f2f]" : "text-[#a8a8a8]"}
+          />
         ) : null}
         {label}
       </span>
