@@ -3,6 +3,11 @@ import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { hasValidCsrf, isAdminRequest } from '@/lib/server/admin-auth';
 import { fail, ok } from '@/lib/server/http';
 
+function isMissingDisplayOrderColumnError(error: { code?: string; message?: string } | null) {
+  if (!error) return false;
+  return error.code === '42703' || (error.message ?? '').includes('display_order');
+}
+
 export async function PATCH(request: NextRequest, context: { params: { id: string } }) {
   if (!isAdminRequest(request)) return fail(401, 'UNAUTHORIZED', 'admin authorization required');
   if (!hasValidCsrf(request)) return fail(403, 'CSRF_INVALID', 'csrf token is invalid');
@@ -20,9 +25,43 @@ export async function PATCH(request: NextRequest, context: { params: { id: strin
   }
 
   const supabase = createServerSupabaseClient({ serviceRole: true });
+  const { data: currentMessage, error: currentMessageError } = await supabase
+    .from('guest_messages')
+    .select('is_public')
+    .eq('id', id)
+    .maybeSingle();
+
+  if (currentMessageError) {
+    return fail(500, 'ADMIN_GUEST_MESSAGE_FETCH_FAILED', currentMessageError.message);
+  }
+  if (!currentMessage) {
+    return fail(404, 'NOT_FOUND', 'guest message not found');
+  }
+
+  let nextDisplayOrder: number | undefined;
+  if (!currentMessage.is_public && body.isPublic) {
+    const { data: lastPublicMessage, error: orderError } = await supabase
+      .from('guest_messages')
+      .select('display_order')
+      .eq('is_public', true)
+      .order('display_order', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (orderError && !isMissingDisplayOrderColumnError(orderError)) {
+      return fail(500, 'ADMIN_GUEST_MESSAGE_ORDER_FETCH_FAILED', orderError.message);
+    }
+    if (!orderError) {
+      nextDisplayOrder = (lastPublicMessage?.display_order ?? -1) + 1;
+    }
+  }
+
   const { error } = await supabase
     .from('guest_messages')
-    .update({ is_public: body.isPublic })
+    .update({
+      is_public: body.isPublic,
+      ...(typeof nextDisplayOrder === 'number' ? { display_order: nextDisplayOrder } : {}),
+    })
     .eq('id', id);
 
   if (error) return fail(500, 'ADMIN_GUEST_MESSAGE_UPDATE_FAILED', error.message);

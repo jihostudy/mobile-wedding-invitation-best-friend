@@ -48,3 +48,21 @@ export function useAdminDeleteGuestMessageMutation() {
     },
   });
 }
+
+export function useAdminReorderGuestMessagesMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: { ids: string[] }) =>
+      apiFetch<{ success: true }>('/api/admin/guest-messages/reorder', {
+        method: 'PATCH',
+        headers: {
+          'x-csrf-token': getCookieValue('admin_csrf'),
+        },
+        body: JSON.stringify({ ids: payload.ids }),
+      }),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.adminGuestMessages() });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.guestMessages(true) });
+    },
+  });
+}

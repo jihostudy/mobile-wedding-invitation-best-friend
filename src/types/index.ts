@@ -249,6 +249,7 @@ export interface GuestMessageDto {
   message: string;
   isPublic: boolean;
   createdAt: string;
+  displayOrder: number;
 }
 
 export interface RsvpResponseDto {
