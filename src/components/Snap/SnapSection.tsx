@@ -154,7 +154,7 @@ export default function SnapSection({ section }: SnapSectionProps) {
         <h3 className="mt-3 text-xl tracking-[0.04em] text-wedding-gray-dark">
           {section.title}
         </h3>
-        <p className="mt-8 whitespace-pre-line text-[15px] leading-8 text-wedding-gray">
+        <p className="mt-8 whitespace-pre-line break-keep text-[14px] leading-8 text-wedding-gray sm:text-[15px]">
           {section.description}
         </p>
 

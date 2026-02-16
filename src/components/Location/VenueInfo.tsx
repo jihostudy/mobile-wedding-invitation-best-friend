@@ -91,7 +91,7 @@ export default function VenueInfo({ venue, date }: VenueInfoProps) {
         </div>
 
         <FadeInUp className="mx-8 mt-2 pt-8">
-          <h4 className="text-base font-medium text-wedding-gray">지하철</h4>
+          <h4 className="text-base font-semibold text-wedding-gray">지하철</h4>
           <div className="mt-4 space-y-2 text-[15px] text-wedding-gray">
             {subwayLines.map((line) => (
               <p key={line.label} className="flex items-center">
@@ -105,8 +105,11 @@ export default function VenueInfo({ venue, date }: VenueInfoProps) {
           </div>
         </FadeInUp>
 
-        <FadeInUp className="mx-8 mt-8 border-t border-gray-300/80 pt-8" delay={0.12}>
-          <h4 className="text-base font-medium text-wedding-gray">버스</h4>
+        <FadeInUp
+          className="mx-8 mt-8 border-t border-gray-300/80 pt-8"
+          delay={0.12}
+        >
+          <h4 className="text-base font-semibold text-wedding-gray">버스</h4>
           <div className="mt-4 space-y-2 text-[15px] text-wedding-gray">
             {busLines.map((line) => (
               <p key={line.label} className="flex items-center">
@@ -120,8 +123,13 @@ export default function VenueInfo({ venue, date }: VenueInfoProps) {
           </div>
         </FadeInUp>
 
-        <FadeInUp className="mx-8 mt-8 border-t border-gray-300/80 pt-8" delay={0.24}>
-          <h4 className="text-base font-medium text-wedding-gray">셔틀버스</h4>
+        <FadeInUp
+          className="mx-8 mt-8 border-t border-gray-300/80 pt-8"
+          delay={0.24}
+        >
+          <h4 className="text-base font-semibold text-wedding-gray">
+            셔틀버스
+          </h4>
           <p className="mt-4 text-[15px] text-wedding-gray">
             {venue.transport?.shuttlePickup ??
               `${date.month}월 ${date.day}일 강남구청역 인근 셔틀 탑승`}
