@@ -24,6 +24,7 @@ export interface CarouselProps<T> {
   loop?: boolean;
   showArrows?: boolean;
   showDots?: boolean;
+  showCounter?: boolean;
   keyboard?: boolean;
   swipe?: boolean;
   onIndexChange?: (index: number) => void;
@@ -63,6 +64,7 @@ export default function Carousel<T>({
   loop = true,
   showArrows = true,
   showDots = true,
+  showCounter = false,
   keyboard = true,
   swipe = true,
   onIndexChange,
@@ -246,7 +248,19 @@ export default function Carousel<T>({
         </>
       )}
 
-      {showDots && itemCount > 1 && (
+      {showCounter && itemCount > 1 && (
+        <div className="mt-4 flex items-center justify-center">
+          <p
+            className="font-pretendard rounded-md bg-white/80 px-3 py-1 text-sm text-[#6f6f6f] tabular-nums"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            {currentIndex + 1} / {itemCount}
+          </p>
+        </div>
+      )}
+
+      {!showCounter && showDots && itemCount > 1 && (
         <div className="mt-4 flex items-center justify-center gap-2">
           {items.map((_, index) => (
             <button

@@ -29,9 +29,12 @@ export default function useModalLayer({
       body.dataset[PREV_BODY_PADDING_RIGHT_KEY] = body.style.paddingRight;
 
       const scrollbarWidth = window.innerWidth - html.clientWidth;
+      const shouldCompensateScrollbar =
+        scrollbarWidth > 0 &&
+        window.matchMedia("(hover: hover) and (pointer: fine)").matches;
       html.style.overflow = "hidden";
       body.style.overflow = "hidden";
-      if (scrollbarWidth > 0) {
+      if (shouldCompensateScrollbar) {
         body.style.paddingRight = `${scrollbarWidth}px`;
       }
     }
