@@ -11,10 +11,6 @@ const nextConfig = {
       },
     ],
   },
-  // Vercel 무료 배포 최적화
-  experimental: {
-    optimizeCss: true,
-  },
 }
 
 module.exports = nextConfig
