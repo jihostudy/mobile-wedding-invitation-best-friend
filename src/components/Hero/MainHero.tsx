@@ -103,11 +103,11 @@ export default function MainHero({ groom, bride, date, section }: MainHeroProps)
           </div>
         </div>
 
-        <div className="relative z-30 mt-8 ml-6 w-fit text-left text-[#202020]">
-          <p className="font-hyejun ml-14 text-7xl font-medium leading-[0.98] tracking-wider -rotate-[8deg]">
+        <div className="relative z-30 mt-8 w-full px-4 text-[#202020]">
+          <p className="font-hyejun mx-auto w-fit max-w-full text-center text-[clamp(2.75rem,15vw,4.5rem)] font-medium leading-[1.02] tracking-[0.015em] -rotate-[8deg] break-keep">
             {section.titleText}
           </p>
-          <p className="font-hyejun -mt-4 text-4xl ml-56 font-semibold leading-[0.98] tracking-normal -rotate-[8deg]">
+          <p className="font-hyejun -mt-3 pr-1 text-right text-[clamp(1.55rem,8.8vw,2.25rem)] font-semibold leading-[1.02] tracking-[0.01em] -rotate-[8deg] break-keep">
             {displayDate}
           </p>
         </div>

@@ -8,28 +8,34 @@ import QueryProvider from "@/components/providers/QueryProvider";
 import "./globals.css";
 
 const tmoneyRoundWind = localFont({
-  src: "../../public/fonts/TmoneyRoundWindRegular.ttf",
+  src: "../../public/fonts/TmoneyRoundWindRegular.woff2",
   variable: "--font-tmoney",
   display: "swap",
+  preload: true,
+  fallback: ["Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "system-ui", "sans-serif"],
 });
 
 const crimsonPro = Crimson_Pro({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600"],
   variable: "--font-crimson",
   display: "swap",
 });
 
 const nanumHyejun = localFont({
-  src: "../../public/fonts/Nanum_HyeJun.ttf",
+  src: "../../public/fonts/Nanum_HyeJun.woff2",
   variable: "--font-hyejun",
   display: "swap",
+  preload: true,
+  fallback: ["Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "system-ui", "sans-serif"],
 });
 
 const pretendard = localFont({
-  src: "../../public/fonts/PretendardVariable.ttf",
+  src: "../../public/fonts/PretendardVariable.woff2",
   variable: "--font-pretendard",
   display: "swap",
+  preload: false,
+  fallback: ["Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "system-ui", "sans-serif"],
 });
 
 export const metadata: Metadata = {

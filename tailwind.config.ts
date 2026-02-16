@@ -21,7 +21,7 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ["var(--fontc-tmoney)", "sans-serif"],
+        sans: ["var(--font-tmoney)", "sans-serif"],
         crimson: ["var(--font-crimson)", "serif"],
         pretendard: ["var(--font-pretendard)", "sans-serif"],
       },
