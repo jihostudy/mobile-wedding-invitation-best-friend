@@ -52,6 +52,11 @@ yarn install
 
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+
+# 관리자 인증 설정
+ADMIN_SESSION_SECRET=your_admin_session_secret
+ADMIN_BOOTSTRAP_TOKEN=your_admin_bootstrap_token
 
 # 카카오 지도 API (선택사항)
 
@@ -178,8 +183,20 @@ Vercel 대시보드에서 다음 환경 변수를 추가하세요:
 
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `ADMIN_SESSION_SECRET`
+- `ADMIN_BOOTSTRAP_TOKEN`
 - `NEXT_PUBLIC_KAKAO_MAP_KEY` (선택사항)
 - `NEXT_PUBLIC_NAVER_MAP_CLIENT_ID` (선택사항)
+
+배포 전 필수 환경 변수는 아래 명령으로 검증할 수 있습니다:
+
+```bash
+pnpm check:deploy-env
+```
+
+배포 후 종합 점검 체크리스트:
+- `docs/vercel-deployment-checklist.md`
 
 ## 📱 모바일 최적화
 
