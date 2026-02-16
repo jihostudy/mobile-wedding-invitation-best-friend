@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { Circle, CircleCheckBig, CircleX, Minus, Plus, X } from "lucide-react";
 import Icon from "@/components/common/Icon";
 import useToast from "@/components/common/toast/useToast";
@@ -98,8 +99,20 @@ export default function RsvpModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[10000]" role="dialog" aria-modal="true">
-      <div className="mx-auto h-full w-full max-w-[425px]">
+    <motion.div
+      className="fixed inset-0 z-[10000]"
+      role="dialog"
+      aria-modal="true"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
+    >
+      <motion.div
+        className="mx-auto h-full w-full max-w-[425px]"
+        initial={{ y: 20, opacity: 0.82 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+      >
         <div className="modal-scrollbar h-full overflow-y-auto bg-white px-5 pb-10 pt-8">
           <div className="relative">
             <h3 className="text-center text-xl font-semibold text-[#202020]">
@@ -359,7 +372,7 @@ export default function RsvpModal({
             </button>
           </form>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

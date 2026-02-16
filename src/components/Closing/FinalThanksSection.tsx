@@ -7,7 +7,9 @@ interface FinalThanksSectionProps {
   section: ClosingSectionData;
 }
 
-export default function FinalThanksSection({ section }: FinalThanksSectionProps) {
+export default function FinalThanksSection({
+  section,
+}: FinalThanksSectionProps) {
   return (
     <section id="final-thanks" className="bg-white px-6 pb-10 pt-6">
       <div className="mx-auto w-full max-w-md">
@@ -16,14 +18,19 @@ export default function FinalThanksSection({ section }: FinalThanksSectionProps)
             src={section.image.url}
             alt={section.image.alt}
             fill
-            className="object-cover object-center grayscale"
+            className="object-cover object-center"
             sizes="(max-width: 425px) 100vw, 425px"
+            quality={100}
+            unoptimized
+            loading="eager"
           />
           <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-white to-transparent" />
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-white to-transparent" />
-          <p className="absolute bottom-[30%] left-1/2 -translate-x-1/2 text-xl tracking-[0.12em] text-white/90">
-            감사합니다.
-          </p>
+          <div className="pointer-events-none absolute bottom-7 right-7">
+            <p className="font-hyejun text-3xl text-[#1f1a17] [text-shadow:0_2px_10px_rgba(255,255,255,0.38)]">
+              감사합니다.
+            </p>
+          </div>
         </div>
 
         <button

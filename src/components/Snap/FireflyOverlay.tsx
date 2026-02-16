@@ -171,6 +171,26 @@ const PARTICLES: FireflyParticle[] = [
   },
 ];
 
+const ACTIVE_PARTICLES: FireflyParticle[] = [
+  ...PARTICLES,
+  ...PARTICLES.map((particle, index) => ({
+    ...particle,
+    id: `${particle.id}-alt`,
+    left: Math.max(
+      4,
+      Math.min(96, particle.left + (index % 2 === 0 ? 7 : -7)),
+    ),
+    size: Math.max(2, particle.size - 1 + (index % 3 === 0 ? 1 : 0)),
+    rise: Math.round(particle.rise * 0.82),
+    drift: Math.round(particle.drift * -0.75),
+    duration: Math.max(2.2, particle.duration * 0.78),
+    delay: particle.delay * 0.55,
+    repeatDelay: Math.max(0.2, particle.repeatDelay * 0.35),
+    opacityPeak: Math.min(0.96, particle.opacityPeak + 0.1),
+    strongGlow: index % 2 === 0 ? particle.strongGlow : !particle.strongGlow,
+  })),
+];
+
 export default function FireflyOverlay() {
   const prefersReducedMotion = useReducedMotion();
 
@@ -184,11 +204,11 @@ export default function FireflyOverlay() {
       style={{ perspective: "700px", transformStyle: "preserve-3d" }}
       aria-hidden="true"
     >
-      {PARTICLES.map((particle) => {
+      {ACTIVE_PARTICLES.map((particle) => {
         const glowColor = particle.strongGlow
-          ? "rgba(124, 255, 138, 0.35)"
-          : "rgba(91, 239, 118, 0.2)";
-        const baseColor = particle.strongGlow ? "#7CFF8A" : "#5BEF76";
+          ? "rgba(236, 145, 161, 0.35)"
+          : "rgba(245, 215, 181, 0.24)";
+        const baseColor = particle.strongGlow ? "#EC91A1" : "#F5D7B5";
 
         return (
           <div
@@ -218,7 +238,7 @@ export default function FireflyOverlay() {
                 opacity: [
                   0,
                   particle.opacityPeak,
-                  particle.opacityPeak * 0.4,
+                  particle.opacityPeak * 0.62,
                   0,
                 ],
                 scale: [0.92, 1.08, 0.96],

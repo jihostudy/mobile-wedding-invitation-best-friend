@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function AdminLayout({
   children,
 }: {
@@ -28,6 +30,14 @@ export default function AdminLayout({
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#f3f2ef]">
+      <Link
+        href="/"
+        className="fixed right-[max(12px,env(safe-area-inset-right))] top-[max(12px,env(safe-area-inset-top))] z-[10040] inline-flex items-center rounded-full border border-[#d7c8b1] bg-white/92 px-4 py-2 text-xs font-semibold text-[#5b4934] shadow-[0_8px_20px_rgba(73,54,31,0.18)] backdrop-blur transition hover:bg-[#fff9ef]"
+        aria-label="메인 화면으로 이동"
+      >
+        메인으로
+      </Link>
+
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute -left-24 -top-16 h-72 w-72 rounded-full bg-[#fff7ea]/80 blur-3xl" />
         <div className="absolute right-[-90px] top-[12%] h-80 w-80 rounded-full bg-[#f8eddc]/75 blur-3xl" />
@@ -44,4 +54,3 @@ export default function AdminLayout({
     </div>
   );
 }
-

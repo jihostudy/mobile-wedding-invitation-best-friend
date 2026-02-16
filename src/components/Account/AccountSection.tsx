@@ -55,19 +55,19 @@ export default function AccountSection({ section }: AccountSectionProps) {
             section.groups.map((group) => (
               <div
                 key={group.id}
-                className="overflow-hidden rounded-t-xl rounded-b-none border border-gray-200 bg-[#f3f3f3]"
+                className="overflow-hidden rounded-t-xl rounded-b-none border border-[#e7dccb] bg-[#faf6ef]"
               >
                 <button
                   type="button"
                   onClick={() => toggleGroup(group.id)}
-                  className="relative flex w-full items-center justify-center bg-[#f3f3f3] px-5 py-4 text-center"
+                  className="relative flex w-full items-center justify-center bg-gradient-to-r from-[#f7eddc] to-[#f4e8d4] px-2 py-3 text-center"
                   aria-expanded={openGroups[group.id]}
                 >
-                  <span className="text-base font-medium text-wedding-brown">
+                  <span className="text-sm font-medium text-[#6f5a3d]">
                     {group.label}
                   </span>
                   <span
-                    className={`absolute right-5 text-sm text-wedding-brown transition-transform ${openGroups[group.id] ? "" : "rotate-180"}`}
+                    className={`absolute right-5 text-sm text-[#7a6445] transition-transform ${openGroups[group.id] ? "" : "rotate-180"}`}
                   >
                     <Icon icon={ChevronUp} size="sm" />
                   </span>
@@ -94,7 +94,7 @@ export default function AccountSection({ section }: AccountSectionProps) {
                   className="overflow-hidden"
                   aria-hidden={!openGroups[group.id]}
                 >
-                  <div className="border-t border-gray-200 bg-white">
+                  <div className="border-t border-[#e7dccb] bg-white">
                     {group.accounts.map((account, index) => {
                       const rowKey = `${group.id}-${index}`;
                       return (

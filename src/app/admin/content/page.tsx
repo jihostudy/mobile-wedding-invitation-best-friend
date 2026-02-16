@@ -18,6 +18,7 @@ import type { WeddingContentV1 } from "@/types";
 
 type PathSegment = string | number;
 const GALLERY_IMAGE_ALT = "신랑신부 사진";
+const SNAP_COVER_IMAGE_ALT = "스냅 업로드 커버 이미지";
 
 function deepClone<T>(value: T): T {
   if (typeof structuredClone === "function") return structuredClone(value);
@@ -638,18 +639,23 @@ export default function AdminContentPage() {
   const sectionNavItems = [
     { id: "groomInfo", label: "신랑 정보" },
     { id: "brideInfo", label: "신부 정보" },
-    { id: "weddingInfo", label: "예식 정보" },
     { id: "backgroundMusic", label: "배경음악" },
     { id: "hero", label: "상단 소개" },
     { id: "invitation", label: "초대 문구" },
-    { id: "guestbook", label: "방명록" },
-    { id: "rsvp", label: "참석 의사 전달" },
     { id: "interview", label: "인터뷰" },
     { id: "gallery", label: "갤러리" },
+    { id: "weddingInfo", label: "예식 정보" },
+    { id: "guestbook", label: "방명록" },
+    { id: "rsvp", label: "참석 의사 전달" },
+    { id: "snap", label: "스냅" },
     { id: "account", label: "계좌 정보" },
-    { id: "snap", label: "스냅 업로드" },
     { id: "closing", label: "마지막 감사 이미지" },
   ];
+  const snapNoticeText = [
+    ...(content.snapSection.modal.guideLines ?? []),
+    ...(content.snapSection.modal.guideHighlightLines ?? []),
+    ...(content.snapSection.modal.policyLines ?? []),
+  ].join("\n");
 
   return (
     <main className="mx-auto w-full max-w-[980px] px-6 py-10 pb-28">
@@ -1438,15 +1444,15 @@ export default function AdminContentPage() {
           />
           <div className="overflow-hidden rounded-lg border border-[#e5dccb] bg-[#f7f2e8]">
             {content.interviewSection.image.url ? (
-              <div className="relative aspect-[17/10] w-full">
+              <div className="w-full">
                 <img
                   src={content.interviewSection.image.url}
                   alt={content.interviewSection.image.alt}
-                  className="absolute inset-0 h-full w-full object-cover"
+                  className="block h-auto w-full object-contain"
                 />
               </div>
             ) : (
-              <div className="flex aspect-[17/10] w-full items-center justify-center text-xs text-[#8f816b]">
+              <div className="flex min-h-[180px] w-full items-center justify-center text-xs text-[#8f816b]">
                 업로드된 이미지가 없습니다.
               </div>
             )}
@@ -1671,7 +1677,7 @@ export default function AdminContentPage() {
                         src={image.url}
                         alt={GALLERY_IMAGE_ALT}
                         fill
-                        className="object-cover"
+                        className="object-cover object-center"
                         sizes="(max-width: 980px) 100vw, 600px"
                       />
                     ) : (
@@ -1784,17 +1790,7 @@ export default function AdminContentPage() {
                 key={group.id}
                 className="rounded-xl border border-[#eadfcb] bg-[#fffcf7] p-3"
               >
-                <div className="grid gap-2 md:grid-cols-[1fr_1fr_auto]">
-                  <TextField
-                    label="그룹 ID"
-                    value={group.id}
-                    onChange={(value) =>
-                      updatePath(
-                        ["accountSection", "groups", groupIndex, "id"],
-                        value,
-                      )
-                    }
-                  />
+                <div className="grid gap-2 md:grid-cols-[1fr_auto]">
                   <TextField
                     label="그룹 이름"
                     value={group.label}
@@ -1895,23 +1891,17 @@ export default function AdminContentPage() {
                               )
                             }
                           />
-                          <TextField
-                            label="카카오페이 링크"
-                            value={account.kakaoPayLink ?? ""}
-                            onChange={(value) =>
-                              updatePath(
-                                [
-                                  "accountSection",
-                                  "groups",
-                                  groupIndex,
-                                  "accounts",
-                                  accountIndex,
-                                  "kakaoPayLink",
-                                ],
-                                value,
-                              )
-                            }
-                          />
+                          <label className="block min-w-0">
+                            <span className="mb-1.5 block text-xs font-semibold text-[#6f6350]">
+                              카카오페이 링크 (읽기 전용)
+                            </span>
+                            <input
+                              type="text"
+                              readOnly
+                              value={account.kakaoPayLink ?? ""}
+                              className="h-10 w-full rounded-lg border border-[#dfd4c1] bg-[#f5f0e7] px-3 text-sm text-[#6f6350] outline-none"
+                            />
+                          </label>
                         </div>
                         <div className="mt-2 flex justify-end">
                           <button
@@ -1943,7 +1933,7 @@ export default function AdminContentPage() {
 
         <SectionCard
           isActive={activeSection === "snap"}
-          title="스냅 업로드"
+          title="스냅"
         >
           <TextField
             label="영문 제목"
@@ -2033,37 +2023,44 @@ export default function AdminContentPage() {
               스냅 이미지 추가
             </button>
           </div>
-          <div className="space-y-3">
+          <div className="space-y-2 rounded-xl border border-[#eadfcb] bg-[#fffcf7] p-3">
+            <div className="grid grid-cols-[64px_1fr_1fr_auto] items-center gap-2 px-1 text-[11px] font-semibold text-[#6f6350]">
+              <span>항목</span>
+              <span>회전</span>
+              <span>X 오프셋</span>
+              <span className="text-right">작업</span>
+            </div>
             {content.snapSection.images.map((image, index) => (
               <div
                 key={image.id}
-                className="rounded-xl border border-[#eadfcb] bg-[#fffcf7] p-3"
+                className="grid grid-cols-[64px_1fr_1fr_auto] items-center gap-2 rounded-lg border border-[#eadfcb] bg-white p-2"
               >
-                <div className="grid gap-2 md:grid-cols-2">
-                  <TextField
-                    label="회전"
-                    type="number"
-                    value={String(image.rotation)}
-                    onChange={(value) =>
-                      updatePath(
-                        ["snapSection", "images", index, "rotation"],
-                        toNumber(value, image.rotation),
-                      )
-                    }
-                  />
-                  <TextField
-                    label="X 오프셋"
-                    type="number"
-                    value={String(image.offsetX)}
-                    onChange={(value) =>
-                      updatePath(
-                        ["snapSection", "images", index, "offsetX"],
-                        toNumber(value, image.offsetX),
-                      )
-                    }
-                  />
-                </div>
-                <div className="mt-2 flex items-center justify-end gap-2">
+                <span className="text-xs font-medium text-[#6f6350]">
+                  #{index + 1}
+                </span>
+                <input
+                  type="number"
+                  value={String(image.rotation)}
+                  onChange={(event) =>
+                    updatePath(
+                      ["snapSection", "images", index, "rotation"],
+                      toNumber(event.target.value, image.rotation),
+                    )
+                  }
+                  className="h-9 min-w-0 rounded-md border border-[#dfd4c1] bg-white px-2 text-sm text-[#2e261b] outline-none focus:border-[#b9a17e]"
+                />
+                <input
+                  type="number"
+                  value={String(image.offsetX)}
+                  onChange={(event) =>
+                    updatePath(
+                      ["snapSection", "images", index, "offsetX"],
+                      toNumber(event.target.value, image.offsetX),
+                    )
+                  }
+                  className="h-9 min-w-0 rounded-md border border-[#dfd4c1] bg-white px-2 text-sm text-[#2e261b] outline-none focus:border-[#b9a17e]"
+                />
+                <div className="flex items-center gap-2">
                   <label>
                     <input
                       type="file"
@@ -2082,9 +2079,7 @@ export default function AdminContentPage() {
                       }}
                     />
                     <span className="inline-flex h-9 cursor-pointer items-center rounded-md border border-[#d7c9b1] bg-white px-3 text-xs text-[#574938]">
-                      {uploadingKey === `snap-${index}`
-                        ? "업로드 중..."
-                        : "업로드"}
+                      {uploadingKey === `snap-${index}` ? "업로드 중..." : "업로드"}
                     </span>
                   </label>
                   <button
@@ -2103,35 +2098,58 @@ export default function AdminContentPage() {
 
           <div className="rounded-xl border border-[#eadfcb] bg-[#fffcf7] p-3">
             <p className="text-sm font-semibold text-[#4e422f]">
-              스냅 모달 문구
+              스냅 모달 설정
             </p>
-            <div className="mt-3 grid gap-3 md:grid-cols-2">
-              <TextField
-                label="뒤로가기 라벨"
-                value={content.snapSection.modal.backLabel}
-                onChange={(value) =>
-                  updatePath(["snapSection", "modal", "backLabel"], value)
-                }
-              />
+            <div className="mt-3 overflow-hidden rounded-lg border border-[#e5dccb] bg-[#f7f2e8]">
+              {content.snapSection.modal.coverImage.url ? (
+                <div className="w-full">
+                  <img
+                    src={content.snapSection.modal.coverImage.url}
+                    alt={SNAP_COVER_IMAGE_ALT}
+                    className="block h-auto w-full object-contain"
+                  />
+                </div>
+              ) : (
+                <div className="flex min-h-[180px] w-full items-center justify-center text-xs text-[#8f816b]">
+                  업로드된 커버 이미지가 없습니다.
+                </div>
+              )}
+            </div>
+            <div className="mt-3 flex justify-end">
+              <label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(event) => {
+                    const file = event.target.files?.[0];
+                    if (!file) return;
+                    void handleUpload(
+                      file,
+                      ["snapSection", "modal", "coverImage", "url"],
+                      "snap-cover",
+                    );
+                    updatePath(
+                      ["snapSection", "modal", "coverImage", "alt"],
+                      SNAP_COVER_IMAGE_ALT,
+                    );
+                    event.target.value = "";
+                  }}
+                />
+                <span className="inline-flex h-9 cursor-pointer items-center rounded-md border border-[#d7c9b1] bg-white px-3 text-xs text-[#574938]">
+                  {uploadingKey === "snap-cover"
+                    ? "업로드 중..."
+                    : "커버 이미지 업로드"}
+                </span>
+              </label>
+            </div>
+
+            <div className="mt-4 grid gap-3 md:grid-cols-2">
               <TextField
                 label="가이드 제목"
                 value={content.snapSection.modal.guideTitle}
                 onChange={(value) =>
                   updatePath(["snapSection", "modal", "guideTitle"], value)
-                }
-              />
-              <TextField
-                label="이름 라벨"
-                value={content.snapSection.modal.nameLabel}
-                onChange={(value) =>
-                  updatePath(["snapSection", "modal", "nameLabel"], value)
-                }
-              />
-              <TextField
-                label="이름 placeholder"
-                value={content.snapSection.modal.namePlaceholder}
-                onChange={(value) =>
-                  updatePath(["snapSection", "modal", "namePlaceholder"], value)
                 }
               />
               <TextField
@@ -2162,97 +2180,22 @@ export default function AdminContentPage() {
                   )
                 }
               />
-              <TextField
-                label="커버 이미지 URL"
-                value={content.snapSection.modal.coverImage.url}
-                onChange={(value) =>
-                  updatePath(
-                    ["snapSection", "modal", "coverImage", "url"],
-                    value,
-                  )
-                }
-              />
-              <TextField
-                label="커버 이미지 ALT"
-                value={content.snapSection.modal.coverImage.alt}
-                onChange={(value) =>
-                  updatePath(
-                    ["snapSection", "modal", "coverImage", "alt"],
-                    value,
-                  )
-                }
-              />
             </div>
-            <div className="mt-3">
-              <label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={(event) => {
-                    const file = event.target.files?.[0];
-                    if (!file) return;
-                    void handleUpload(
-                      file,
-                      ["snapSection", "modal", "coverImage", "url"],
-                      "snap-cover",
-                      {
-                        altPath: ["snapSection", "modal", "coverImage", "alt"],
-                      },
-                    );
-                    event.target.value = "";
-                  }}
-                />
-                <span className="inline-flex h-9 cursor-pointer items-center rounded-md border border-[#d7c9b1] bg-white px-3 text-xs text-[#574938]">
-                  {uploadingKey === "snap-cover"
-                    ? "업로드 중..."
-                    : "커버 이미지 업로드"}
-                </span>
-              </label>
-            </div>
+            <p className="mt-3 text-xs text-[#7b6f5c]">
+              뒤로가기 라벨, 이름 라벨, 이름 입력 안내 문구는 고정 문구로 표시됩니다.
+            </p>
 
-            <div className="mt-4 space-y-3">
+            <div className="mt-4">
               <TextAreaField
-                label="guideLines (줄바꿈 구분)"
-                value={content.snapSection.modal.guideLines.join("\n")}
-                onChange={(value) =>
-                  updatePath(
-                    ["snapSection", "modal", "guideLines"],
-                    value
-                      .split("\n")
-                      .map((line) => line.trim())
-                      .filter(Boolean),
-                  )
-                }
-                rows={5}
-              />
-              <TextAreaField
-                label="guideHighlightLines (줄바꿈 구분)"
-                value={content.snapSection.modal.guideHighlightLines.join("\n")}
-                onChange={(value) =>
-                  updatePath(
-                    ["snapSection", "modal", "guideHighlightLines"],
-                    value
-                      .split("\n")
-                      .map((line) => line.trim())
-                      .filter(Boolean),
-                  )
-                }
-                rows={5}
-              />
-              <TextAreaField
-                label="policyLines (줄바꿈 구분)"
-                value={content.snapSection.modal.policyLines.join("\n")}
-                onChange={(value) =>
-                  updatePath(
-                    ["snapSection", "modal", "policyLines"],
-                    value
-                      .split("\n")
-                      .map((line) => line.trim())
-                      .filter(Boolean),
-                  )
-                }
-                rows={5}
+                label="모달 안내 문구 (줄바꿈으로 구분)"
+                value={snapNoticeText}
+                onChange={(value) => {
+                  const lines = value.replace(/\r\n?/g, "\n").split("\n");
+                  updatePath(["snapSection", "modal", "guideLines"], lines);
+                  updatePath(["snapSection", "modal", "guideHighlightLines"], []);
+                  updatePath(["snapSection", "modal", "policyLines"], []);
+                }}
+                rows={10}
               />
             </div>
           </div>

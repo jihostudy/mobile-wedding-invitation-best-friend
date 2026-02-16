@@ -1,12 +1,13 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
-import { Check, Copy, Phone, X } from 'lucide-react';
-import Icon from '@/components/common/Icon';
-import useToast from '@/components/common/toast/useToast';
-import useModalLayer from '@/hooks/useModalLayer';
-import type { Person } from '@/types';
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { motion } from "framer-motion";
+import { Check, Copy, Phone, X } from "lucide-react";
+import Icon from "@/components/common/Icon";
+import useToast from "@/components/common/toast/useToast";
+import useModalLayer from "@/hooks/useModalLayer";
+import type { Person } from "@/types";
 
 interface ContactModalProps {
   isOpen: boolean;
@@ -15,7 +16,12 @@ interface ContactModalProps {
   bride: Person;
 }
 
-export default function ContactModal({ isOpen, onClose, groom, bride }: ContactModalProps) {
+export default function ContactModal({
+  isOpen,
+  onClose,
+  groom,
+  bride,
+}: ContactModalProps) {
   const [copiedContact, setCopiedContact] = useState<string | null>(null);
   const [isMounted, setIsMounted] = useState(false);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -38,16 +44,19 @@ export default function ContactModal({ isOpen, onClose, groom, bride }: ContactM
 
   if (!isMounted || !isOpen) return null;
 
-  const copyToClipboard = async (text: string | undefined, contactType: string) => {
+  const copyToClipboard = async (
+    text: string | undefined,
+    contactType: string,
+  ) => {
     if (!text) return;
     try {
       await navigator.clipboard.writeText(text);
       setCopiedContact(contactType);
-      toast.success('연락처가 복사되었습니다.');
+      toast.success("연락처가 복사되었습니다.");
       setTimeout(() => setCopiedContact(null), 1500);
     } catch (error) {
-      console.error('Failed to copy:', error);
-      toast.error('연락처 복사에 실패했습니다.');
+      console.error("Failed to copy:", error);
+      toast.error("연락처 복사에 실패했습니다.");
     }
   };
 
@@ -96,12 +105,23 @@ export default function ContactModal({ isOpen, onClose, groom, bride }: ContactM
   );
 
   return createPortal(
-    <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4" onClick={onClose} role="dialog" aria-modal="true">
+    <motion.div
+      className="fixed inset-0 z-[10000] flex items-center justify-center p-4"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
+    >
       <div className="absolute inset-0 z-0 bg-black/60 backdrop-blur-sm" />
 
-      <div
+      <motion.div
         className="relative z-10 w-full max-w-md overflow-hidden rounded-2xl bg-wedding-brown shadow-2xl"
         onClick={(event) => event.stopPropagation()}
+        initial={{ y: 20, opacity: 0.82 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
       >
         <button
           type="button"
@@ -114,24 +134,35 @@ export default function ContactModal({ isOpen, onClose, groom, bride }: ContactM
         </button>
 
         <div className="border-b border-wedding-beige/20 px-6 py-6 text-center">
-          <p className="text-sm tracking-[0.24em] text-wedding-beige/70">CONTACT</p>
-          <h3 className="mt-2 text-lg font-semibold text-wedding-beige">양가 연락처 안내</h3>
+          <p className="text-sm tracking-[0.24em] text-wedding-beige/70">
+            CONTACT
+          </p>
+          <h3 className="mt-2 text-lg font-semibold text-wedding-beige">
+            양가 연락처 안내
+          </h3>
         </div>
 
-        <div className="max-h-[70dvh] overflow-y-auto modal-scrollbar px-6 py-5">
+        <div className="max-h-[70dvh] overflow-y-auto modal-scrollbar pl-6 pr-2 py-5">
           <div className="mb-5">
-            <h4 className="mb-2 text-sm font-semibold text-wedding-beige">신랑측</h4>
+            <h4 className="mb-2 text-sm font-semibold text-wedding-beige">
+              신랑측
+            </h4>
             <div className="overflow-hidden rounded-lg bg-wedding-brown/40">
-              <ContactRow label="신랑" name={groom.name} phone={groom.contact} contactType="groom" />
+              <ContactRow
+                label="신랑"
+                name={groom.name}
+                phone={groom.contact}
+                contactType="groom"
+              />
               <ContactRow
                 label="신랑 아버지"
-                name={groom.parents?.father || '-'}
+                name={groom.parents?.father || "-"}
                 phone={groom.parents?.fatherContact}
                 contactType="groom-father"
               />
               <ContactRow
                 label="신랑 어머니"
-                name={groom.parents?.mother || '-'}
+                name={groom.parents?.mother || "-"}
                 phone={groom.parents?.motherContact}
                 contactType="groom-mother"
               />
@@ -139,26 +170,33 @@ export default function ContactModal({ isOpen, onClose, groom, bride }: ContactM
           </div>
 
           <div>
-            <h4 className="mb-2 text-sm font-semibold text-wedding-beige">신부측</h4>
+            <h4 className="mb-2 text-sm font-semibold text-wedding-beige">
+              신부측
+            </h4>
             <div className="overflow-hidden rounded-lg bg-wedding-brown/40">
-              <ContactRow label="신부" name={bride.name} phone={bride.contact} contactType="bride" />
+              <ContactRow
+                label="신부"
+                name={bride.name}
+                phone={bride.contact}
+                contactType="bride"
+              />
               <ContactRow
                 label="신부 아버지"
-                name={bride.parents?.father || '-'}
+                name={bride.parents?.father || "-"}
                 phone={bride.parents?.fatherContact}
                 contactType="bride-father"
               />
               <ContactRow
                 label="신부 어머니"
-                name={bride.parents?.mother || '-'}
+                name={bride.parents?.mother || "-"}
                 phone={bride.parents?.motherContact}
                 contactType="bride-mother"
               />
             </div>
           </div>
         </div>
-      </div>
-    </div>,
-    document.body
+      </motion.div>
+    </motion.div>,
+    document.body,
   );
 }
