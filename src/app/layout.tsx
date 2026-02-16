@@ -70,7 +70,7 @@ export default function RootLayout({
       className={`${tmoneyRoundWind.variable} ${crimsonPro.variable} ${nanumHyejun.variable} ${pretendard.variable}`}
     >
       <body
-        className={`${tmoneyRoundWind.className} antialiased bg-wedding-beige-dark`}
+        className={`${tmoneyRoundWind.className} antialiased bg-gradient-to-b from-[#f8f0e4] via-[#fdf7f0] to-[#f6ecdd]`}
       >
         <QueryProvider>
           <ScrollResetProvider />
