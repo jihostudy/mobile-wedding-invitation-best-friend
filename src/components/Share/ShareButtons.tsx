@@ -44,7 +44,7 @@ export default function ShareButtons() {
     kakao.Share.sendDefault({
       objectType: 'feed',
       content: {
-        title: '김민섭 ♥ 전이서 결혼합니다',
+        title: '동현❤️다연의 결혼식에 초대합니다',
         description: '2025년 3월 1일 토요일 오후 2시 50분',
         imageUrl: `${window.location.origin}/images/placeholder-couple.svg`,
         link: {
@@ -89,7 +89,7 @@ export default function ShareButtons() {
   // 트위터 공유
   const shareTwitter = () => {
     const url = encodeURIComponent(window.location.href);
-    const text = encodeURIComponent('김민섭 ♥ 전이서 결혼합니다');
+    const text = encodeURIComponent('동현❤️다연의 결혼식에 초대합니다');
     window.open(
       `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
       '_blank',

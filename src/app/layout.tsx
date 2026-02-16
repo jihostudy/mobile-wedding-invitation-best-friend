@@ -33,11 +33,11 @@ const pretendard = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "김민섭 ♥ 전이서 결혼합니다",
+  title: "동현❤️다연의 결혼식에 초대합니다",
   description: "2025년 3월 1일 토요일 오후 2시 50분",
   keywords: ["결혼", "청첩장", "모바일청첩장", "웨딩"],
   openGraph: {
-    title: "김민섭 ♥ 전이서 결혼합니다",
+    title: "동현❤️다연의 결혼식에 초대합니다",
     description: "2025년 3월 1일 토요일 오후 2시 50분",
     type: "website",
     locale: "ko_KR",
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
         url: "/images/placeholder-couple.svg",
         width: 1200,
         height: 630,
-        alt: "김민섭 ♥ 전이서 결혼식 청첩장",
+        alt: "동현❤️다연의 결혼식 청첩장",
       },
     ],
   },

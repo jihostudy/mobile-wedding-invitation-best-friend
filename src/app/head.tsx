@@ -18,8 +18,7 @@ export default function Head() {
       <link rel="apple-touch-icon" href="/images/placeholder-couple.svg" />
       
       {/* Favicon */}
-      <link rel="icon" href="/images/placeholder-couple.svg" />
+      <link rel="icon" href="/favicon.ico" />
     </>
   );
 }
-
