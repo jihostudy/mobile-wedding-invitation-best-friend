@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { X } from "lucide-react";
+import { Check, X } from "lucide-react";
 import Icon from "@/components/common/Icon";
 import ModalPortal from "@/components/common/ModalPortal";
 import useModalLayer from "@/hooks/useModalLayer";
@@ -108,7 +108,7 @@ export default function GuestbookModal({
               >
                 <Icon icon={X} size="md" />
               </button>
-              <h3 className="text-center text-xl font-semibold text-gray-900">
+              <h3 className="text-center text-lg font-semibold text-gray-900">
                 방명록 작성하기
               </h3>
             </div>
@@ -117,7 +117,7 @@ export default function GuestbookModal({
               <div className="py-3">
                 <label
                   htmlFor="author"
-                  className="mb-3 block text-base font-semibold text-gray-800"
+                  className="mb-3 block text-sm font-semibold text-gray-800"
                 >
                   <span className="mr-1 text-red-500">*</span>이름
                 </label>
@@ -132,7 +132,7 @@ export default function GuestbookModal({
                     }))
                   }
                   placeholder="이름을 입력해 주세요."
-                  className="w-full px-2 border-0 border-b border-gray-300 py-3 text-sm outline-none placeholder:text-gray-400 focus:border-gray-400 text-wedding-gray"
+                  className="w-full px-2 border-0 border-b border-gray-300 pt-1 pb-3 text-sm outline-none placeholder:text-gray-400 focus:border-gray-400 text-wedding-gray"
                   maxLength={20}
                   required
                 />
@@ -141,7 +141,7 @@ export default function GuestbookModal({
               <div className="py-3">
                 <label
                   htmlFor="message"
-                  className="mb-3 block text-base font-semibold text-gray-800"
+                  className="mb-3 block text-sm font-semibold text-gray-800"
                 >
                   <span className="mr-1 text-red-500">*</span>내용
                 </label>
@@ -154,7 +154,7 @@ export default function GuestbookModal({
                       message: event.target.value,
                     }))
                   }
-                  className="w-full resize-none border-0 border-b border-gray-300 px-2 py-3 text-sm outline-none placeholder:text-gray-400 focus:border-gray-400 text-wedding-gray"
+                  className="w-full resize-none border-0 border-b border-gray-300 px-2 pt-1 pb-3 text-sm outline-none placeholder:text-gray-400 focus:border-gray-400 text-wedding-gray"
                   placeholder="내용을 작성해 주세요. (최대 500자)"
                   rows={4}
                   maxLength={500}
@@ -163,27 +163,37 @@ export default function GuestbookModal({
               </div>
 
               <div>
-                <label className="flex items-center gap-2 text-sm text-gray-700">
-                  <input
-                    type="checkbox"
-                    checked={formData.isPublic}
-                    onChange={(event) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        isPublic: event.target.checked,
-                      }))
-                    }
-                    className="h-4 w-4 rounded border-gray-300 text-wedding-brown focus:ring-wedding-brown"
-                  />
+                <button
+                  type="button"
+                  role="checkbox"
+                  aria-checked={formData.isPublic}
+                  onClick={() =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      isPublic: !prev.isPublic,
+                    }))
+                  }
+                  className="inline-flex items-center gap-2 text-sm text-gray-700"
+                >
+                  <span
+                    className={`inline-flex h-4 w-4 items-center justify-center rounded border transition ${
+                      formData.isPublic
+                        ? "border-wedding-brown bg-wedding-brown text-white"
+                        : "border-gray-300 bg-white text-transparent"
+                    }`}
+                    aria-hidden="true"
+                  >
+                    <Icon icon={Check} size="sm" className="!h-3 !w-3" />
+                  </span>
                   청첩장에 공개하기
-                </label>
+                </button>
               </div>
 
               {errorMessage && (
                 <p className="text-sm text-red-500">{errorMessage}</p>
               )}
 
-              <div className="mt-4 flex justify-end  pt-6 w-full">
+              <div className="mt-4 flex justify-end w-full">
                 <button
                   type="submit"
                   disabled={!canSubmit || isSubmitting}
