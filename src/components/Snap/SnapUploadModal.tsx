@@ -26,7 +26,6 @@ interface SelectedImage {
 }
 
 const SNAP_COVER_IMAGE_ALT = "스냅 업로드 커버 이미지";
-const SNAP_BACK_LABEL = "뒤로";
 const SNAP_NAME_LABEL = "이름";
 const SNAP_NAME_PLACEHOLDER = "이름을 입력해 주세요.";
 
@@ -197,11 +196,10 @@ export default function SnapUploadModal({
           <button
             type="button"
             onClick={onClose}
-            className="mb-4 inline-flex items-center gap-1 text-sm font-medium text-[#2f2f2f]"
+            className="absolute right-4 top-5 rounded-full p-1 text-[#222222] hover:bg-black/5"
             aria-label="스냅 업로드 모달 닫기"
           >
-            <Icon icon={ChevronLeft} size="sm" />
-            <span>{SNAP_BACK_LABEL}</span>
+            <Icon icon={X} size="lg" />
           </button>
 
           <div className="group relative mx-auto w-full rounded-[22px] bg-gradient-to-br from-[#f8eee0] via-[#ffffff] to-[#efe2d0] p-[1.5px] shadow-[0_18px_34px_rgba(58,41,23,0.15)]">
@@ -222,18 +220,6 @@ export default function SnapUploadModal({
               <p className="mt-4 whitespace-pre-line text-sm leading-7">
                 {noticeText}
               </p>
-            ) : null}
-            {noticeLines.length > 0 ? (
-              <ul className="mt-5 space-y-1 text-sm leading-7 text-[#757575]">
-                {noticeLines.map((line, index) => (
-                  <li key={`${line}-${index}`} className="flex gap-2">
-                    <span aria-hidden="true" className="pt-[2px]">
-                      •
-                    </span>
-                    <span>{line}</span>
-                  </li>
-                ))}
-              </ul>
             ) : null}
           </div>
 
@@ -365,6 +351,19 @@ export default function SnapUploadModal({
               {isSubmitting ? "업로드 중..." : "업로드"}
             </button>
           </div>
+
+          {noticeLines.length > 0 ? (
+            <ul className="mt-5 space-y-1 px-4 text-sm leading-7 text-[#757575]">
+              {noticeLines.map((line, index) => (
+                <li key={`${line}-${index}`} className="flex gap-2">
+                  <span aria-hidden="true" className="pt-[2px]">
+                    •
+                  </span>
+                  <span>{line}</span>
+                </li>
+              ))}
+            </ul>
+          ) : null}
 
           <div className="pb-8" />
         </motion.div>
