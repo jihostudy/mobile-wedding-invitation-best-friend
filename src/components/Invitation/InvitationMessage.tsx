@@ -13,12 +13,24 @@ interface InvitationMessageProps {
   bride: Person;
 }
 
+function formatParentLine(person: Person, relation: "아들" | "딸") {
+  const names = [person.parents?.father, person.parents?.mother].filter(
+    (name): name is string => Boolean(name && name.trim()),
+  );
+  if (names.length === 0) {
+    return relation === "아들" ? "신랑" : "신부";
+  }
+  return `${names.join(" · ")} 의 ${relation}`;
+}
+
 export default function InvitationMessage({
   section,
   groom,
   bride,
 }: InvitationMessageProps) {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const groomParentLine = formatParentLine(groom, "아들");
+  const brideParentLine = formatParentLine(bride, "딸");
 
   return (
     <section id="invitation" className="relative z-10 bg-white px-6 py-16">
@@ -41,16 +53,14 @@ export default function InvitationMessage({
           <div className="mx-auto w-fit text-wedding-brown-light">
             <div className="grid grid-cols-[max-content_max-content] items-baseline gap-x-3 gap-y-3 text-base">
               <p className="text-right text-wedding-gray font-medium">
-                {groom.parents?.father || "-"} · {groom.parents?.mother || "-"}
-                <span className="text-sm text-wedding-gray-light"> 의 아들</span>
+                {groomParentLine}
               </p>
               <span className="text-right font-semibold text-wedding-brown">
                 {groom.name}
               </span>
 
               <p className="text-right text-wedding-gray font-medium">
-                {bride.parents?.father || "-"} · {bride.parents?.mother || "-"}
-                <span className="text-sm text-wedding-gray-light"> 의 딸</span>
+                {brideParentLine}
               </p>
               <span className="text-right font-semibold text-wedding-brown">
                 {bride.name}

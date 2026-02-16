@@ -16,7 +16,8 @@ interface SnapSectionProps {
 
 function formatUploadOpenAtLabel(uploadOpenAt: string) {
   const parsed = new Date(uploadOpenAt);
-  if (Number.isNaN(parsed.getTime())) return "업로드 시간이 설정되지 않았습니다.";
+  if (Number.isNaN(parsed.getTime()))
+    return "업로드 시간이 설정되지 않았습니다.";
   const hour = String(parsed.getHours()).padStart(2, "0");
   const minute = String(parsed.getMinutes()).padStart(2, "0");
   return `예식 당일 ${hour}:${minute}부터 업로드 가능합니다.`;
@@ -169,7 +170,9 @@ export default function SnapSection({ section }: SnapSectionProps) {
         </button>
 
         <p className="mt-6 text-sm leading-[1.5]">
-          <span className="text-[#a2a2a2]">{formatUploadOpenAtLabel(section.uploadOpenAt)}</span>
+          <span className="text-[#a2a2a2]">
+            {formatUploadOpenAtLabel(section.uploadOpenAt)}
+          </span>
         </p>
       </FadeInUp>
       <SnapUploadModal

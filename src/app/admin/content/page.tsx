@@ -175,6 +175,33 @@ function formatPhoneNumber(value: string) {
   return `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7)}`;
 }
 
+function getAccountOwnerLabel(groupId: string, groupLabel: string, accountIndex: number) {
+  const isGroomGroup = groupId.includes("groom") || groupLabel.includes("신랑");
+  const isBrideGroup = groupId.includes("bride") || groupLabel.includes("신부");
+
+  if (isGroomGroup) {
+    return (["신랑", "부친", "모친"][accountIndex] ?? `신랑측 계좌 ${accountIndex + 1}`);
+  }
+  if (isBrideGroup) {
+    return (["신부", "부친", "모친"][accountIndex] ?? `신부측 계좌 ${accountIndex + 1}`);
+  }
+  return `계좌 ${accountIndex + 1}`;
+}
+
+function hasAnyParentValue(parents: {
+  father?: string;
+  mother?: string;
+  fatherContact?: string;
+  motherContact?: string;
+}) {
+  return Boolean(
+    parents.father?.trim() ||
+      parents.mother?.trim() ||
+      parents.fatherContact?.trim() ||
+      parents.motherContact?.trim(),
+  );
+}
+
 function normalizeTransportDetails(content: WeddingContentV1): WeddingContentV1 {
   const next = deepClone(content);
   const transport = next.weddingData.venue.transport;
@@ -472,6 +499,42 @@ export default function AdminContentPage() {
     });
   }, []);
 
+  const updateParentField = useCallback(
+    (
+      side: "groom" | "bride",
+      key: "father" | "mother" | "fatherContact" | "motherContact",
+      rawValue: string,
+    ) => {
+      setDraftContent((prev) => {
+        if (!prev) return prev;
+        const next = deepClone(prev);
+        const person = next.weddingData[side];
+        const existing = person.parents ?? {};
+        const value =
+          key === "fatherContact" || key === "motherContact"
+            ? formatPhoneNumber(rawValue)
+            : rawValue;
+        const normalizedValue = value.trim();
+
+        const updatedParents = { ...existing };
+        if (normalizedValue.length === 0) {
+          delete updatedParents[key];
+        } else {
+          updatedParents[key] = value;
+        }
+
+        if (hasAnyParentValue(updatedParents)) {
+          person.parents = updatedParents;
+        } else {
+          delete person.parents;
+        }
+
+        return next;
+      });
+    },
+    [],
+  );
+
   const addArrayItem = useCallback((path: PathSegment[], item: unknown) => {
     setDraftContent((prev) => {
       if (!prev) return prev;
@@ -755,35 +818,25 @@ export default function AdminContentPage() {
               <TextField
                 label="부친"
                 value={content.weddingData.groom.parents?.father ?? ""}
-                onChange={(value) =>
-                  updatePath(["weddingData", "groom", "parents", "father"], value)
-                }
+                onChange={(value) => updateParentField("groom", "father", value)}
               />
               <TextField
                 label="부친 연락처"
                 value={content.weddingData.groom.parents?.fatherContact ?? ""}
                 onChange={(value) =>
-                  updatePath(
-                    ["weddingData", "groom", "parents", "fatherContact"],
-                    formatPhoneNumber(value),
-                  )
+                  updateParentField("groom", "fatherContact", value)
                 }
               />
               <TextField
                 label="모친"
                 value={content.weddingData.groom.parents?.mother ?? ""}
-                onChange={(value) =>
-                  updatePath(["weddingData", "groom", "parents", "mother"], value)
-                }
+                onChange={(value) => updateParentField("groom", "mother", value)}
               />
               <TextField
                 label="모친 연락처"
                 value={content.weddingData.groom.parents?.motherContact ?? ""}
                 onChange={(value) =>
-                  updatePath(
-                    ["weddingData", "groom", "parents", "motherContact"],
-                    formatPhoneNumber(value),
-                  )
+                  updateParentField("groom", "motherContact", value)
                 }
               />
             </div>
@@ -816,35 +869,25 @@ export default function AdminContentPage() {
               <TextField
                 label="부친"
                 value={content.weddingData.bride.parents?.father ?? ""}
-                onChange={(value) =>
-                  updatePath(["weddingData", "bride", "parents", "father"], value)
-                }
+                onChange={(value) => updateParentField("bride", "father", value)}
               />
               <TextField
                 label="부친 연락처"
                 value={content.weddingData.bride.parents?.fatherContact ?? ""}
                 onChange={(value) =>
-                  updatePath(
-                    ["weddingData", "bride", "parents", "fatherContact"],
-                    formatPhoneNumber(value),
-                  )
+                  updateParentField("bride", "fatherContact", value)
                 }
               />
               <TextField
                 label="모친"
                 value={content.weddingData.bride.parents?.mother ?? ""}
-                onChange={(value) =>
-                  updatePath(["weddingData", "bride", "parents", "mother"], value)
-                }
+                onChange={(value) => updateParentField("bride", "mother", value)}
               />
               <TextField
                 label="모친 연락처"
                 value={content.weddingData.bride.parents?.motherContact ?? ""}
                 onChange={(value) =>
-                  updatePath(
-                    ["weddingData", "bride", "parents", "motherContact"],
-                    formatPhoneNumber(value),
-                  )
+                  updateParentField("bride", "motherContact", value)
                 }
               />
             </div>
@@ -1682,7 +1725,7 @@ export default function AdminContentPage() {
                       }
                       disabled={index === 0}
                     >
-                      위로
+                      앞으로
                     </button>
                     <button
                       type="button"
@@ -1696,7 +1739,7 @@ export default function AdminContentPage() {
                       }
                       disabled={index === content.gallerySection.images.length - 1}
                     >
-                      아래로
+                      뒤로
                     </button>
                   </div>
                 </div>
@@ -1869,6 +1912,9 @@ export default function AdminContentPage() {
                         key={`account-${groupIndex}-${accountIndex}`}
                         className="rounded-lg border border-[#efe5d6] bg-white p-3"
                       >
+                        <p className="mb-2 text-xs font-semibold text-[#7a6c58]">
+                          {getAccountOwnerLabel(group.id, group.label, accountIndex)}
+                        </p>
                         <div className="grid gap-2 md:grid-cols-2">
                           <TextField
                             label="은행"

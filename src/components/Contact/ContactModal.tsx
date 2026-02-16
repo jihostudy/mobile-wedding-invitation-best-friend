@@ -44,6 +44,64 @@ export default function ContactModal({
 
   if (!isMounted || !isOpen) return null;
 
+  const groomContactRows = [
+    {
+      label: "신랑",
+      name: groom.name,
+      phone: groom.contact,
+      contactType: "groom",
+    },
+    ...(groom.parents?.father?.trim() || groom.parents?.fatherContact?.trim()
+      ? [
+          {
+            label: "신랑 아버지",
+            name: groom.parents?.father ?? "신랑 아버지",
+            phone: groom.parents?.fatherContact,
+            contactType: "groom-father",
+          },
+        ]
+      : []),
+    ...(groom.parents?.mother?.trim() || groom.parents?.motherContact?.trim()
+      ? [
+          {
+            label: "신랑 어머니",
+            name: groom.parents?.mother ?? "신랑 어머니",
+            phone: groom.parents?.motherContact,
+            contactType: "groom-mother",
+          },
+        ]
+      : []),
+  ];
+
+  const brideContactRows = [
+    {
+      label: "신부",
+      name: bride.name,
+      phone: bride.contact,
+      contactType: "bride",
+    },
+    ...(bride.parents?.father?.trim() || bride.parents?.fatherContact?.trim()
+      ? [
+          {
+            label: "신부 아버지",
+            name: bride.parents?.father ?? "신부 아버지",
+            phone: bride.parents?.fatherContact,
+            contactType: "bride-father",
+          },
+        ]
+      : []),
+    ...(bride.parents?.mother?.trim() || bride.parents?.motherContact?.trim()
+      ? [
+          {
+            label: "신부 어머니",
+            name: bride.parents?.mother ?? "신부 어머니",
+            phone: bride.parents?.motherContact,
+            contactType: "bride-mother",
+          },
+        ]
+      : []),
+  ];
+
   const copyToClipboard = async (
     text: string | undefined,
     contactType: string,
@@ -148,24 +206,15 @@ export default function ContactModal({
               신랑측
             </h4>
             <div className="overflow-hidden rounded-lg bg-wedding-brown/40">
-              <ContactRow
-                label="신랑"
-                name={groom.name}
-                phone={groom.contact}
-                contactType="groom"
-              />
-              <ContactRow
-                label="신랑 아버지"
-                name={groom.parents?.father || "-"}
-                phone={groom.parents?.fatherContact}
-                contactType="groom-father"
-              />
-              <ContactRow
-                label="신랑 어머니"
-                name={groom.parents?.mother || "-"}
-                phone={groom.parents?.motherContact}
-                contactType="groom-mother"
-              />
+              {groomContactRows.map((row) => (
+                <ContactRow
+                  key={row.contactType}
+                  label={row.label}
+                  name={row.name}
+                  phone={row.phone}
+                  contactType={row.contactType}
+                />
+              ))}
             </div>
           </div>
 
@@ -174,24 +223,15 @@ export default function ContactModal({
               신부측
             </h4>
             <div className="overflow-hidden rounded-lg bg-wedding-brown/40">
-              <ContactRow
-                label="신부"
-                name={bride.name}
-                phone={bride.contact}
-                contactType="bride"
-              />
-              <ContactRow
-                label="신부 아버지"
-                name={bride.parents?.father || "-"}
-                phone={bride.parents?.fatherContact}
-                contactType="bride-father"
-              />
-              <ContactRow
-                label="신부 어머니"
-                name={bride.parents?.mother || "-"}
-                phone={bride.parents?.motherContact}
-                contactType="bride-mother"
-              />
+              {brideContactRows.map((row) => (
+                <ContactRow
+                  key={row.contactType}
+                  label={row.label}
+                  name={row.name}
+                  phone={row.phone}
+                  contactType={row.contactType}
+                />
+              ))}
             </div>
           </div>
         </div>

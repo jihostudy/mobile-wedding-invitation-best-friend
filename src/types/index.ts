@@ -29,8 +29,8 @@ export interface Person {
 }
 
 export interface Parents {
-  father: string;
-  mother: string;
+  father?: string;
+  mother?: string;
   fatherContact?: string;
   motherContact?: string;
 }

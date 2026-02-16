@@ -6,8 +6,8 @@ const personSchema = z.object({
   englishName: z.string().optional(),
   parents: z
     .object({
-      father: z.string(),
-      mother: z.string(),
+      father: z.string().optional(),
+      mother: z.string().optional(),
       fatherContact: z.string().optional(),
       motherContact: z.string().optional(),
     })
