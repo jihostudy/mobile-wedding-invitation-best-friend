@@ -17,6 +17,7 @@ import { useAdminSnapSubmissionsQuery } from "@/lib/queries/snap";
 import type { WeddingContentV1 } from "@/types";
 
 type PathSegment = string | number;
+type Indexable = Record<string | number, unknown>;
 const GALLERY_IMAGE_ALT = "신랑신부 사진";
 const SNAP_COVER_IMAGE_ALT = "스냅 업로드 커버 이미지";
 
@@ -25,23 +26,32 @@ function deepClone<T>(value: T): T {
   return JSON.parse(JSON.stringify(value)) as T;
 }
 
+function isIndexable(value: unknown): value is Indexable {
+  return typeof value === "object" && value !== null;
+}
+
 function getValueAtPath(obj: unknown, path: PathSegment[]) {
-  let cursor: any = obj;
+  let cursor: unknown = obj;
   for (const key of path) {
-    if (cursor == null) return undefined;
-    cursor = cursor[key as keyof typeof cursor];
+    if (!isIndexable(cursor)) return undefined;
+    cursor = cursor[key];
   }
   return cursor;
 }
 
 function setValueAtPath<T>(obj: T, path: PathSegment[], value: unknown): T {
   const next = deepClone(obj);
-  let cursor: any = next;
+  if (path.length === 0) return next;
+
+  let cursor: unknown = next;
   for (let index = 0; index < path.length - 1; index += 1) {
-    cursor = cursor[path[index] as keyof typeof cursor];
+    if (!isIndexable(cursor)) return next;
+    cursor = cursor[path[index]];
   }
+  if (!isIndexable(cursor)) return next;
+
   const last = path[path.length - 1];
-  cursor[last as keyof typeof cursor] = value;
+  cursor[last] = value;
   return next;
 }
 
