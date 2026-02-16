@@ -300,6 +300,41 @@
   }
 }
 
+@keyframes ambientGradientShift {
+  0% {
+    transform: scale(1) translate3d(-1.5%, -1%, 0);
+    opacity: 0.52;
+  }
+  35% {
+    transform: scale(1.08) translate3d(1.6%, -2.2%, 0);
+    opacity: 0.62;
+  }
+  70% {
+    transform: scale(1.04) translate3d(-1%, 1.8%, 0);
+    opacity: 0.56;
+  }
+  100% {
+    transform: scale(1) translate3d(-1.5%, -1%, 0);
+    opacity: 0.52;
+  }
+}
+
+@keyframes ambientBlobDrift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.58;
+  }
+  50% {
+    transform: translate3d(var(--blob-drift-x, 18px), var(--blob-drift-y, -20px), 0)
+      scale(var(--blob-scale, 1.12));
+    opacity: 0.72;
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.58;
+  }
+}
+
 @layer utilities {
   .hero-snow-layer {
     mix-blend-mode: normal;
@@ -368,6 +403,39 @@
     will-change: transform, opacity;
     opacity: 0;
   }
+
+  .ambient-gradient-layer {
+    position: absolute;
+    inset: -20%;
+    background:
+      radial-gradient(
+        circle at 10% 20%,
+        rgba(255, 204, 214, 0.68) 0%,
+        rgba(255, 204, 214, 0) 56%
+      ),
+      radial-gradient(
+        circle at 84% 26%,
+        rgba(255, 228, 188, 0.64) 0%,
+        rgba(255, 228, 188, 0) 58%
+      ),
+      radial-gradient(
+        circle at 50% 78%,
+        rgba(255, 215, 223, 0.52) 0%,
+        rgba(255, 215, 223, 0) 62%
+      );
+    filter: blur(30px) saturate(112%);
+    animation: ambientGradientShift 28s ease-in-out infinite;
+    will-change: transform, opacity;
+  }
+
+  .ambient-gradient-blob {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(72px);
+    animation: ambientBlobDrift var(--blob-duration, 22s) ease-in-out infinite;
+    animation-delay: var(--blob-delay, 0s);
+    will-change: transform, opacity;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -383,6 +451,13 @@
 
   .wedding-day-pulse {
     animation: none;
+  }
+
+  .ambient-gradient-layer,
+  .ambient-gradient-blob {
+    animation: none;
+    transform: none;
+    opacity: 0.55;
   }
 }
 

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
+import { type CSSProperties, useEffect, useRef, useState } from 'react';
 import MainHero from '@/components/Hero/MainHero';
 import BackgroundMusicPlayer from '@/components/Audio/BackgroundMusicPlayer';
 import InvitationMessage from '@/components/Invitation/InvitationMessage';
@@ -49,9 +49,43 @@ export default function HomePageClient() {
   return (
     <>
       <div aria-hidden className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -left-24 top-[12%] h-72 w-72 rounded-full bg-[#ffc8d2]/45 blur-3xl" />
-        <div className="absolute -right-24 top-[34%] h-80 w-80 rounded-full bg-[#ffe2b8]/45 blur-3xl" />
-        <div className="absolute left-1/2 top-[70%] h-64 w-64 -translate-x-1/2 rounded-full bg-[#ffd5de]/35 blur-3xl" />
+        <div className="ambient-gradient-layer" />
+        <div
+          className="ambient-gradient-blob -left-28 top-[10%] h-[24rem] w-[24rem] bg-[#ffccd6]/60"
+          style={
+            {
+              "--blob-drift-x": "22px",
+              "--blob-drift-y": "-26px",
+              "--blob-scale": "1.16",
+              "--blob-duration": "24s",
+              "--blob-delay": "-4s",
+            } as CSSProperties
+          }
+        />
+        <div
+          className="ambient-gradient-blob -right-28 top-[30%] h-[28rem] w-[28rem] bg-[#ffe4bd]/58"
+          style={
+            {
+              "--blob-drift-x": "-20px",
+              "--blob-drift-y": "22px",
+              "--blob-scale": "1.13",
+              "--blob-duration": "30s",
+              "--blob-delay": "-11s",
+            } as CSSProperties
+          }
+        />
+        <div
+          className="ambient-gradient-blob left-1/2 top-[68%] h-[21rem] w-[21rem] -translate-x-1/2 bg-[#ffd8df]/54"
+          style={
+            {
+              "--blob-drift-x": "16px",
+              "--blob-drift-y": "-18px",
+              "--blob-scale": "1.12",
+              "--blob-duration": "27s",
+              "--blob-delay": "-7s",
+            } as CSSProperties
+          }
+        />
       </div>
       <main className="relative z-10 mx-auto w-full max-w-[425px] border-x border-[#efe2d1] bg-white/95 shadow-[0_24px_64px_rgba(103,76,48,0.16)] backdrop-blur-sm">
         <MainHero
@@ -90,16 +124,16 @@ export default function HomePageClient() {
           </FadeInUp>
         </div>
         <BackgroundMusicPlayer config={content.weddingData.backgroundMusic} />
-        {isAdminAuthenticated ? (
-          <Link
-            href="/admin/guest-messages"
-            className="fixed bottom-5 right-5 z-50 rounded-full bg-wedding-brown px-5 py-3 text-xs font-semibold tracking-[0.08em] text-white shadow-[0_10px_24px_rgba(68,47,33,0.3)] transition hover:bg-wedding-brown-light"
-            aria-label="관리자 대시보드로 이동"
-          >
-            대시보드
-          </Link>
-        ) : null}
       </main>
+      {isAdminAuthenticated ? (
+        <Link
+          href="/admin/guest-messages"
+          className="fixed bottom-5 right-5 z-[10020] rounded-full bg-wedding-brown px-5 py-3 text-xs font-semibold tracking-[0.08em] text-white shadow-[0_10px_24px_rgba(68,47,33,0.3)] transition hover:bg-wedding-brown-light"
+          aria-label="관리자 대시보드로 이동"
+        >
+          대시보드
+        </Link>
+      ) : null}
     </>
   );
 }
