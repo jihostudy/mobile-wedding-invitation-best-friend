@@ -127,7 +127,10 @@ export default function HomePageClient() {
             />
           </FadeInUp>
           <FadeInUp delay={0.35} amount={0.15}>
-            <AccountSection section={content.accountSection} />
+            <AccountSection
+              section={content.accountSection}
+              weddingData={content.weddingData}
+            />
           </FadeInUp>
           <FadeInUp delay={0.4} amount={0.15}>
             <FinalThanksSection section={content.closingSection} />

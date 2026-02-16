@@ -232,9 +232,6 @@ const weddingContentSchema = z.object({
           z.object({
             bank: z.string(),
             account: z.string(),
-            holder: z.string(),
-            label: z.string().optional(),
-            kakaoPayLink: z.string().optional(),
           }),
         ),
       }),

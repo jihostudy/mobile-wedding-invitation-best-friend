@@ -1797,6 +1797,9 @@ export default function AdminContentPage() {
             }
             rows={3}
           />
+          <p className="text-xs text-[#7a6c58]">
+            예금주 표시는 신랑/신부 및 부모 정보에서 자동으로 연동됩니다. 계좌에는 은행과 계좌번호만 입력하세요.
+          </p>
 
           <div className="flex justify-end">
             <button
@@ -1853,9 +1856,6 @@ export default function AdminContentPage() {
                           {
                             bank: "",
                             account: "",
-                            holder: "",
-                            label: "",
-                            kakaoPayLink: "",
                           },
                         )
                       }
@@ -1904,34 +1904,6 @@ export default function AdminContentPage() {
                               )
                             }
                           />
-                          <TextField
-                            label="예금주"
-                            value={account.holder}
-                            onChange={(value) =>
-                              updatePath(
-                                [
-                                  "accountSection",
-                                  "groups",
-                                  groupIndex,
-                                  "accounts",
-                                  accountIndex,
-                                  "holder",
-                                ],
-                                value,
-                              )
-                            }
-                          />
-                          <label className="block min-w-0">
-                            <span className="mb-1.5 block text-xs font-semibold text-[#6f6350]">
-                              카카오페이 링크 (읽기 전용)
-                            </span>
-                            <input
-                              type="text"
-                              readOnly
-                              value={account.kakaoPayLink ?? ""}
-                              className="h-10 w-full rounded-lg border border-[#dfd4c1] bg-[#f5f0e7] px-3 text-sm text-[#6f6350] outline-none"
-                            />
-                          </label>
                         </div>
                         <div className="mt-2 flex justify-end">
                           <button

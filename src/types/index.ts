@@ -89,9 +89,6 @@ export interface ImageAsset {
 export interface AccountItem {
   bank: string;
   account: string;
-  holder: string;
-  label?: string;
-  kakaoPayLink?: string;
 }
 
 export interface AccountGroup {

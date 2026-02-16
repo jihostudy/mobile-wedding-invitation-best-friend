@@ -262,18 +262,14 @@ export const ACCOUNT_SECTION: AccountSectionData = {
       label: "신랑측",
       accounts: [
         {
-          holder: WEDDING_DATA.groom.name,
           bank: "신한은행",
           account: "110-123-456789",
-          kakaoPayLink: "https://pay.kakao.com",
         },
         {
-          holder: WEDDING_DATA.groom.parents?.father || "신랑 아버지",
           bank: "우리은행",
           account: "110-000-000001",
         },
         {
-          holder: WEDDING_DATA.groom.parents?.mother || "신랑 어머니",
           bank: "국민은행",
           account: "110-000-000002",
         },
@@ -284,18 +280,14 @@ export const ACCOUNT_SECTION: AccountSectionData = {
       label: "신부측",
       accounts: [
         {
-          holder: WEDDING_DATA.bride.name,
           bank: "카카오뱅크",
           account: "3333-01-1234567",
-          kakaoPayLink: "https://pay.kakao.com",
         },
         {
-          holder: WEDDING_DATA.bride.parents?.father || "신부 아버지",
           bank: "토스뱅크",
           account: "110-000-000004",
         },
         {
-          holder: WEDDING_DATA.bride.parents?.mother || "신부 어머니",
           bank: "카카오뱅크",
           account: "110-000-000005",
         },

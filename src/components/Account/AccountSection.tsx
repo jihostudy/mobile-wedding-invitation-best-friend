@@ -2,16 +2,39 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ChevronUp, Copy, MessageCircle } from "lucide-react";
+import { ChevronUp, Copy } from "lucide-react";
 import Icon from "@/components/common/Icon";
 import useToast from "@/components/common/toast/useToast";
-import type { AccountSectionData } from "@/types";
+import type { AccountSectionData, WeddingInfo } from "@/types";
 
 interface AccountSectionProps {
   section: AccountSectionData;
+  weddingData: WeddingInfo;
 }
 
-export default function AccountSection({ section }: AccountSectionProps) {
+function inferAccountHolderName(
+  groupId: string,
+  groupLabel: string,
+  accountIndex: number,
+  weddingData: WeddingInfo,
+) {
+  const isGroomGroup = groupId.includes("groom") || groupLabel.includes("신랑");
+  const isBrideGroup = groupId.includes("bride") || groupLabel.includes("신부");
+  if (!isGroomGroup && !isBrideGroup) {
+    return `${groupLabel || "계좌"} ${accountIndex + 1}`;
+  }
+
+  const side = isGroomGroup ? "groom" : "bride";
+  const person = isGroomGroup ? weddingData.groom : weddingData.bride;
+  const candidates = [
+    person.name,
+    person.parents?.father ?? `${side === "groom" ? "신랑" : "신부"} 아버지`,
+    person.parents?.mother ?? `${side === "groom" ? "신랑" : "신부"} 어머니`,
+  ];
+  return candidates[accountIndex] ?? `${groupLabel || (side === "groom" ? "신랑측" : "신부측")} 계좌`;
+}
+
+export default function AccountSection({ section, weddingData }: AccountSectionProps) {
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(
     Object.fromEntries(section.groups.map((group) => [group.id, true])),
   );
@@ -97,44 +120,34 @@ export default function AccountSection({ section }: AccountSectionProps) {
                   <div className="border-t border-[#e7dccb] bg-white">
                     {group.accounts.map((account, index) => {
                       const rowKey = `${group.id}-${index}`;
+                      const holderName = inferAccountHolderName(
+                        group.id,
+                        group.label,
+                        index,
+                        weddingData,
+                      );
                       return (
                         <div
                           key={rowKey}
-                          className="flex items-center justify-between px-5 py-4"
+                          className="flex items-start justify-between gap-4 px-5 py-4"
                         >
-                          <div className="flex flex-col gap-2">
-                            <button
-                              type="button"
-                              onClick={() => handleCopy(account.account)}
-                              className="flex items-center gap-2 text-left text-[16px] text-gray-800"
-                            >
-                              <Icon
-                                icon={Copy}
-                                size="sm"
-                                className="text-gray-500"
-                              />
-                              {account.holder}
-                            </button>
-                            <p className="mt-1 text-sm text-gray-700">
+                          <div>
+                            <p className="text-[16px] text-gray-800">
+                              {holderName}
+                            </p>
+                            <p className="mt-2 text-sm text-gray-700">
                               {account.bank} {account.account}
                             </p>
                           </div>
 
-                          {account.kakaoPayLink && (
-                            <a
-                              href={account.kakaoPayLink}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-[#FEE500]"
-                              aria-label="카카오페이로 송금하기"
-                            >
-                              <Icon
-                                icon={MessageCircle}
-                                size="lg"
-                                className="text-black"
-                              />
-                            </a>
-                          )}
+                          <button
+                            type="button"
+                            onClick={() => handleCopy(account.account)}
+                            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#d5d5d5] bg-white text-[#5f5f5f] transition hover:bg-[#f5f5f5]"
+                            aria-label={`${holderName} 계좌번호 복사`}
+                          >
+                            <Icon icon={Copy} size="sm" />
+                          </button>
                         </div>
                       );
                     })}
