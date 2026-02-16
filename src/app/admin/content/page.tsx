@@ -533,8 +533,9 @@ export default function AdminContentPage() {
         const isAudioFile = file.type.startsWith("audio/");
         if (file.size > MAX_ASSET_UPLOAD_SIZE_BYTES) {
           toast.error(
-            `${isAudioFile ? "음원" : "이미지"} 파일 용량이 너무 큽니다. ` +
-              `최대 ${formatFileSize(MAX_ASSET_UPLOAD_SIZE_BYTES)}까지 업로드할 수 있습니다.`,
+            isAudioFile
+              ? "음원 파일 용량이 커서 업로드할 수 없습니다. 관리자에게 문의해 주세요."
+              : `이미지 파일 용량이 너무 큽니다. 최대 ${formatFileSize(MAX_ASSET_UPLOAD_SIZE_BYTES)}까지 업로드할 수 있습니다.`,
           );
           return;
         }
@@ -578,7 +579,9 @@ export default function AdminContentPage() {
         const isAudioFile = file.type.startsWith("audio/");
         const message =
           error instanceof ApiError && error.status === 413
-            ? `${isAudioFile ? "음원" : "이미지"} 파일 용량이 너무 커서 업로드할 수 없습니다.`
+            ? isAudioFile
+              ? "음원 파일 용량이 커서 업로드할 수 없습니다. 관리자에게 문의해 주세요."
+              : "이미지 파일 용량이 너무 커서 업로드할 수 없습니다."
             : error instanceof ApiError
             ? error.message
             : isAudioFile

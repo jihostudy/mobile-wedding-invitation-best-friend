@@ -20,7 +20,7 @@ export default function AdminPage() {
       .then((result) => {
         if (cancelled) return;
         if (result.authenticated) {
-          router.replace("/admin/guest-messages");
+          router.replace("/admin/content");
         }
       })
       .catch(() => {})
@@ -43,7 +43,7 @@ export default function AdminPage() {
         body: JSON.stringify({ password }),
       });
       toast.success("관리자 로그인에 성공했습니다.");
-      router.replace("/admin/guest-messages");
+      router.replace("/admin/content");
     } catch (error) {
       const message =
         error instanceof ApiError
