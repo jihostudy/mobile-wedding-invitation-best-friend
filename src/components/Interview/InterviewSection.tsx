@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import { createPortal } from "react-dom";
+import { AnimatePresence, motion } from "framer-motion";
 import { Mail, UserRound, X } from "lucide-react";
 import Icon from "@/components/common/Icon";
 import FadeInUp from "@/components/common/FadeInUp";
@@ -47,14 +47,15 @@ export default function InterviewSection({
           </p>
 
           <FadeInUp className="mt-8">
-            <div className="relative aspect-[17/10] w-full overflow-hidden rounded-xl">
-              <Image
-                src={section.image.url}
-                alt={section.image.alt}
-                fill
-                className="object-cover"
-                sizes="(max-width: 425px) 100vw, 425px"
-              />
+            <div className="group relative mx-auto w-full max-w-[370px] rounded-[22px] bg-gradient-to-br from-[#f9efe1] via-[#ffffff] to-[#efe3d3] p-[1.5px] shadow-[0_18px_36px_rgba(63,47,30,0.12)]">
+              <div className="relative overflow-hidden rounded-[20px] bg-white">
+                <img
+                  src={section.image.url}
+                  alt={section.image.alt}
+                  className="block h-auto w-full object-contain transition-transform duration-500 ease-out group-hover:scale-[1.015]"
+                />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/[0.08] via-transparent to-white/[0.14]" />
+              </div>
             </div>
 
             <button
@@ -70,61 +71,81 @@ export default function InterviewSection({
         </div>
       </section>
 
-      {isMounted && isOpen &&
+      {isMounted &&
         createPortal(
-        <div
-          className="fixed inset-0 z-[10000] overflow-hidden overscroll-none"
-          role="dialog"
-          aria-modal="true"
-        >
-          <div className="absolute inset-0 bg-[#f4eee4]/22 backdrop-blur-[2px]" />
-          <div className="modal-scrollbar relative z-10 mx-auto h-[100dvh] w-full max-w-[425px] overflow-y-auto overscroll-contain bg-white px-6 pb-12 pt-6">
-            <div className="flex items-center justify-between">
-              <h3 className="flex-1 text-center text-lg font-semibold text-wedding-gray-dark">
-                {section.title}
-              </h3>
-              <button
-                type="button"
-                onClick={() => setIsOpen(false)}
-                className="ml-4 rounded-full p-1 text-[#222] hover:bg-black/5"
-                aria-label="인터뷰 닫기"
+          <AnimatePresence>
+            {isOpen ? (
+              <motion.div
+                className="fixed inset-0 z-[10000] overflow-hidden overscroll-none"
+                role="dialog"
+                aria-modal="true"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.22, ease: "easeOut" }}
               >
-                <Icon icon={X} size="lg" />
-              </button>
-            </div>
+                <motion.div
+                  className="absolute inset-0 bg-[#f4eee4]/22 backdrop-blur-[2px]"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                />
+                <motion.div
+                  className="modal-scrollbar relative z-10 mx-auto h-[100dvh] w-full max-w-[425px] overflow-y-auto overscroll-contain bg-white px-6 pb-12 pt-6"
+                  initial={{ y: 22, opacity: 0.8 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: 18, opacity: 0.78 }}
+                  transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <div className="relative flex items-center justify-center">
+                    <h3 className="text-center text-lg font-semibold text-wedding-gray-dark">
+                      {section.title}
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => setIsOpen(false)}
+                      className="absolute right-0 rounded-full p-1 text-[#222] hover:bg-black/5"
+                      aria-label="인터뷰 닫기"
+                    >
+                      <Icon icon={X} size="lg" />
+                    </button>
+                  </div>
 
-            <div className="mt-8 divide-y divide-[#dcdcdc]">
-              {section.questions.map((questionItem) => (
-                <section key={questionItem.question} className="py-7">
-                  <h4 className="text-[16px] font-semibold text-[#333]">
-                    {questionItem.question}
-                  </h4>
-                  <div className="mt-5 space-y-7">
-                    {questionItem.answers.map((answer) => (
-                      <div
-                        key={`${questionItem.question}-${answer.side}`}
-                      >
-                        <p className="flex items-center gap-2 text-sm font-semibold text-[#333] ">
-                          <Icon
-                            icon={UserRound}
-                            size="sm"
-                            className="text-[#666]"
-                          />
-                          {answer.side === "groom" ? `신랑 ${groom.name}` : `신부 ${bride.name}`}
-                        </p>
-                        <p className="mt-3 whitespace-pre-line text-sm leading-[1.62] text-[#333]">
-                          {answer.content}
-                        </p>
-                      </div>
+                  <div className="mt-8 divide-y divide-[#dcdcdc]">
+                    {section.questions.map((questionItem) => (
+                      <section key={questionItem.question} className="py-7">
+                        <h4 className="text-[16px] font-semibold text-[#333]">
+                          {questionItem.question}
+                        </h4>
+                        <div className="mt-5 space-y-7">
+                          {questionItem.answers.map((answer) => (
+                            <div
+                              key={`${questionItem.question}-${answer.side}`}
+                            >
+                              <p className="flex items-center gap-2 text-sm font-semibold text-[#333] ">
+                                <Icon
+                                  icon={UserRound}
+                                  size="sm"
+                                  className="text-[#666]"
+                                />
+                                {answer.side === "groom" ? `신랑 ${groom.name}` : `신부 ${bride.name}`}
+                              </p>
+                              <p className="mt-3 whitespace-pre-line text-sm leading-[1.62] text-[#333]">
+                                {answer.content}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      </section>
                     ))}
                   </div>
-                </section>
-              ))}
-            </div>
-          </div>
-        </div>,
-        document.body
-      )}
+                </motion.div>
+              </motion.div>
+            ) : null}
+          </AnimatePresence>,
+          document.body,
+        )}
     </>
   );
 }
