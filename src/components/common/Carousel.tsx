@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type {
+  CSSProperties,
   KeyboardEvent as ReactKeyboardEvent,
   PointerEvent as ReactPointerEvent,
   ReactNode,
@@ -28,6 +29,7 @@ export interface CarouselProps<T> {
   onIndexChange?: (index: number) => void;
   className?: string;
   viewportClassName?: string;
+  viewportStyle?: CSSProperties;
   slideClassName?: string;
   prevAriaLabel?: string;
   nextAriaLabel?: string;
@@ -66,6 +68,7 @@ export default function Carousel<T>({
   onIndexChange,
   className,
   viewportClassName,
+  viewportStyle,
   slideClassName,
   prevAriaLabel = "이전 슬라이드",
   nextAriaLabel = "다음 슬라이드",
@@ -200,18 +203,19 @@ export default function Carousel<T>({
           swipe ? "cursor-grab active:cursor-grabbing" : undefined,
           viewportClassName,
         )}
+        style={viewportStyle}
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerEnd}
         onPointerCancel={handlePointerCancel}
       >
         <div
-          className="flex transition-transform duration-300 ease-out"
+          className="flex h-full transition-transform duration-300 ease-out"
           style={trackStyle}
         >
           {items.map((item, index) => (
             <div
               key={getItemKey ? getItemKey(item, index) : index}
-              className={cx("min-w-full", slideClassName)}
+              className={cx("min-w-full h-full", slideClassName)}
             >
               {renderItem(item, { index, isActive: index === currentIndex })}
             </div>
@@ -226,7 +230,7 @@ export default function Carousel<T>({
             onClick={prev}
             disabled={disablePrev}
             aria-label={prevAriaLabel}
-            className="absolute left-0 top-1/2 z-10 flex h-8 w-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-wedding-brown shadow-sm transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-40"
+            className="absolute left-0 top-1/2 z-30 flex h-8 w-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-wedding-brown shadow-sm transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-40"
           >
             <Icon icon={ChevronLeft} size="sm" />
           </button>
@@ -235,7 +239,7 @@ export default function Carousel<T>({
             onClick={next}
             disabled={disableNext}
             aria-label={nextAriaLabel}
-            className="absolute right-0 top-1/2 z-10 flex h-8 w-8 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-wedding-brown shadow-sm transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-40"
+            className="absolute right-0 top-1/2 z-30 flex h-8 w-8 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-wedding-brown shadow-sm transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-40"
           >
             <Icon icon={ChevronRight} size="sm" />
           </button>

@@ -4,4 +4,5 @@ export const queryKeys = {
   adminGuestMessages: () => ['admin', 'guest-messages'] as const,
   adminRsvpResponses: () => ['admin', 'rsvp-responses'] as const,
   adminSnapSubmissions: (filters?: Record<string, string>) => ['admin', 'snap-submissions', filters ?? {}] as const,
+  adminSnapSubmission: (id: string) => ['admin', 'snap-submission', id] as const,
 };

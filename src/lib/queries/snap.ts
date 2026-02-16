@@ -36,6 +36,16 @@ export function useAdminSnapSubmissionsQuery(filters?: Record<string, string>) {
   });
 }
 
+export function useAdminSnapSubmissionQuery(id: string) {
+  return useQuery({
+    queryKey: queryKeys.adminSnapSubmission(id),
+    queryFn: () =>
+      apiFetch<{ submission: SnapSubmissionDto }>(`/api/admin/snap-submissions/${encodeURIComponent(id)}`),
+    enabled: Boolean(id),
+    staleTime: 10 * 1000,
+  });
+}
+
 export function useAdminUpdateSnapSubmissionStatusMutation() {
   const queryClient = useQueryClient();
   return useMutation({
