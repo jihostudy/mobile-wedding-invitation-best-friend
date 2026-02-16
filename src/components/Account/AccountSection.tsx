@@ -36,15 +36,13 @@ export default function AccountSection({ section }: AccountSectionProps) {
       <div className="mx-auto w-full max-w-md">
         <div className="text-center">
           <p className="font-crimson text-sm uppercase tracking-[0.33em] text-wedding-brown">
-            ACCOUNT
+            {section.kicker}
           </p>
           <h2 className="mt-3 text-xl tracking-[0.04em] text-wedding-gray-dark">
-            마음 전하실 곳
+            {section.title}
           </h2>
           <p className="mt-3 whitespace-pre-line text-sm leading-8 text-wedding-gray">
-            참석이 어려우신 분들을 위해
-            {"\n"}계좌번호를 기재하였습니다.
-            {"\n"}너그러운 마음으로 양해 부탁드립니다.
+            {section.description}
           </p>
         </div>
 

@@ -1,15 +1,20 @@
 "use client";
 
 import Image from "next/image";
+import type { ClosingSectionData } from "@/types";
 
-export default function FinalThanksSection() {
+interface FinalThanksSectionProps {
+  section: ClosingSectionData;
+}
+
+export default function FinalThanksSection({ section }: FinalThanksSectionProps) {
   return (
     <section id="final-thanks" className="bg-white px-6 pb-10 pt-6">
       <div className="mx-auto w-full max-w-md">
         <div className="relative h-[560px] w-full overflow-hidden rounded-[4px] bg-[#f3f3f3]">
           <Image
-            src="/images/placeholder-couple.svg"
-            alt="감사 인사 이미지"
+            src={section.image.url}
+            alt={section.image.alt}
             fill
             className="object-cover object-center grayscale"
             sizes="(max-width: 425px) 100vw, 425px"

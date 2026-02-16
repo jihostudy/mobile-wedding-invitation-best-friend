@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Check, Copy, Phone, X } from 'lucide-react';
 import Icon from '@/components/common/Icon';
+import useToast from '@/components/common/toast/useToast';
 import useModalLayer from '@/hooks/useModalLayer';
 import type { Person } from '@/types';
 
@@ -18,6 +19,7 @@ export default function ContactModal({ isOpen, onClose, groom, bride }: ContactM
   const [copiedContact, setCopiedContact] = useState<string | null>(null);
   const [isMounted, setIsMounted] = useState(false);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const toast = useToast();
 
   useModalLayer({
     active: isOpen,
@@ -41,10 +43,11 @@ export default function ContactModal({ isOpen, onClose, groom, bride }: ContactM
     try {
       await navigator.clipboard.writeText(text);
       setCopiedContact(contactType);
+      toast.success('연락처가 복사되었습니다.');
       setTimeout(() => setCopiedContact(null), 1500);
     } catch (error) {
       console.error('Failed to copy:', error);
-      alert('복사에 실패했습니다.');
+      toast.error('연락처 복사에 실패했습니다.');
     }
   };
 

@@ -1,8 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import type { GuestMessage } from "@/types";
-import { SNAP_SECTION } from "@/constants/wedding-data";
+import type {
+  GuestMessage,
+  GuestbookSectionData,
+  RsvpSectionData,
+  SnapSectionData,
+  WeddingInfo,
+} from "@/types";
 import {
   useCreateGuestMessageMutation,
   useGuestMessagesQuery,
@@ -13,7 +18,19 @@ import RsvpSection from "@/components/Rsvp/RsvpSection";
 import SnapSection from "@/components/Snap/SnapSection";
 import GuestbookModal from "./GuestbookModal";
 
-export default function Guestbook() {
+interface GuestbookProps {
+  section: GuestbookSectionData;
+  rsvpSection: RsvpSectionData;
+  snapSection: SnapSectionData;
+  weddingData: WeddingInfo;
+}
+
+export default function Guestbook({
+  section,
+  rsvpSection,
+  snapSection,
+  weddingData,
+}: GuestbookProps) {
   const toast = useToast();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { data, isLoading } = useGuestMessagesQuery(true);
@@ -42,10 +59,10 @@ export default function Guestbook() {
       <div className="mx-auto w-full max-w-md">
         <div className="text-center">
           <p className="font-crimson text-sm uppercase tracking-[0.33em] text-wedding-brown">
-            GUESTBOOK
+            {section.kicker}
           </p>
           <h2 className="mt-3 text-xl tracking-[0.04em] text-wedding-gray-dark">
-            방명록
+            {section.title}
           </h2>
         </div>
 
@@ -118,8 +135,8 @@ export default function Guestbook() {
             </button>
           </div>
         )}
-        <RsvpSection />
-        <SnapSection section={SNAP_SECTION} />
+        <RsvpSection section={rsvpSection} weddingData={weddingData} />
+        <SnapSection section={snapSection} />
       </div>
 
       <GuestbookModal

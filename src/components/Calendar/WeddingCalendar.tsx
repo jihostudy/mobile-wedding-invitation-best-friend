@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { buildWeddingDateTime } from "@/lib/date/wedding-date";
 import type { Person, WeddingDate } from "@/types";
 
 interface WeddingCalendarProps {
@@ -27,10 +28,12 @@ export default function WeddingCalendar({
   const [elapsedDays, setElapsedDays] = useState(0);
   const [isMarried, setIsMarried] = useState(false);
 
+  const targetDate = useMemo(() => buildWeddingDateTime(date), [date]);
+
   useEffect(() => {
     const calculateTimeLeft = () => {
       const now = Date.now();
-      const difference = date.fullDate.getTime() - now;
+      const difference = targetDate.getTime() - now;
 
       if (difference <= 0) {
         const passed = Math.floor(Math.abs(difference) / (1000 * 60 * 60 * 24));
@@ -55,7 +58,7 @@ export default function WeddingCalendar({
     calculateTimeLeft();
     const timer = setInterval(calculateTimeLeft, 1000);
     return () => clearInterval(timer);
-  }, [date.fullDate]);
+  }, [targetDate]);
 
   const calendarDays = useMemo(() => {
     const year = date.year;

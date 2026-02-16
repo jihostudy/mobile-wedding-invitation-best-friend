@@ -1,5 +1,6 @@
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { fail, ok } from '@/lib/server/http';
+import { getWeddingContent } from '@/lib/wedding-content/repository';
 
 function sanitizePathSegment(value: string) {
   const trimmed = value.trim();
@@ -29,6 +30,12 @@ export async function POST(request: Request) {
 
   if (fileEntries.length > 40) {
     return fail(400, 'VALIDATION_ERROR', 'up to 40 files are allowed');
+  }
+
+  const { content } = await getWeddingContent(eventSlug);
+  const uploadOpenAt = new Date(content.snapSection.uploadOpenAt);
+  if (!Number.isNaN(uploadOpenAt.getTime()) && Date.now() < uploadOpenAt.getTime()) {
+    return fail(400, 'SNAP_UPLOAD_NOT_OPEN', 'snap upload is not open yet');
   }
 
   const supabase = createServerSupabaseClient({ serviceRole: true });

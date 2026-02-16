@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { buildWeddingDateTime } from '@/lib/date/wedding-date';
 import { getWeddingContent } from '@/lib/wedding-content/repository';
 
 /**
@@ -10,7 +11,7 @@ export async function GET() {
   const { groom, bride, date, venue } = content.weddingData;
 
   // 날짜 포맷 (YYYYMMDDTHHMMSS)
-  const startDate = date.fullDate;
+  const startDate = buildWeddingDateTime(date);
   const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000); // 2시간 후
 
   const formatDate = (d: Date): string => {
@@ -52,4 +53,3 @@ END:VCALENDAR`;
     },
   });
 }
-

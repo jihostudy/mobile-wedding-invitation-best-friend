@@ -8,9 +8,14 @@ import {
   openRsvpEntryPromptOverlay,
   openRsvpFormOverlay,
 } from "@/overlays/rsvpOverlay";
-import { WEDDING_DATA } from "@/constants/wedding-data";
+import type { RsvpSectionData, WeddingInfo } from "@/types";
 
-export default function RsvpSection() {
+interface RsvpSectionProps {
+  section: RsvpSectionData;
+  weddingData: WeddingInfo;
+}
+
+export default function RsvpSection({ section, weddingData }: RsvpSectionProps) {
   const HIDE_KEY = "rsvp_prompt_hide_until";
   const SUBMITTED_KEY = "rsvp_submitted_at";
 
@@ -23,16 +28,16 @@ export default function RsvpSection() {
   }, []);
 
   const entryPromptDateLine = useMemo(() => {
-    const { year, month, day, dayOfWeek, time } = WEDDING_DATA.date;
+    const { year, month, day, dayOfWeek, time } = weddingData.date;
     const normalizedDay = dayOfWeek.replace("요일", "");
     const dayLabel = normalizedDay[0] ?? dayOfWeek;
     return `${year}.${String(month).padStart(2, "0")}.${String(day).padStart(2, "0")} (${dayLabel}) ${time}`;
-  }, []);
+  }, [weddingData.date]);
 
   const entryPromptVenueLine = useMemo(() => {
-    const { name, floor } = WEDDING_DATA.venue;
+    const { name, floor } = weddingData.venue;
     return floor ? `${name}, ${floor}` : name;
-  }, []);
+  }, [weddingData.venue]);
 
   const hidePromptToday = useCallback(() => {
     localStorage.setItem(HIDE_KEY, todayLabel);
@@ -58,10 +63,10 @@ export default function RsvpSection() {
       openRsvpEntryPromptOverlay({
         onHideToday: hidePromptToday,
         onOpenRsvp: openRsvpForm,
-        title: "참석 의사 전달",
+        title: section.title,
         dateLine: entryPromptDateLine,
         venueLine: entryPromptVenueLine,
-        addressLine: WEDDING_DATA.venue.address,
+        addressLine: weddingData.venue.address,
       });
     }
   }, [
@@ -69,20 +74,22 @@ export default function RsvpSection() {
     entryPromptVenueLine,
     hidePromptToday,
     openRsvpForm,
+    section.title,
     todayLabel,
+    weddingData.venue.address,
   ]);
 
   return (
     <section className="mt-12 rounded-[18px]  px-6 py-14">
       <FadeInUp className="mx-auto w-full max-w-md text-center">
         <p className="font-crimson text-sm uppercase tracking-[0.33em] text-wedding-brown">
-          R.S.V.P.
+          {section.kicker}
         </p>
         <h3 className="mt-3 text-xl tracking-[0.04em] text-wedding-gray-dark">
-          참석 의사 전달
+          {section.title}
         </h3>
         <p className="mt-9 whitespace-pre-line text-[15px] leading-8 text-wedding-gray">
-          신랑, 신부에게 참석의사를{"\n"}미리 전달할 수 있어요.
+          {section.description}
         </p>
 
         <button

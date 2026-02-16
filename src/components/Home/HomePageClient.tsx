@@ -92,6 +92,7 @@ export default function HomePageClient() {
           groom={content.weddingData.groom}
           bride={content.weddingData.bride}
           date={content.weddingData.date}
+          section={content.heroSection}
         />
         <div className="relative z-10 bg-white/94">
           <FadeInUp delay={0.05} amount={0.15}>
@@ -101,7 +102,11 @@ export default function HomePageClient() {
               bride={content.weddingData.bride}
             />
           </FadeInUp>
-          <InterviewSection section={content.interviewSection} />
+          <InterviewSection
+            section={content.interviewSection}
+            groom={content.weddingData.groom}
+            bride={content.weddingData.bride}
+          />
           <FadeInUp delay={0.15} amount={0.15}>
             <ImageGallery section={content.gallerySection} />
           </FadeInUp>
@@ -114,13 +119,18 @@ export default function HomePageClient() {
           </FadeInUp>
           <VenueInfo venue={content.weddingData.venue} date={content.weddingData.date} />
           <FadeInUp delay={0.3} amount={0.15}>
-            <Guestbook />
+            <Guestbook
+              section={content.guestbookSection}
+              rsvpSection={content.rsvpSection}
+              snapSection={content.snapSection}
+              weddingData={content.weddingData}
+            />
           </FadeInUp>
           <FadeInUp delay={0.35} amount={0.15}>
             <AccountSection section={content.accountSection} />
           </FadeInUp>
           <FadeInUp delay={0.4} amount={0.15}>
-            <FinalThanksSection />
+            <FinalThanksSection section={content.closingSection} />
           </FadeInUp>
         </div>
         <BackgroundMusicPlayer config={content.weddingData.backgroundMusic} />

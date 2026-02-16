@@ -16,6 +16,162 @@ const personSchema = z.object({
   instagram: z.string().optional(),
 });
 
+const fallbackHeroImage = {
+  url: '/images/placeholder-couple.svg',
+  alt: '웨딩 메인 이미지',
+};
+
+const heroImageSchema = z.object({
+  url: z.string(),
+  alt: z.string(),
+});
+
+const heroSectionSchema = z
+  .object({
+    // Legacy field for backward compatibility with previously saved payloads.
+    mainImage: heroImageSchema.optional(),
+    primaryImage: heroImageSchema.optional(),
+    secondaryImage: heroImageSchema.optional(),
+    titleText: z.string().optional(),
+  })
+  .transform((hero) => {
+    const primaryImage = hero.primaryImage ?? hero.mainImage ?? fallbackHeroImage;
+    const secondaryImage = hero.secondaryImage ?? hero.mainImage ?? primaryImage;
+    return {
+      primaryImage,
+      secondaryImage,
+      titleText: hero.titleText ?? '결혼합니다',
+    };
+  });
+
+const invitationSectionSchema = z
+  .object({
+    kicker: z.string().optional(),
+    title: z.string().optional(),
+    message: z.string(),
+  })
+  .transform((section) => ({
+    kicker: section.kicker ?? 'INVITATION',
+    title: section.title ?? '소중한 분들을 초대합니다',
+    message: section.message,
+  }));
+
+const guestbookSectionSchema = z
+  .object({
+    kicker: z.string().optional(),
+    title: z.string().optional(),
+  })
+  .transform((section) => ({
+    kicker: section.kicker ?? 'GUESTBOOK',
+    title: section.title ?? '방명록',
+  }));
+
+const rsvpSectionSchema = z
+  .object({
+    kicker: z.string().optional(),
+    title: z.string().optional(),
+    description: z.string().optional(),
+  })
+  .transform((section) => ({
+    kicker: section.kicker ?? 'R.S.V.P.',
+    title: section.title ?? '참석 의사 전달',
+    description: section.description ?? '신랑, 신부에게 참석의사를\n미리 전달할 수 있어요.',
+  }));
+
+const gallerySectionSchema = z
+  .object({
+    kicker: z.string().optional(),
+    title: z.string().optional(),
+    batchSize: z.number().optional(),
+    images: z.array(
+      z.object({
+        id: z.string(),
+        url: z.string(),
+        alt: z.string(),
+        width: z.number(),
+        height: z.number(),
+      }),
+    ),
+  })
+  .transform((section) => ({
+    // Keep gallery paging predictable: at least 2 and always even.
+    batchSize: Math.max(2, Math.floor((section.batchSize ?? 6) / 2) * 2),
+    kicker: section.kicker ?? 'GALLERY',
+    title: section.title ?? '웨딩 갤러리',
+    images: section.images,
+  }));
+
+const interviewAnswerSchema = z.object({
+  side: z.enum(['groom', 'bride']),
+  content: z.string(),
+});
+
+const interviewLegacyAnswerSchema = z.object({
+  side: z.enum(['groom', 'bride']).optional(),
+  role: z.string().optional(),
+  name: z.string().optional(),
+  content: z.string().optional(),
+  paragraphs: z.array(z.string()).optional(),
+});
+
+function inferInterviewSide(
+  answer: z.infer<typeof interviewLegacyAnswerSchema>,
+  index: number,
+): 'groom' | 'bride' {
+  if (answer.side) return answer.side;
+  if (answer.role?.includes('신부')) return 'bride';
+  if (answer.role?.includes('신랑')) return 'groom';
+  return index === 0 ? 'groom' : 'bride';
+}
+
+function normalizeInterviewAnswerContent(
+  answer: z.infer<typeof interviewLegacyAnswerSchema>,
+): string {
+  if (typeof answer.content === 'string') return answer.content;
+  if (Array.isArray(answer.paragraphs)) {
+    return answer.paragraphs.filter((paragraph) => paragraph.trim().length > 0).join('\n\n');
+  }
+  return '';
+}
+
+const interviewQuestionSchema = z
+  .object({
+    question: z.string(),
+    answers: z.array(z.union([interviewAnswerSchema, interviewLegacyAnswerSchema])),
+  })
+  .transform((question) => {
+    const normalizedBySide = new Map<'groom' | 'bride', string>();
+    question.answers.forEach((answer, index) => {
+      const side = inferInterviewSide(answer, index);
+      if (normalizedBySide.has(side)) return;
+      normalizedBySide.set(side, normalizeInterviewAnswerContent(answer));
+    });
+
+    return {
+      question: question.question,
+      answers: [
+        { side: 'groom' as const, content: normalizedBySide.get('groom') ?? '' },
+        { side: 'bride' as const, content: normalizedBySide.get('bride') ?? '' },
+      ],
+    };
+  });
+
+const interviewSectionSchema = z
+  .object({
+    kicker: z.string().optional(),
+    title: z.string().optional(),
+    description: z.string(),
+    image: z.object({ url: z.string(), alt: z.string() }),
+    questions: z.array(interviewQuestionSchema),
+  })
+  .transform((section) => ({
+    kicker: section.kicker ?? 'INTERVIEW',
+    title: section.title ?? '우리 두 사람의 이야기',
+    description: section.description,
+    image: section.image,
+    questions: section.questions,
+  }));
+
 const weddingContentSchema = z.object({
   weddingData: z.object({
     groom: personSchema,
@@ -26,7 +182,6 @@ const weddingContentSchema = z.object({
       day: z.number(),
       dayOfWeek: z.string(),
       time: z.string(),
-      fullDate: z.union([z.string(), z.date()]),
     }),
     venue: z.object({
       name: z.string(),
@@ -40,6 +195,7 @@ const weddingContentSchema = z.object({
         .object({
           subway: z.array(z.string()).optional(),
           subwayDetails: z.array(z.object({ label: z.string(), color: z.string() })).optional(),
+          busDetails: z.array(z.object({ label: z.string(), color: z.string() })).optional(),
           bus: z.array(z.string()).optional(),
           busNote: z.string().optional(),
           parking: z.string().optional(),
@@ -58,40 +214,16 @@ const weddingContentSchema = z.object({
       })
       .optional(),
   }),
-  heroSection: z.object({
-    mainImage: z.object({ url: z.string(), alt: z.string() }),
-  }),
-  invitationSection: z.object({
-    message: z.string(),
-  }),
-  gallerySection: z.object({
-    images: z.array(
-      z.object({
-        id: z.string(),
-        url: z.string(),
-        alt: z.string(),
-        width: z.number(),
-        height: z.number(),
-      }),
-    ),
-  }),
-  interviewSection: z.object({
-    description: z.string(),
-    image: z.object({ url: z.string(), alt: z.string() }),
-    questions: z.array(
-      z.object({
-        question: z.string(),
-        answers: z.array(
-          z.object({
-            role: z.string(),
-            name: z.string(),
-            paragraphs: z.array(z.string()),
-          }),
-        ),
-      }),
-    ),
-  }),
+  heroSection: heroSectionSchema,
+  invitationSection: invitationSectionSchema,
+  gallerySection: gallerySectionSchema,
+  interviewSection: interviewSectionSchema,
+  guestbookSection: guestbookSectionSchema,
+  rsvpSection: rsvpSectionSchema,
   accountSection: z.object({
+    kicker: z.string().optional(),
+    title: z.string().optional(),
+    description: z.string().optional(),
     groups: z.array(
       z.object({
         id: z.string(),
@@ -107,9 +239,19 @@ const weddingContentSchema = z.object({
         ),
       }),
     ),
-  }),
+  }).transform((section) => ({
+    kicker: section.kicker ?? 'ACCOUNT',
+    title: section.title ?? '마음 전하실 곳',
+    description:
+      section.description ??
+      '참석이 어려우신 분들을 위해\n계좌번호를 기재하였습니다.\n너그러운 마음으로 양해 부탁드립니다.',
+    groups: section.groups,
+  })),
   snapSection: z.object({
+    kicker: z.string().optional(),
+    title: z.string().optional(),
     description: z.string(),
+    uploadOpenAt: z.string().optional(),
     images: z.array(
       z.object({
         id: z.string(),
@@ -135,7 +277,25 @@ const weddingContentSchema = z.object({
       maxFiles: z.number(),
       policyLines: z.array(z.string()),
     }),
-  }),
+  }).transform((section) => ({
+    kicker: section.kicker ?? 'CAPTURE OUR MOMENTS',
+    title: section.title ?? '스냅',
+    description: section.description,
+    uploadOpenAt: section.uploadOpenAt ?? '2026-06-20T11:30:00+09:00',
+    images: section.images,
+    modal: section.modal,
+  })),
+  closingSection: z
+    .object({
+      image: z.object({ url: z.string(), alt: z.string() }).optional(),
+    })
+    .optional()
+    .transform((section) => ({
+      image: section?.image ?? {
+        url: '/images/placeholder-couple.svg',
+        alt: '감사 인사 이미지',
+      },
+    })),
   floatingNavItems: z.array(z.object({ id: z.string(), label: z.string() })),
 }).strict();
 

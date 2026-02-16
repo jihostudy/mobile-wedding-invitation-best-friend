@@ -41,7 +41,6 @@ export interface WeddingDate {
   day: number;
   dayOfWeek: string;
   time: string;
-  fullDate: Date;
 }
 
 export interface Venue {
@@ -61,6 +60,10 @@ export interface Venue {
 export interface TransportInfo {
   subway?: string[];
   subwayDetails?: {
+    label: string;
+    color: string;
+  }[];
+  busDetails?: {
     label: string;
     color: string;
   }[];
@@ -98,10 +101,14 @@ export interface AccountGroup {
 }
 
 export interface HeroSectionData {
-  mainImage: ImageAsset;
+  primaryImage: ImageAsset;
+  secondaryImage: ImageAsset;
+  titleText: string;
 }
 
 export interface InvitationSectionData {
+  kicker: string;
+  title: string;
   message: string;
 }
 
@@ -110,6 +117,9 @@ export interface CalendarSectionData {
 }
 
 export interface GallerySectionData {
+  kicker: string;
+  title: string;
+  batchSize: number;
   images: GalleryImage[];
 }
 
@@ -122,7 +132,10 @@ export interface SnapImageItem {
 }
 
 export interface SnapSectionData {
+  kicker: string;
+  title: string;
   description: string;
+  uploadOpenAt: string;
   images: SnapImageItem[];
   modal: SnapUploadModalData;
 }
@@ -145,13 +158,19 @@ export interface SnapUploadModalData {
 }
 
 export interface RsvpSectionData {
-  description?: string;
+  kicker: string;
+  title: string;
+  description: string;
+}
+
+export interface GuestbookSectionData {
+  kicker: string;
+  title: string;
 }
 
 export interface InterviewAnswer {
-  role: string;
-  name: string;
-  paragraphs: string[];
+  side: "groom" | "bride";
+  content: string;
 }
 
 export interface InterviewQuestion {
@@ -160,6 +179,8 @@ export interface InterviewQuestion {
 }
 
 export interface InterviewSectionData {
+  kicker: string;
+  title: string;
   description: string;
   image: ImageAsset;
   questions: InterviewQuestion[];
@@ -170,7 +191,14 @@ export interface LocationSectionData {
 }
 
 export interface AccountSectionData {
+  kicker: string;
+  title: string;
+  description: string;
   groups: AccountGroup[];
+}
+
+export interface ClosingSectionData {
+  image: ImageAsset;
 }
 
 export interface FloatingNavItem {
@@ -219,8 +247,11 @@ export interface WeddingContentV1 {
   invitationSection: InvitationSectionData;
   gallerySection: GallerySectionData;
   interviewSection: InterviewSectionData;
+  guestbookSection: GuestbookSectionData;
+  rsvpSection: RsvpSectionData;
   accountSection: AccountSectionData;
   snapSection: SnapSectionData;
+  closingSection: ClosingSectionData;
   floatingNavItems: FloatingNavItem[];
 }
 
@@ -233,6 +264,20 @@ export interface WeddingContentResponse {
 export interface UpdateWeddingContentRequest {
   content: WeddingContentV1;
   expectedVersion: number;
+}
+
+export interface WeddingContentAsset {
+  url: string;
+  path: string;
+  bucket: string;
+  width?: number;
+  height?: number;
+  altDefault?: string;
+}
+
+export interface WeddingContentAssetUploadResponse {
+  success: true;
+  asset: WeddingContentAsset;
 }
 
 export interface ApiErrorResponse {

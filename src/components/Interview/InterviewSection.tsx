@@ -7,13 +7,19 @@ import { Mail, UserRound, X } from "lucide-react";
 import Icon from "@/components/common/Icon";
 import FadeInUp from "@/components/common/FadeInUp";
 import useModalLayer from "@/hooks/useModalLayer";
-import type { InterviewSectionData } from "@/types";
+import type { InterviewSectionData, Person } from "@/types";
 
 interface InterviewSectionProps {
   section: InterviewSectionData;
+  groom: Person;
+  bride: Person;
 }
 
-export default function InterviewSection({ section }: InterviewSectionProps) {
+export default function InterviewSection({
+  section,
+  groom,
+  bride,
+}: InterviewSectionProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
@@ -31,17 +37,17 @@ export default function InterviewSection({ section }: InterviewSectionProps) {
       <section id="interview" className="bg-white px-6 py-16">
         <div className="mx-auto w-full max-w-md text-center">
           <p className="font-crimson text-sm uppercase tracking-[0.33em] text-wedding-brown">
-            INTERVIEW
+            {section.kicker}
           </p>
           <h2 className="mt-3 text-xl tracking-[0.04em] text-wedding-gray-dark">
-            우리 두 사람의 이야기
+            {section.title}
           </h2>
           <p className="mt-8 whitespace-pre-line text-[15px] leading-8 text-wedding-gray">
             {section.description}
           </p>
 
           <FadeInUp className="mt-8">
-            <div className="relative h-[210px] w-full overflow-hidden rounded-xl">
+            <div className="relative aspect-[17/10] w-full overflow-hidden rounded-xl">
               <Image
                 src={section.image.url}
                 alt={section.image.alt}
@@ -75,7 +81,7 @@ export default function InterviewSection({ section }: InterviewSectionProps) {
           <div className="modal-scrollbar relative z-10 mx-auto h-[100dvh] w-full max-w-[425px] overflow-y-auto overscroll-contain bg-white px-6 pb-12 pt-6">
             <div className="flex items-center justify-between">
               <h3 className="flex-1 text-center text-lg font-semibold text-wedding-gray-dark">
-                우리 두 사람의 이야기
+                {section.title}
               </h3>
               <button
                 type="button"
@@ -96,7 +102,7 @@ export default function InterviewSection({ section }: InterviewSectionProps) {
                   <div className="mt-5 space-y-7">
                     {questionItem.answers.map((answer) => (
                       <div
-                        key={`${questionItem.question}-${answer.role}-${answer.name}`}
+                        key={`${questionItem.question}-${answer.side}`}
                       >
                         <p className="flex items-center gap-2 text-sm font-semibold text-[#333] ">
                           <Icon
@@ -104,13 +110,11 @@ export default function InterviewSection({ section }: InterviewSectionProps) {
                             size="sm"
                             className="text-[#666]"
                           />
-                          {answer.role} {answer.name}
+                          {answer.side === "groom" ? `신랑 ${groom.name}` : `신부 ${bride.name}`}
                         </p>
-                        <div className="mt-3 space-y-4 text-sm leading-[1.62] text-[#333]">
-                          {answer.paragraphs.map((paragraph) => (
-                            <p key={paragraph}>{paragraph}</p>
-                          ))}
-                        </div>
+                        <p className="mt-3 whitespace-pre-line text-sm leading-[1.62] text-[#333]">
+                          {answer.content}
+                        </p>
                       </div>
                     ))}
                   </div>

@@ -2,7 +2,11 @@
 
 import Link from "next/link";
 
-type AdminSectionKey = "guest-messages" | "attendance" | "snap-submissions";
+type AdminSectionKey =
+  | "guest-messages"
+  | "attendance"
+  | "snap-submissions"
+  | "content";
 
 interface AdminSummaryCardsProps {
   loading: boolean;
@@ -13,45 +17,44 @@ interface AdminSummaryCardsProps {
 }
 
 export default function AdminSummaryCards({
-  loading,
-  guestMessageCount,
-  attendanceCount,
-  snapCount,
+  loading: _loading,
+  guestMessageCount: _guestMessageCount,
+  attendanceCount: _attendanceCount,
+  snapCount: _snapCount,
   active,
 }: AdminSummaryCardsProps) {
   const baseClassName =
-    "group block rounded-2xl border border-[#e8e5dd] bg-gradient-to-br from-white via-[#fffdfa] to-[#f8f4ee] p-5 shadow-[0_8px_24px_rgba(60,45,20,0.08)] transition hover:-translate-y-[1px] hover:border-[#d6cfc1] hover:shadow-[0_14px_28px_rgba(60,45,20,0.14)]";
-  const activeClassName = "border-[#cfbf9f] ring-1 ring-[#efe3cd]";
+    "inline-flex h-9 items-center rounded-full border border-[#d8ccb8] bg-[#fffaf2] px-4 text-sm font-medium text-[#6f6350] shadow-[0_3px_10px_rgba(86,63,37,0.08)] transition hover:border-[#c3ae8d] hover:bg-[#fff3df]";
+  const activeClassName = "border-[#c8ad84] bg-[#f6e8d2] text-[#4a3a24] shadow-[0_5px_14px_rgba(89,63,33,0.15)]";
 
   return (
-    <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
+    <nav aria-label="관리자 빠른 이동" className="mt-5 border-b border-[#e6dccd] pb-3">
+      <div className="flex flex-wrap items-center gap-2">
+      <Link
+        href="/admin/content"
+        className={`${baseClassName} ${active === "content" ? activeClassName : ""}`}
+      >
+        <p>메인 콘텐츠</p>
+      </Link>
       <Link
         href="/admin/guest-messages"
         className={`${baseClassName} ${active === "guest-messages" ? activeClassName : ""}`}
       >
-        <p className="text-xs tracking-[0.06em] text-[#8c7c65]">방명록</p>
-        <p className="mt-2 text-3xl font-semibold text-[#2c271f]">
-          {loading ? "-" : guestMessageCount}
-        </p>
+        <p>방명록</p>
       </Link>
       <Link
         href="/admin/attendance"
         className={`${baseClassName} ${active === "attendance" ? activeClassName : ""}`}
       >
-        <p className="text-xs tracking-[0.06em] text-[#8c7c65]">참석 의사</p>
-        <p className="mt-2 text-3xl font-semibold text-[#2c271f]">
-          {loading ? "-" : attendanceCount}
-        </p>
+        <p>참석 의사</p>
       </Link>
       <Link
         href="/admin/snap-submissions"
         className={`${baseClassName} ${active === "snap-submissions" ? activeClassName : ""}`}
       >
-        <p className="text-xs tracking-[0.06em] text-[#8c7c65]">스냅 업로드</p>
-        <p className="mt-2 text-3xl font-semibold text-[#2c271f]">
-          {loading ? "-" : snapCount}
-        </p>
+        <p>스냅 사진</p>
       </Link>
-    </div>
+      </div>
+    </nav>
   );
 }

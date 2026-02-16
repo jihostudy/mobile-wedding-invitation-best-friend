@@ -14,11 +14,26 @@ interface SnapSectionProps {
   section: SnapSectionData;
 }
 
+function formatUploadOpenAtLabel(uploadOpenAt: string) {
+  const parsed = new Date(uploadOpenAt);
+  if (Number.isNaN(parsed.getTime())) return "업로드 시간이 설정되지 않았습니다.";
+  const year = parsed.getFullYear();
+  const month = String(parsed.getMonth() + 1).padStart(2, "0");
+  const day = String(parsed.getDate()).padStart(2, "0");
+  const hour = String(parsed.getHours()).padStart(2, "0");
+  const minute = String(parsed.getMinutes()).padStart(2, "0");
+  return `${year}.${month}.${day} ${hour}:${minute}부터 업로드 가능합니다.`;
+}
+
 export default function SnapSection({ section }: SnapSectionProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [hasEnteredViewport, setHasEnteredViewport] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const previewImages = section.images.slice(0, 3);
+  const uploadOpensAt = new Date(section.uploadOpenAt);
+  const canUpload = !Number.isNaN(uploadOpensAt.getTime())
+    ? Date.now() >= uploadOpensAt.getTime()
+    : true;
 
   useEffect(() => {
     if (hasEnteredViewport || !sectionRef.current) return;
@@ -141,10 +156,10 @@ export default function SnapSection({ section }: SnapSectionProps) {
         </div>
 
         <p className="mt-9 font-crimson text-sm uppercase tracking-[0.33em] text-wedding-brown">
-          CAPTURE OUR MOMENTS
+          {section.kicker}
         </p>
         <h3 className="mt-3 text-xl tracking-[0.04em] text-wedding-gray-dark">
-          스냅
+          {section.title}
         </h3>
         <p className="mt-8 whitespace-pre-line text-[15px] leading-8 text-wedding-gray">
           {section.description}
@@ -153,7 +168,8 @@ export default function SnapSection({ section }: SnapSectionProps) {
         <button
           type="button"
           onClick={() => setIsModalOpen(true)}
-          className="mt-8 inline-flex  items-center justify-center gap-2 rounded-[12px] border border-wedding-brown/25 bg-white/70 px-9 py-3 text-sm font-medium text-wedding-brown transition hover:bg-white"
+          disabled={!canUpload}
+          className="mt-8 inline-flex items-center justify-center gap-2 rounded-[12px] border border-wedding-brown/25 bg-white/70 px-9 py-3 text-sm font-medium text-wedding-brown transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-50"
           aria-label="사진 업로드 모달 열기"
         >
           <Icon icon={Camera} size="sm" className="text-wedding-brown" />
@@ -161,8 +177,7 @@ export default function SnapSection({ section }: SnapSectionProps) {
         </button>
 
         <p className="mt-6 text-sm leading-[1.5]">
-          <span className="text-[#a2a2a2]">예식 당일 11:30부터 </span>
-          <span className="text-[#b0b0b0]">업로드 가능합니다.</span>
+          <span className="text-[#a2a2a2]">{formatUploadOpenAtLabel(section.uploadOpenAt)}</span>
         </p>
       </FadeInUp>
       <SnapUploadModal

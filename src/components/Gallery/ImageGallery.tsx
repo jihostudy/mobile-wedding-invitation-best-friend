@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { ChevronDown, X } from "lucide-react";
 import FadeInUp from "@/components/common/FadeInUp";
@@ -16,13 +16,23 @@ interface ImageGalleryProps {
 
 export default function ImageGallery({ section }: ImageGalleryProps) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const [visibleCount, setVisibleCount] = useState(6);
+  const batchSize = useMemo(
+    () => Math.max(2, Math.floor((section.batchSize || 6) / 2) * 2),
+    [section.batchSize],
+  );
+  const [visibleCount, setVisibleCount] = useState(() =>
+    Math.min(section.images.length, batchSize),
+  );
   const visibleImages = section.images.slice(0, visibleCount);
   const hasMore = visibleCount < section.images.length;
   const isModalOpen = selectedIndex !== null;
 
+  useEffect(() => {
+    setVisibleCount(Math.min(section.images.length, batchSize));
+  }, [batchSize, section.images.length]);
+
   const handleLoadMore = () => {
-    setVisibleCount(section.images.length);
+    setVisibleCount((prev) => Math.min(section.images.length, prev + batchSize));
   };
 
   useModalLayer({
@@ -35,10 +45,10 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
       <div className="mx-auto flex w-full max-w-md flex-col">
         <FadeInUp className="mb-8 text-center">
           <p className="font-crimson text-sm uppercase tracking-[0.33em] text-wedding-brown">
-            GALLERY
+            {section.kicker}
           </p>
           <h2 className="mt-3 text-xl tracking-[0.04em] text-wedding-gray-dark">
-            웨딩 갤러리
+            {section.title}
           </h2>
         </FadeInUp>
 

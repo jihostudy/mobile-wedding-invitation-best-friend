@@ -2,15 +2,16 @@
 
 import Image from "next/image";
 import type { CSSProperties } from "react";
-import type { Person, WeddingDate } from "@/types";
+import type { HeroSectionData, Person, WeddingDate } from "@/types";
 
 interface MainHeroProps {
   groom: Person;
   bride: Person;
   date: WeddingDate;
+  section: HeroSectionData;
 }
 
-export default function MainHero({ groom, bride, date }: MainHeroProps) {
+export default function MainHero({ groom, bride, date, section }: MainHeroProps) {
   const yearShort = String(date.year).slice(-2);
   const month = String(date.month).padStart(2, "0");
   const day = String(date.day).padStart(2, "0");
@@ -77,28 +78,34 @@ export default function MainHero({ groom, bride, date }: MainHeroProps) {
         <div className="relative z-10 mx-auto mt-3 w-full max-w-[300px]">
           <div className="relative h-[240px] w-[220px] overflow-hidden rounded-[6px] border border-black/5 shadow-[0_10px_24px_rgba(0,0,0,0.12)]">
             <Image
-              src="/images/placeholder-couple.svg"
-              alt="신랑 사진 플레이스홀더"
+              src={section.primaryImage.url}
+              alt={section.primaryImage.alt}
               fill
               className="object-cover"
               sizes="220px"
+              quality={100}
+              unoptimized
+              priority
             />
           </div>
 
           <div className="relative -mt-5 ml-auto h-[215px] w-[235px] overflow-hidden rounded-[6px] border border-black/5 shadow-[0_10px_24px_rgba(0,0,0,0.12)]">
             <Image
-              src="/images/placeholder-couple.svg"
-              alt="신부 사진 플레이스홀더"
+              src={section.secondaryImage.url}
+              alt={section.secondaryImage.alt}
               fill
               className="object-cover"
               sizes="235px"
+              quality={100}
+              unoptimized
+              loading="eager"
             />
           </div>
         </div>
 
         <div className="relative z-30 mt-8 ml-6 w-fit text-left text-[#202020]">
           <p className="font-hyejun ml-14 text-7xl font-medium leading-[0.98] tracking-wider -rotate-[8deg]">
-            결혼합니다
+            {section.titleText}
           </p>
           <p className="font-hyejun -mt-4 text-4xl ml-56 font-semibold leading-[0.98] tracking-normal -rotate-[8deg]">
             {displayDate}

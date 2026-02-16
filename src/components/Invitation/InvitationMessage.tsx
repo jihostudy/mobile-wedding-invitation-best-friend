@@ -25,10 +25,10 @@ export default function InvitationMessage({
       <div className="mx-auto w-full max-w-md space-y-10">
         <div className="text-center">
           <p className="font-crimson text-sm uppercase tracking-[0.33em] text-wedding-brown">
-            INVITATION
+            {section.kicker}
           </p>
           <h2 className="mt-3 text-xl tracking-[0.04em] text-wedding-gray-dark">
-            소중한 분들을 초대합니다
+            {section.title}
           </h2>
           <p className="mt-8 whitespace-pre-line text-[15px] leading-8 text-wedding-gray">
             {section.message}

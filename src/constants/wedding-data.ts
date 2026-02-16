@@ -16,9 +16,12 @@ import {
   HeroSectionData,
   InvitationSectionData,
   GallerySectionData,
+  GuestbookSectionData,
+  RsvpSectionData,
   SnapSectionData,
   InterviewSectionData,
   AccountSectionData,
+  ClosingSectionData,
   FloatingNavItem,
 } from "@/types";
 
@@ -48,7 +51,6 @@ export const WEDDING_DATA: WeddingInfo = {
     day: 20,
     dayOfWeek: "토요일",
     time: "낮 12시 30분",
-    fullDate: new Date(2026, 5, 20, 12, 30), // month는 0부터 시작 (5 = 6월)
   },
   venue: {
     name: "루클라비더화이트",
@@ -68,6 +70,10 @@ export const WEDDING_DATA: WeddingInfo = {
         { label: "신분당선 신사역 1번 출구 도보 15분", color: "#D31145" },
         { label: "7호선 학동역 8번 출구 도보 7분", color: "#747F00" },
       ],
+      busDetails: [
+        { label: "간선버스 : 146, 540, 4318", color: "#1d3f8a" },
+        { label: "지선버스 : 3414, 4318", color: "#2d9b46" },
+      ],
       bus: ["간선버스: 146, 540, 4318", "지선버스: 3414, 4318"],
       parking: "건물 지하 1~3층 (3시간 무료)",
       shuttlePickup: "학동역 8번 출구 앞 셔틀 탑승",
@@ -85,14 +91,21 @@ export const WEDDING_DATA: WeddingInfo = {
 
 // 2) Hero
 export const HERO_SECTION: HeroSectionData = {
-  mainImage: {
+  primaryImage: {
     url: "/images/placeholder-couple.svg",
     alt: `${WEDDING_DATA.groom.name}과 ${WEDDING_DATA.bride.name}의 결혼식`,
   },
+  secondaryImage: {
+    url: "/images/placeholder-couple.svg",
+    alt: `${WEDDING_DATA.groom.name}과 ${WEDDING_DATA.bride.name}의 결혼식`,
+  },
+  titleText: "결혼합니다",
 };
 
 // 3) Invitation
 export const INVITATION_SECTION: InvitationSectionData = {
+  kicker: "INVITATION",
+  title: "소중한 분들을 초대합니다",
   message: `
 저희 두 사람의 작은 만남이
 사랑의 결실을 이루어
@@ -175,11 +188,16 @@ const GALLERY_IMAGES: GalleryImage[] = [
 ];
 
 export const GALLERY_SECTION: GallerySectionData = {
+  kicker: "GALLERY",
+  title: "웨딩 갤러리",
+  batchSize: 6,
   images: GALLERY_IMAGES,
 };
 
 // 5) Interview
 export const INTERVIEW_SECTION: InterviewSectionData = {
+  kicker: "INTERVIEW",
+  title: "우리 두 사람의 이야기",
   description: "결혼을 앞두고 저희 두 사람의\n인터뷰를 준비했습니다.",
   image: {
     url: "/images/placeholder-couple.svg",
@@ -190,22 +208,14 @@ export const INTERVIEW_SECTION: InterviewSectionData = {
       question: "Q1. 결혼을 앞둔 소감",
       answers: [
         {
-          role: "신랑",
-          name: WEDDING_DATA.groom.name,
-          paragraphs: [
-            "드디어 장가갑니다! 먼저 인생에서 가장 큰 결심을 할 수 있게 해준 예비 신부에게 정말 고맙습니다.",
-            "가족이라는 단어를 함께 한다는 것은 정말 설레고 아름다운 일이지만 그만큼 책임감을 더 갖고 살아야겠다고 다짐했습니다.",
-            "저희 부부가 한걸음 한걸음 성장해 나가는 모습을 지켜봐주시고 응원해주세요.",
-          ],
+          side: "groom",
+          content:
+            "드디어 장가갑니다! 먼저 인생에서 가장 큰 결심을 할 수 있게 해준 예비 신부에게 정말 고맙습니다.\n\n가족이라는 단어를 함께 한다는 것은 정말 설레고 아름다운 일이지만 그만큼 책임감을 더 갖고 살아야겠다고 다짐했습니다.\n\n저희 부부가 한걸음 한걸음 성장해 나가는 모습을 지켜봐주시고 응원해주세요.",
         },
         {
-          role: "신부",
-          name: WEDDING_DATA.bride.name,
-          paragraphs: [
-            "오래된 연인에서 이제는 서로의 부부가 되기로 약속했습니다.",
-            "아직은 남자친구라는 말이 더 익숙하지만, 그동안 제 옆을 든든하게 지켜주면서 큰 행복을 준 예비 신랑에게 고맙습니다.",
-            "이제는 저의 평생의 반려자가 될 신랑에게 좋은 아내로서 더욱 배려하며 큰 힘이 되는 존재로 살겠습니다.",
-          ],
+          side: "bride",
+          content:
+            "오래된 연인에서 이제는 서로의 부부가 되기로 약속했습니다.\n\n아직은 남자친구라는 말이 더 익숙하지만, 그동안 제 옆을 든든하게 지켜주면서 큰 행복을 준 예비 신랑에게 고맙습니다.\n\n이제는 저의 평생의 반려자가 될 신랑에게 좋은 아내로서 더욱 배려하며 큰 힘이 되는 존재로 살겠습니다.",
         },
       ],
     },
@@ -213,28 +223,39 @@ export const INTERVIEW_SECTION: InterviewSectionData = {
       question: "Q2. 앞으로의 우리",
       answers: [
         {
-          role: "신랑",
-          name: WEDDING_DATA.groom.name,
-          paragraphs: [
-            "서로의 다름을 존중하면서 같은 방향을 바라보는 부부가 되고 싶습니다.",
-            "사소한 일상에서도 감사함을 잊지 않고, 웃음이 많은 가정을 만들어가겠습니다.",
-          ],
+          side: "groom",
+          content:
+            "서로의 다름을 존중하면서 같은 방향을 바라보는 부부가 되고 싶습니다.\n\n사소한 일상에서도 감사함을 잊지 않고, 웃음이 많은 가정을 만들어가겠습니다.",
         },
         {
-          role: "신부",
-          name: WEDDING_DATA.bride.name,
-          paragraphs: [
-            "서로에게 가장 편안한 쉼이 되는 사람이 되고 싶습니다.",
-            "좋은 날도 어려운 날도 손을 놓지 않고, 함께 성장하는 부부로 살아가겠습니다.",
-          ],
+          side: "bride",
+          content:
+            "서로에게 가장 편안한 쉼이 되는 사람이 되고 싶습니다.\n\n좋은 날도 어려운 날도 손을 놓지 않고, 함께 성장하는 부부로 살아가겠습니다.",
         },
       ],
     },
   ],
 };
 
-// 6) Account
+// 6) Guestbook
+export const GUESTBOOK_SECTION: GuestbookSectionData = {
+  kicker: "GUESTBOOK",
+  title: "방명록",
+};
+
+// 7) RSVP
+export const RSVP_SECTION: RsvpSectionData = {
+  kicker: "R.S.V.P.",
+  title: "참석 의사 전달",
+  description: "신랑, 신부에게 참석의사를\n미리 전달할 수 있어요.",
+};
+
+// 8) Account
 export const ACCOUNT_SECTION: AccountSectionData = {
+  kicker: "ACCOUNT",
+  title: "마음 전하실 곳",
+  description:
+    "참석이 어려우신 분들을 위해\n계좌번호를 기재하였습니다.\n너그러운 마음으로 양해 부탁드립니다.",
   groups: [
     {
       id: "groom",
@@ -285,8 +306,11 @@ export const ACCOUNT_SECTION: AccountSectionData = {
 
 // 7) RSVP + Snap
 export const SNAP_SECTION: SnapSectionData = {
+  kicker: "CAPTURE OUR MOMENTS",
+  title: "스냅",
   description:
     "신랑신부의 행복한 순간을 담아주세요.\n예식 당일, 아래 버튼을 통해 사진을 올려주세요.\n많은 참여 부탁드려요!",
+  uploadOpenAt: "2026-06-20T11:30:00+09:00",
   images: [
     {
       id: "snap-1",
@@ -342,6 +366,13 @@ export const SNAP_SECTION: SnapSectionData = {
       "업로드 가능한 파일 크기는 사진 1장당 10MB 이하입니다.",
       "업로드는 예식 당일부터 다음날까지 가능합니다.",
     ],
+  },
+};
+
+export const CLOSING_SECTION: ClosingSectionData = {
+  image: {
+    url: "/images/placeholder-couple.svg",
+    alt: "감사 인사 이미지",
   },
 };
 
