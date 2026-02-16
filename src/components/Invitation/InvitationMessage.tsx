@@ -13,14 +13,14 @@ interface InvitationMessageProps {
   bride: Person;
 }
 
-function formatParentLine(person: Person, relation: "아들" | "딸") {
+function formatParentLine(person: Person, fallbackLabel: string) {
   const names = [person.parents?.father, person.parents?.mother].filter(
     (name): name is string => Boolean(name && name.trim()),
   );
   if (names.length === 0) {
-    return relation === "아들" ? "신랑" : "신부";
+    return `${fallbackLabel}의`;
   }
-  return `${names.join(" · ")} 의 ${relation}`;
+  return `${names.join(" · ")}의`;
 }
 
 export default function InvitationMessage({
@@ -29,8 +29,8 @@ export default function InvitationMessage({
   bride,
 }: InvitationMessageProps) {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
-  const groomParentLine = formatParentLine(groom, "아들");
-  const brideParentLine = formatParentLine(bride, "딸");
+  const groomParentLine = formatParentLine(groom, "신랑");
+  const brideParentLine = formatParentLine(bride, "신부");
 
   return (
     <section id="invitation" className="relative z-10 bg-white px-6 py-16">
@@ -51,18 +51,24 @@ export default function InvitationMessage({
 
         <FadeInUp className="space-y-8">
           <div className="mx-auto w-fit text-wedding-brown-light">
-            <div className="grid grid-cols-[max-content_max-content] items-baseline gap-x-3 gap-y-3 text-base">
+            <div className="grid grid-cols-[1fr_46px_auto] items-center gap-x-1 gap-y-3 text-base">
               <p className="text-right text-wedding-gray font-medium">
                 {groomParentLine}
               </p>
-              <span className="text-right font-semibold text-wedding-brown">
+              <span className="text-center text-sm text-wedding-gray-light">
+                아들
+              </span>
+              <span className="text-left font-semibold text-wedding-brown">
                 {groom.name}
               </span>
 
               <p className="text-right text-wedding-gray font-medium">
                 {brideParentLine}
               </p>
-              <span className="text-right font-semibold text-wedding-brown">
+              <span className="text-center text-sm text-wedding-gray-light">
+                딸
+              </span>
+              <span className="text-left font-semibold text-wedding-brown">
                 {bride.name}
               </span>
             </div>
@@ -75,7 +81,11 @@ export default function InvitationMessage({
               className="inline-flex items-center gap-1.5 rounded-[12px] border border-wedding-brown/25 bg-white/70 px-9 py-3 text-sm font-medium text-wedding-brown transition hover:bg-white"
               aria-label="연락처 모달 열기"
             >
-              <Icon icon={Phone} size="sm" className="text-wedding-gray-light" />
+              <Icon
+                icon={Phone}
+                size="sm"
+                className="text-wedding-gray-light"
+              />
               연락하기
             </button>
           </div>
