@@ -116,6 +116,24 @@ export default function AdminAttendancePage() {
     () => applyFilters(sourceRows, filterDefinitions, filterState),
     [filterDefinitions, filterState, sourceRows],
   );
+  const mealTotalCount = useMemo(
+    () =>
+      filteredRows.reduce((sum, row) => {
+        if (!row.eatMeal) return sum;
+        const companions = Math.max(0, row.extraCount ?? 0);
+        return sum + 1 + companions;
+      }, 0),
+    [filteredRows],
+  );
+  const shuttleTotalCount = useMemo(
+    () =>
+      filteredRows.reduce((sum, row) => {
+        if (!row.rideBus) return sum;
+        const companions = Math.max(0, row.extraCount ?? 0);
+        return sum + 1 + companions;
+      }, 0),
+    [filteredRows],
+  );
   const columns: AdminTableColumn<RsvpResponseDto>[] = [
     {
       key: "name",
@@ -133,7 +151,17 @@ export default function AdminAttendancePage() {
       key: "side",
       header: "구분",
       className: "whitespace-nowrap",
-      renderCell: (row) => formatSide(row.side),
+      renderCell: (row) => (
+        <span
+          className={
+            row.side === "groom"
+              ? "font-medium text-[#2f69d8]"
+              : "font-medium text-[#d85f97]"
+          }
+        >
+          {formatSide(row.side)}
+        </span>
+      ),
     },
     {
       key: "extraCount",
@@ -190,6 +218,16 @@ export default function AdminAttendancePage() {
         onChange={setFilterState}
         onReset={() => setFilterState({})}
       />
+      <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <article className="rounded-2xl border border-[#e6dccb] bg-white/90 px-4 py-3 shadow-[0_8px_20px_rgba(70,55,25,0.07)]">
+          <p className="text-xs tracking-[0.05em] text-[#7e6f58]">식사 인원 총합</p>
+          <p className="mt-1 text-2xl font-semibold text-[#2f271b]">{mealTotalCount}명</p>
+        </article>
+        <article className="rounded-2xl border border-[#e6dccb] bg-white/90 px-4 py-3 shadow-[0_8px_20px_rgba(70,55,25,0.07)]">
+          <p className="text-xs tracking-[0.05em] text-[#7e6f58]">셔틀 버스 탑승 총합</p>
+          <p className="mt-1 text-2xl font-semibold text-[#2f271b]">{shuttleTotalCount}명</p>
+        </article>
+      </div>
 
       <AdminDataTable
         caption="참석 의사 목록"
