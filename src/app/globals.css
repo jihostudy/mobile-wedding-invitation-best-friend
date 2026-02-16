@@ -267,6 +267,39 @@
   }
 }
 
+@keyframes adminPetalFall {
+  0% {
+    transform: translate3d(var(--admin-petal-drift-start, -12px), -12vh, 0)
+      rotate(0deg);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.72;
+  }
+  38% {
+    transform: translate3d(
+        calc(var(--admin-petal-drift-start, -12px) * 0.4),
+        32vh,
+        0
+      )
+      rotate(calc(var(--admin-petal-rotate, 12deg) * 0.45));
+  }
+  70% {
+    transform: translate3d(
+        calc(var(--admin-petal-drift-end, 12px) * 0.72),
+        74vh,
+        0
+      )
+      rotate(calc(var(--admin-petal-rotate, 12deg) * 0.82));
+    opacity: 0.66;
+  }
+  100% {
+    transform: translate3d(var(--admin-petal-drift-end, 12px), 112vh, 0)
+      rotate(var(--admin-petal-rotate, 12deg));
+    opacity: 0;
+  }
+}
+
 @layer utilities {
   .hero-snow-layer {
     mix-blend-mode: normal;
@@ -308,10 +341,42 @@
   .music-eq-bar-delay-3 {
     animation-delay: 0.36s;
   }
+
+  .admin-petal-layer {
+    overflow: hidden;
+  }
+
+  .admin-petal {
+    position: absolute;
+    top: -12%;
+    left: var(--admin-petal-left, 50%);
+    width: var(--admin-petal-size, 14px);
+    height: calc(var(--admin-petal-size, 14px) * 0.72);
+    border-radius: 60% 40% 64% 36%;
+    background: radial-gradient(
+      ellipse at 30% 30%,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(245, 219, 193, 0.92) 42%,
+      rgba(233, 193, 162, 0.78) 100%
+    );
+    box-shadow: 0 2px 8px rgba(191, 151, 120, 0.18);
+    animation-name: adminPetalFall;
+    animation-duration: var(--admin-petal-duration, 12s);
+    animation-delay: var(--admin-petal-delay, 0s);
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    will-change: transform, opacity;
+    opacity: 0;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .hero-snowflake {
+    animation: none;
+    opacity: 0;
+  }
+
+  .admin-petal {
     animation: none;
     opacity: 0;
   }
