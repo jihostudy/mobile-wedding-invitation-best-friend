@@ -192,7 +192,7 @@ export default function RsvpModal({
             <div>
               <div className="flex items-center justify-between">
                 <label className="text-sm font-semibold text-[#1f1f1f]">
-                  성함
+                  <span className="mr-1 text-[#d62020]">*</span>성함
                 </label>
                 <div className="flex items-center gap-4 text-xs font-semibold text-[#1f1f1f]">
                   <label className="inline-flex items-center gap-1">
@@ -230,7 +230,7 @@ export default function RsvpModal({
 
             <div>
               <label className="text-sm font-semibold text-[#1f1f1f]">
-                연락처
+                <span className="mr-1 text-[#d62020]">*</span>연락처
               </label>
               <input
                 type="text"
