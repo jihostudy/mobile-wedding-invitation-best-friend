@@ -78,7 +78,7 @@ export default function AdminAttendancePage() {
       },
       {
         id: "extraCount",
-        label: "동행 인원",
+        label: "총 인원",
         getValue: (row) => row.extraCount,
         sort: "custom",
         compareFn: (a, b) => Number(a.value) - Number(b.value),
@@ -165,7 +165,7 @@ export default function AdminAttendancePage() {
     },
     {
       key: "extraCount",
-      header: "동행 인원",
+      header: "총 인원",
       className: "whitespace-nowrap text-right",
       renderCell: (row) => row.extraCount,
     },
