@@ -193,14 +193,16 @@ export default function SnapUploadModal({
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
         >
-          <button
-            type="button"
-            onClick={onClose}
-            className="absolute right-4 top-5 rounded-full p-1 text-[#222222] hover:bg-black/5"
-            aria-label="스냅 업로드 모달 닫기"
-          >
-            <Icon icon={X} size="lg" />
-          </button>
+          <div className="mb-2 flex justify-end">
+            <button
+              type="button"
+              onClick={onClose}
+              className="rounded-full p-1 text-[#222222] hover:bg-black/5"
+              aria-label="스냅 업로드 모달 닫기"
+            >
+              <Icon icon={X} size="lg" />
+            </button>
+          </div>
 
           <div className="group relative mx-auto w-full rounded-[22px] bg-gradient-to-br from-[#f8eee0] via-[#ffffff] to-[#efe2d0] p-[1.5px] shadow-[0_18px_34px_rgba(58,41,23,0.15)]">
             <div className="relative overflow-hidden rounded-[20px] bg-white">

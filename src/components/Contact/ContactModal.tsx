@@ -3,9 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
-import { Check, Copy, Phone, X } from "lucide-react";
+import { Phone, X } from "lucide-react";
 import Icon from "@/components/common/Icon";
-import useToast from "@/components/common/toast/useToast";
 import useModalLayer from "@/hooks/useModalLayer";
 import type { Person } from "@/types";
 
@@ -22,10 +21,8 @@ export default function ContactModal({
   groom,
   bride,
 }: ContactModalProps) {
-  const [copiedContact, setCopiedContact] = useState<string | null>(null);
   const [isMounted, setIsMounted] = useState(false);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
-  const toast = useToast();
 
   useModalLayer({
     active: isOpen,
@@ -102,59 +99,29 @@ export default function ContactModal({
       : []),
   ];
 
-  const copyToClipboard = async (
-    text: string | undefined,
-    contactType: string,
-  ) => {
-    if (!text) return;
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopiedContact(contactType);
-      toast.success("연락처가 복사되었습니다.");
-      setTimeout(() => setCopiedContact(null), 1500);
-    } catch (error) {
-      console.error("Failed to copy:", error);
-      toast.error("연락처 복사에 실패했습니다.");
-    }
-  };
-
   const ContactRow = ({
     label,
     name,
     phone,
-    contactType,
   }: {
     label: string;
     name: string;
     phone?: string;
-    contactType: string;
   }) => (
     <div className="grid grid-cols-[82px_1fr_auto] items-center gap-3 border-b border-wedding-brown/20 px-4 py-3 last:border-b-0">
       <span className="text-xs text-wedding-beige/80">{label}</span>
-      <span className="text-sm font-medium text-wedding-beige">{name}</span>
+      <span className="text-sm pl-4 font-medium text-wedding-beige">
+        {name}
+      </span>
       <div className="flex items-center gap-2">
         {phone ? (
-          <>
-            <a
-              href={`tel:${phone}`}
-              className="rounded-full bg-wedding-beige/15 p-2 hover:bg-wedding-beige/25"
-              aria-label={`${name}에게 전화하기`}
-            >
-              <Icon icon={Phone} size="sm" className="text-wedding-beige" />
-            </a>
-            <button
-              type="button"
-              onClick={() => copyToClipboard(phone, contactType)}
-              className="rounded-full bg-wedding-beige/15 p-2 hover:bg-wedding-beige/25"
-              aria-label={`${name} 연락처 복사하기`}
-            >
-              {copiedContact === contactType ? (
-                <Icon icon={Check} size="sm" className="text-green-300" />
-              ) : (
-                <Icon icon={Copy} size="sm" className="text-wedding-beige" />
-              )}
-            </button>
-          </>
+          <a
+            href={`tel:${phone}`}
+            className="rounded-full bg-wedding-beige/15 p-2 hover:bg-wedding-beige/25"
+            aria-label={`${name}에게 전화하기`}
+          >
+            <Icon icon={Phone} size="sm" className="text-wedding-beige" />
+          </a>
         ) : (
           <span className="px-2 text-[11px] text-wedding-beige/50">N/A</span>
         )}
@@ -175,7 +142,7 @@ export default function ContactModal({
       <div className="absolute inset-0 z-0 bg-black/60 backdrop-blur-sm" />
 
       <motion.div
-        className="relative z-10 w-full max-w-md overflow-hidden rounded-2xl bg-wedding-brown shadow-2xl"
+        className="relative z-10 w-[423px] max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl bg-wedding-brown shadow-2xl"
         onClick={(event) => event.stopPropagation()}
         initial={{ y: 20, opacity: 0.82 }}
         animate={{ y: 0, opacity: 1 }}
@@ -191,7 +158,7 @@ export default function ContactModal({
           <Icon icon={X} size="md" className="text-wedding-beige" />
         </button>
 
-        <div className="border-b border-wedding-beige/20 px-6 py-6 text-center">
+        <div className="border-b border-wedding-beige/20 px-6 py-6 ">
           <p className="text-sm tracking-[0.24em] text-wedding-beige/70">
             CONTACT
           </p>
@@ -212,7 +179,6 @@ export default function ContactModal({
                   label={row.label}
                   name={row.name}
                   phone={row.phone}
-                  contactType={row.contactType}
                 />
               ))}
             </div>
@@ -229,7 +195,6 @@ export default function ContactModal({
                   label={row.label}
                   name={row.name}
                   phone={row.phone}
-                  contactType={row.contactType}
                 />
               ))}
             </div>
