@@ -131,7 +131,7 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
                 transition={{ duration: 0.2, ease: "easeOut" }}
               />
               <motion.div
-                className="relative mx-auto h-[88dvh] w-full max-w-[720px]"
+                className="relative mx-auto flex h-[88dvh] w-full max-w-[720px] flex-col"
                 onClick={(event) => event.stopPropagation()}
                 initial={{ y: 18, scale: 0.985, opacity: 0.82 }}
                 animate={{ y: 0, scale: 1, opacity: 1 }}
@@ -153,7 +153,7 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
                   initialIndex={selectedIndex}
                   loop={false}
                   getItemKey={(item) => item.id}
-                  className="h-full"
+                  className="min-h-0 flex-1"
                   viewportClassName="h-full"
                   slideClassName="h-full"
                   showDots={false}
@@ -178,8 +178,8 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
                 />
 
                 {section.images.length > 1 ? (
-                  <div className="pointer-events-none absolute bottom-[max(14px,env(safe-area-inset-bottom))] left-1/2 z-20 -translate-x-1/2">
-                    <div className="pointer-events-auto inline-flex items-center gap-2 rounded-full bg-black/45 px-3 py-2 text-white backdrop-blur">
+                  <div className="z-20 mt-2 flex items-center justify-center pb-[max(2px,env(safe-area-inset-bottom))]">
+                    <div className="inline-flex items-center gap-2 rounded-full bg-black/45 px-3 py-2 text-white backdrop-blur">
                       <button
                         type="button"
                         onClick={() => canGoPrev && setModalIndex((prev) => Math.max(prev - 1, 0))}
