@@ -18,6 +18,7 @@ import type { WeddingContentV1 } from "@/types";
 
 type PathSegment = string | number;
 type Indexable = Record<string | number, unknown>;
+const MAX_ASSET_UPLOAD_SIZE_BYTES = 4 * 1024 * 1024;
 const GALLERY_IMAGE_ALT = "신랑신부 사진";
 const SNAP_COVER_IMAGE_ALT = "스냅 업로드 커버 이미지";
 
@@ -128,6 +129,12 @@ function getDisplayFileNameFromUrl(url: string) {
   } catch {
     return "";
   }
+}
+
+function formatFileSize(bytes: number) {
+  if (bytes < 1024) return `${bytes}B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)}KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)}MB`;
 }
 
 function toDateTimeLocalInputValue(isoString: string) {
@@ -523,6 +530,15 @@ export default function AdminContentPage() {
       },
     ) => {
       try {
+        const isAudioFile = file.type.startsWith("audio/");
+        if (file.size > MAX_ASSET_UPLOAD_SIZE_BYTES) {
+          toast.error(
+            `${isAudioFile ? "음원" : "이미지"} 파일 용량이 너무 큽니다. ` +
+              `최대 ${formatFileSize(MAX_ASSET_UPLOAD_SIZE_BYTES)}까지 업로드할 수 있습니다.`,
+          );
+          return;
+        }
+
         setUploadingKey(key);
         const result = await uploadAssetMutation.mutateAsync({ file });
 
@@ -557,12 +573,13 @@ export default function AdminContentPage() {
           return next;
         });
 
-        const isAudioFile = file.type.startsWith("audio/");
         toast.success(isAudioFile ? "음원이 업로드되었습니다." : "이미지가 업로드되었습니다.");
       } catch (error) {
         const isAudioFile = file.type.startsWith("audio/");
         const message =
-          error instanceof ApiError
+          error instanceof ApiError && error.status === 413
+            ? `${isAudioFile ? "음원" : "이미지"} 파일 용량이 너무 커서 업로드할 수 없습니다.`
+            : error instanceof ApiError
             ? error.message
             : isAudioFile
               ? "음원 업로드에 실패했습니다."
