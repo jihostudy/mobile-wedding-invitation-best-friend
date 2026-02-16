@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { ChevronDown, X } from "lucide-react";
 import FadeInUp from "@/components/common/FadeInUp";
 import Icon from "@/components/common/Icon";
 import Carousel from "@/components/common/Carousel";
+import ModalPortal from "@/components/common/ModalPortal";
+import useModalLayer from "@/hooks/useModalLayer";
 import type { GallerySectionData } from "@/types";
 
 interface ImageGalleryProps {
@@ -17,27 +19,16 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
   const [visibleCount, setVisibleCount] = useState(6);
   const visibleImages = section.images.slice(0, visibleCount);
   const hasMore = visibleCount < section.images.length;
+  const isModalOpen = selectedIndex !== null;
 
   const handleLoadMore = () => {
     setVisibleCount(section.images.length);
   };
 
-  useEffect(() => {
-    if (selectedIndex === null) return;
-
-    document.body.style.overflow = "hidden";
-    const onEsc = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setSelectedIndex(null);
-      }
-    };
-
-    window.addEventListener("keydown", onEsc);
-    return () => {
-      document.body.style.overflow = "unset";
-      window.removeEventListener("keydown", onEsc);
-    };
-  }, [selectedIndex]);
+  useModalLayer({
+    active: isModalOpen,
+    onEscape: () => setSelectedIndex(null),
+  });
 
   return (
     <section id="gallery" className="bg-white py-16">
@@ -55,6 +46,7 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
           <div className="grid grid-cols-2 gap-2">
             {visibleImages.map((image) => (
               <button
+                type="button"
                 key={image.id}
                 className="relative aspect-square w-full overflow-hidden rounded-md text-left"
                 onClick={() => {
@@ -80,6 +72,7 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
         {hasMore && (
           <FadeInUp className="mt-8 flex justify-center" delay={0.18}>
             <button
+              type="button"
               onClick={handleLoadMore}
               className="inline-flex items-center gap-1 text-base font-medium text-wedding-gray-dark"
               aria-label="갤러리 이미지 더 보기"
@@ -91,49 +84,52 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
         )}
       </div>
 
-      {selectedIndex !== null && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
-          onClick={() => setSelectedIndex(null)}
-          role="dialog"
-          aria-modal="true"
-        >
+      {selectedIndex !== null ? (
+        <ModalPortal>
           <div
-            className="relative h-[88dvh] w-full max-w-4xl"
-            onClick={(event) => event.stopPropagation()}
+            className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/60 p-4"
+            onClick={() => setSelectedIndex(null)}
+            role="dialog"
+            aria-modal="true"
           >
-            <button
-              onClick={() => setSelectedIndex(null)}
-              className="absolute right-3 top-3 z-10 rounded-full bg-black/40 p-2"
-              aria-label="갤러리 확대 닫기"
+            <div
+              className="relative h-[88dvh] w-full max-w-4xl"
+              onClick={(event) => event.stopPropagation()}
             >
-              <Icon icon={X} size="md" className="text-white" />
-            </button>
-            <Carousel
-              items={section.images}
-              initialIndex={selectedIndex}
-              getItemKey={(item) => item.id}
-              className="h-full"
-              viewportClassName="h-full"
-              slideClassName="h-full"
-              prevAriaLabel="이전 사진 보기"
-              nextAriaLabel="다음 사진 보기"
-              renderItem={(image) => (
-                <div className="relative h-full w-full">
-                  <Image
-                    src={image.url}
-                    alt={image.alt}
-                    fill
-                    className="object-contain"
-                    sizes="90vw"
-                    priority
-                  />
-                </div>
-              )}
-            />
+              <button
+                type="button"
+                onClick={() => setSelectedIndex(null)}
+                className="absolute right-3 top-3 z-10 rounded-full bg-black/40 p-2"
+                aria-label="갤러리 확대 닫기"
+              >
+                <Icon icon={X} size="md" className="text-white" />
+              </button>
+              <Carousel
+                items={section.images}
+                initialIndex={selectedIndex}
+                getItemKey={(item) => item.id}
+                className="h-full"
+                viewportClassName="h-full"
+                slideClassName="h-full"
+                prevAriaLabel="이전 사진 보기"
+                nextAriaLabel="다음 사진 보기"
+                renderItem={(image) => (
+                  <div className="relative h-full w-full">
+                    <Image
+                      src={image.url}
+                      alt={image.alt}
+                      fill
+                      className="object-contain"
+                      sizes="90vw"
+                      priority
+                    />
+                  </div>
+                )}
+              />
+            </div>
           </div>
-        </div>
-      )}
+        </ModalPortal>
+      ) : null}
     </section>
   );
 }

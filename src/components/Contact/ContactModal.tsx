@@ -1,8 +1,10 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Check, Copy, Phone, X } from 'lucide-react';
 import Icon from '@/components/common/Icon';
+import useModalLayer from '@/hooks/useModalLayer';
 import type { Person } from '@/types';
 
 interface ContactModalProps {
@@ -14,31 +16,25 @@ interface ContactModalProps {
 
 export default function ContactModal({ isOpen, onClose, groom, bride }: ContactModalProps) {
   const [copiedContact, setCopiedContact] = useState<string | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
+  useModalLayer({
+    active: isOpen,
+    onEscape: onClose,
+  });
+
   useEffect(() => {
-    if (!isOpen) {
-      document.body.style.overflow = 'unset';
-      return;
-    }
+    setIsMounted(true);
+  }, []);
 
-    document.body.style.overflow = 'hidden';
-    closeButtonRef.current?.focus();
+  useEffect(() => {
+    if (!isOpen) return;
 
-    const handleEsc = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        onClose();
-      }
-    };
+    closeButtonRef.current?.focus({ preventScroll: true });
+  }, [isOpen]);
 
-    window.addEventListener('keydown', handleEsc);
-    return () => {
-      document.body.style.overflow = 'unset';
-      window.removeEventListener('keydown', handleEsc);
-    };
-  }, [isOpen, onClose]);
-
-  if (!isOpen) return null;
+  if (!isMounted || !isOpen) return null;
 
   const copyToClipboard = async (text: string | undefined, contactType: string) => {
     if (!text) return;
@@ -77,6 +73,7 @@ export default function ContactModal({ isOpen, onClose, groom, bride }: ContactM
               <Icon icon={Phone} size="sm" className="text-wedding-beige" />
             </a>
             <button
+              type="button"
               onClick={() => copyToClipboard(phone, contactType)}
               className="rounded-full bg-wedding-beige/15 p-2 hover:bg-wedding-beige/25"
               aria-label={`${name} 연락처 복사하기`}
@@ -95,15 +92,16 @@ export default function ContactModal({ isOpen, onClose, groom, bride }: ContactM
     </div>
   );
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose} role="dialog" aria-modal="true">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+  return createPortal(
+    <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4" onClick={onClose} role="dialog" aria-modal="true">
+      <div className="absolute inset-0 z-0 bg-black/60 backdrop-blur-sm" />
 
       <div
-        className="relative w-full max-w-md overflow-hidden rounded-2xl bg-wedding-brown shadow-2xl"
+        className="relative z-10 w-full max-w-md overflow-hidden rounded-2xl bg-wedding-brown shadow-2xl"
         onClick={(event) => event.stopPropagation()}
       >
         <button
+          type="button"
           ref={closeButtonRef}
           onClick={onClose}
           className="absolute right-4 top-4 z-20 rounded-full bg-wedding-beige/20 p-2 hover:bg-wedding-beige/30"
@@ -157,6 +155,7 @@ export default function ContactModal({ isOpen, onClose, groom, bride }: ContactM
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

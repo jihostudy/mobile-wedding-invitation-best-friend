@@ -56,6 +56,7 @@ export default function Guestbook() {
               사람에게 따뜻한 한 마디를 남겨주세요.
             </p>
             <button
+              type="button"
               onClick={() => setIsModalOpen(true)}
               className="mt-5 w-full rounded-[12px] border border-wedding-brown/25 bg-white/70 px-[22px] py-[10px] text-sm font-medium text-wedding-brown transition hover:bg-white"
             >
@@ -109,6 +110,7 @@ export default function Guestbook() {
         {hasMessages && (
           <div className="mt-5 flex justify-end">
             <button
+              type="button"
               onClick={() => setIsModalOpen(true)}
               className="rounded-[12px] border border-wedding-brown/25 bg-white/70 px-[22px] py-[10px] text-sm font-medium text-wedding-brown transition hover:bg-white"
             >

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight, Upload, X } from "lucide-react";
 import Icon from "@/components/common/Icon";
 import Carousel from "@/components/common/Carousel";
+import ModalPortal from "@/components/common/ModalPortal";
 import useToast from "@/components/common/toast/useToast";
 import useModalLayer from "@/hooks/useModalLayer";
 import { useCreateSnapSubmissionMutation } from "@/lib/queries/snap";
@@ -32,31 +33,13 @@ export default function SnapUploadModal({
   const [name, setName] = useState("");
   const [images, setImages] = useState<SelectedImage[]>([]);
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
-  const [shouldRender, setShouldRender] = useState(isOpen);
-  const [isActive, setIsActive] = useState(isOpen);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imagesRef = useRef<SelectedImage[]>([]);
 
-  useEffect(() => {
-    if (isOpen) {
-      setShouldRender(true);
-      const raf = requestAnimationFrame(() => {
-        setIsActive(true);
-      });
-      return () => cancelAnimationFrame(raf);
-    }
-
-    setIsActive(false);
-    const timer = window.setTimeout(() => {
-      setShouldRender(false);
-    }, 200);
-    return () => window.clearTimeout(timer);
-  }, [isOpen]);
-
   useModalLayer({
-    active: shouldRender,
+    active: isOpen,
     onEscape: () => {
       if (previewIndex !== null) {
         setPreviewIndex(null);
@@ -86,7 +69,7 @@ export default function SnapUploadModal({
     images.length > 0 &&
     previewIndex < images.length - 1;
 
-  if (!shouldRender) return null;
+  if (!isOpen) return null;
 
   const openFilePicker = () => {
     fileInputRef.current?.click();
@@ -159,15 +142,22 @@ export default function SnapUploadModal({
   };
 
   return (
-    <div
-      className={`fixed inset-0 z-[9999] backdrop-blur-sm transition-opacity duration-200 ${isActive ? "opacity-100" : "opacity-0"}`}
-      role="dialog"
-      aria-modal="true"
-    >
+    <ModalPortal>
       <div
-        className="modal-scrollbar mx-auto h-full w-full max-w-[430px] overflow-y-auto overscroll-contain bg-white px-4 py-5"
-        onClick={(event) => event.stopPropagation()}
+        className="fixed inset-0 z-[10000] overflow-hidden overscroll-none bg-black/45 backdrop-blur-sm"
+        role="dialog"
+        aria-modal="true"
       >
+        <button
+          type="button"
+          className="absolute inset-0 h-full w-full"
+          onClick={onClose}
+          aria-label="스냅 업로드 모달 닫기"
+        />
+        <div
+          className="modal-scrollbar relative z-10 mx-auto h-full w-full max-w-[430px] overflow-y-auto overscroll-contain bg-white px-4 py-5"
+          onClick={(event) => event.stopPropagation()}
+        >
         <button
           type="button"
           onClick={onClose}
@@ -348,13 +338,13 @@ export default function SnapUploadModal({
         </div>
       </div>
 
-      {previewIndex !== null && images.length > 0 && (
-        <div
-          className="fixed inset-0 z-[10000] bg-white"
-          role="dialog"
-          aria-modal="true"
-        >
-          <div className="relative mx-auto h-[100dvh] w-full max-w-[430px]">
+        {previewIndex !== null && images.length > 0 && (
+          <div
+            className="fixed inset-0 z-[10010] bg-white"
+            role="dialog"
+            aria-modal="true"
+          >
+            <div className="relative mx-auto h-[100dvh] w-full max-w-[430px]">
             <button
               type="button"
               onClick={() => setPreviewIndex(null)}
@@ -423,9 +413,10 @@ export default function SnapUploadModal({
                 </div>
               </div>
             )}
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </ModalPortal>
   );
 }

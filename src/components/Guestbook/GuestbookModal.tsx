@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 import Icon from "@/components/common/Icon";
+import ModalPortal from "@/components/common/ModalPortal";
 import useModalLayer from "@/hooks/useModalLayer";
 import type { GuestMessageInput } from "@/types";
 
@@ -42,8 +43,8 @@ export default function GuestbookModal({
       return;
     }
 
-    closeButtonRef.current?.focus();
-  }, [isOpen, onClose]);
+    closeButtonRef.current?.focus({ preventScroll: true });
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -73,18 +74,26 @@ export default function GuestbookModal({
   };
 
   return (
-    <div
-      className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/65 p-4 backdrop-blur-sm"
-      onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-    >
+    <ModalPortal>
       <div
-        className="max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto rounded-xl bg-white"
-        onClick={(event) => event.stopPropagation()}
+        className="fixed inset-0 z-[10000] overflow-hidden overscroll-none"
+        role="dialog"
+        aria-modal="true"
       >
+        <button
+          type="button"
+          className="absolute inset-0 h-full w-full bg-black/65 backdrop-blur-sm"
+          onClick={onClose}
+          aria-label="방명록 모달 배경 닫기"
+        />
+        <div className="relative z-10 flex h-full w-full items-center justify-center p-4">
+        <div
+          className="modal-scrollbar max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto overscroll-contain rounded-xl bg-white"
+          onClick={(event) => event.stopPropagation()}
+        >
         <div className="relative px-6 pb-4 pt-6">
           <button
+            type="button"
             ref={closeButtonRef}
             onClick={onClose}
             className="absolute right-6 top-6 rounded-full p-1 text-gray-800 hover:bg-black/5"
@@ -178,7 +187,9 @@ export default function GuestbookModal({
             </button>
           </div>
         </form>
+        </div>
+        </div>
       </div>
-    </div>
+    </ModalPortal>
   );
 }

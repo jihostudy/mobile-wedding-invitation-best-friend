@@ -60,6 +60,7 @@ export default function InvitationMessage({
 
           <div className="flex justify-center rounded-[12px]">
             <button
+              type="button"
               onClick={() => setIsContactModalOpen(true)}
               className="inline-flex items-center gap-1.5 rounded-[12px] border border-wedding-brown/25 bg-white/70 px-9 py-3 text-sm font-medium text-wedding-brown transition hover:bg-white"
               aria-label="연락처 모달 열기"
