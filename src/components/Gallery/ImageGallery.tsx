@@ -129,11 +129,11 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
                 onPointerCancel={handlePointerCancel}
                 onDragStart={(event) => event.preventDefault()}
               >
-                <div className="relative aspect-[3/4] w-full">
+                <div className="relative w-full">
                   <AnimatePresence initial={false} custom={transitionDirection} mode="wait">
                     <motion.div
                       key={selectedImage.id}
-                      className="absolute inset-0"
+                      className="w-full"
                       custom={transitionDirection}
                       initial={{ x: transitionDirection > 0 ? 36 : -36, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
@@ -143,9 +143,10 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
                       <Image
                         src={selectedImage.url}
                         alt={selectedImage.alt}
-                        fill
+                        width={selectedImage.width}
+                        height={selectedImage.height}
                         draggable={false}
-                        className="object-contain"
+                        className="h-auto w-full object-contain"
                         sizes="(max-width: 425px) 100vw, 420px"
                         priority
                       />
@@ -156,7 +157,11 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
                   <>
                     <button
                       type="button"
-                      onClick={() => moveSelection(-1)}
+                      onPointerDown={(event) => event.stopPropagation()}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        moveSelection(-1);
+                      }}
                       aria-label="이전 사진 보기"
                       className="absolute left-3 top-1/2 z-10 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/20 text-white backdrop-blur-sm transition hover:bg-black/35"
                     >
@@ -164,7 +169,11 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
                     </button>
                     <button
                       type="button"
-                      onClick={() => moveSelection(1)}
+                      onPointerDown={(event) => event.stopPropagation()}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        moveSelection(1);
+                      }}
                       aria-label="다음 사진 보기"
                       className="absolute right-3 top-1/2 z-10 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/20 text-white backdrop-blur-sm transition hover:bg-black/35"
                     >
