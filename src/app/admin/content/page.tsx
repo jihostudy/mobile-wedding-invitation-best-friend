@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { type DragEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ApiError } from "@/lib/api/client";
+import { PAGE_SECTION_LABELS } from "@/lib/wedding-content/section-order";
 import AdminSummaryCards from "@/components/Admin/AdminSummaryCards";
 import useToast from "@/components/common/toast/useToast";
 import {
@@ -18,6 +19,7 @@ import type { WeddingContentV1 } from "@/types";
 
 type PathSegment = string | number;
 type Indexable = Record<string | number, unknown>;
+type DropPosition = "before" | "after";
 const MAX_ASSET_UPLOAD_SIZE_BYTES = 4 * 1024 * 1024;
 const GALLERY_IMAGE_ALT = "신랑신부 사진";
 const SNAP_COVER_IMAGE_ALT = "스냅 업로드 커버 이미지";
@@ -250,8 +252,6 @@ function normalizeTransportDetails(content: WeddingContentV1): WeddingContentV1 
       volume: 0.4,
       src: "",
     };
-  } else {
-    next.weddingData.backgroundMusic.autoplay = true;
   }
 
   return next;
@@ -392,6 +392,13 @@ export default function AdminContentPage() {
   );
   const [version, setVersion] = useState<number>(1);
   const [uploadingKey, setUploadingKey] = useState<string | null>(null);
+  const [draggingSectionId, setDraggingSectionId] = useState<
+    WeddingContentV1["pageSectionOrder"][number] | null
+  >(null);
+  const [dropPreview, setDropPreview] = useState<{
+    targetId: WeddingContentV1["pageSectionOrder"][number];
+    position: DropPosition;
+  } | null>(null);
   const [activeSection, setActiveSection] = useState("groomInfo");
   const sourceContentRef = useRef<WeddingContentV1 | null>(null);
   const draftContentRef = useRef<WeddingContentV1 | null>(null);
@@ -554,6 +561,83 @@ export default function AdminContentPage() {
       setDraftContent((prev) => {
         if (!prev) return prev;
         return moveArrayItemAtPath(prev, path, fromIndex, toIndex);
+      });
+    },
+    [],
+  );
+
+  const handleSectionOrderDrop = useCallback(
+    (
+      event: DragEvent<HTMLLIElement>,
+      dropTargetId: WeddingContentV1["pageSectionOrder"][number],
+    ) => {
+      event.preventDefault();
+      if (!draggingSectionId) return;
+
+      const rect = event.currentTarget.getBoundingClientRect();
+      const shouldDropAfter = event.clientY >= rect.top + rect.height / 2;
+      const position: DropPosition =
+        dropPreview?.targetId === dropTargetId
+          ? dropPreview.position
+          : shouldDropAfter
+            ? "after"
+            : "before";
+
+      setDraftContent((prev) => {
+        if (!prev) return prev;
+        const fromIndex = prev.pageSectionOrder.indexOf(draggingSectionId);
+        const targetIndex = prev.pageSectionOrder.indexOf(dropTargetId);
+        if (fromIndex < 0 || targetIndex < 0) return prev;
+
+        const rawInsertIndex = position === "before" ? targetIndex : targetIndex + 1;
+        const insertIndex =
+          fromIndex < rawInsertIndex ? rawInsertIndex - 1 : rawInsertIndex;
+        if (insertIndex === fromIndex) return prev;
+
+        const nextOrder = [...prev.pageSectionOrder];
+        const [moved] = nextOrder.splice(fromIndex, 1);
+        nextOrder.splice(insertIndex, 0, moved);
+        return {
+          ...prev,
+          pageSectionOrder: nextOrder,
+        };
+      });
+      setDraggingSectionId(null);
+      setDropPreview(null);
+    },
+    [draggingSectionId, dropPreview],
+  );
+
+  const handleSectionOrderDragOver = useCallback(
+    (
+      event: DragEvent<HTMLLIElement>,
+      targetId: WeddingContentV1["pageSectionOrder"][number],
+    ) => {
+      event.preventDefault();
+      if (!draggingSectionId || draggingSectionId === targetId) {
+        setDropPreview(null);
+        return;
+      }
+
+      const rect = event.currentTarget.getBoundingClientRect();
+      const position: DropPosition =
+        event.clientY < rect.top + rect.height / 2 ? "before" : "after";
+      setDropPreview({ targetId, position });
+    },
+    [draggingSectionId],
+  );
+
+  const toggleSectionVisibility = useCallback(
+    (sectionId: WeddingContentV1["pageSectionOrder"][number]) => {
+      setDraftContent((prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          pageSectionVisibility: {
+            ...prev.pageSectionVisibility,
+            [sectionId]: !prev.pageSectionVisibility[sectionId],
+          },
+        };
       });
     },
     [],
@@ -730,6 +814,7 @@ export default function AdminContentPage() {
         return { label: line, color: "#8d8d8d" };
       });
   const sectionNavItems = [
+    { id: "sectionOrder", label: "섹션 순서" },
     { id: "groomInfo", label: "신랑 정보" },
     { id: "brideInfo", label: "신부 정보" },
     { id: "backgroundMusic", label: "배경음악" },
@@ -738,6 +823,7 @@ export default function AdminContentPage() {
     { id: "interview", label: "인터뷰" },
     { id: "gallery", label: "갤러리" },
     { id: "weddingInfo", label: "예식 정보" },
+    { id: "calendar", label: "캘린더 문구" },
     { id: "guestbook", label: "방명록" },
     { id: "rsvp", label: "참석 의사 전달" },
     { id: "snap", label: "스냅" },
@@ -749,6 +835,22 @@ export default function AdminContentPage() {
     ...(content.snapSection.modal.guideHighlightLines ?? []),
     ...(content.snapSection.modal.policyLines ?? []),
   ].join("\n");
+  const sectionKickers: Record<
+    WeddingContentV1["pageSectionOrder"][number],
+    string
+  > = {
+    hero: "HERO",
+    invitation: content.invitationSection.kicker,
+    interview: content.interviewSection.kicker,
+    gallery: content.gallerySection.kicker,
+    calendar: "CALENDAR",
+    location: "LOCATION",
+    guestbook: content.guestbookSection.kicker,
+    rsvp: content.rsvpSection.kicker,
+    snap: content.snapSection.kicker,
+    account: content.accountSection.kicker,
+    closing: "CLOSING",
+  };
 
   return (
     <main className="mx-auto w-full max-w-[980px] px-6 py-10 pb-28">
@@ -792,6 +894,69 @@ export default function AdminContentPage() {
       </div>
 
       <div className="mt-6 space-y-4">
+        <SectionCard
+          isActive={activeSection === "sectionOrder"}
+          title="페이지 섹션 순서"
+        >
+          <p className="text-xs text-[#7b6f5c]">
+            카드를 드래그하면 순서가 바뀌고, 표시/숨김 버튼으로 노출 여부를 바꿀 수 있습니다.
+          </p>
+          <ul className="space-y-2">
+            {content.pageSectionOrder.map((sectionId) => (
+              <li
+                key={sectionId}
+                draggable
+                onDragStart={() => {
+                  setDraggingSectionId(sectionId);
+                  setDropPreview(null);
+                }}
+                onDragEnd={() => {
+                  setDraggingSectionId(null);
+                  setDropPreview(null);
+                }}
+                onDragOver={(event) => handleSectionOrderDragOver(event, sectionId)}
+                onDrop={(event) => handleSectionOrderDrop(event, sectionId)}
+                className={`relative cursor-move rounded-xl border px-4 py-3 text-sm font-semibold text-[#2f271b] transition ${
+                  draggingSectionId === sectionId
+                    ? "border-[#b9a17e] bg-[#fff7ea]"
+                    : "border-[#e7ddcc] bg-white/90"
+                }`}
+              >
+                {dropPreview?.targetId === sectionId &&
+                dropPreview.position === "before" ? (
+                  <span className="pointer-events-none absolute left-3 right-3 top-0 h-[2px] rounded-full bg-[#c49a64]" />
+                ) : null}
+                {dropPreview?.targetId === sectionId &&
+                dropPreview.position === "after" ? (
+                  <span className="pointer-events-none absolute left-3 right-3 bottom-0 h-[2px] rounded-full bg-[#c49a64]" />
+                ) : null}
+                <div className="flex items-start justify-between gap-3">
+                  <div className={content.pageSectionVisibility[sectionId] ? "" : "opacity-55"}>
+                    <p>{PAGE_SECTION_LABELS[sectionId]}</p>
+                    <p className="mt-1 text-xs font-medium uppercase tracking-[0.12em] text-[#8f8069]">
+                      {sectionKickers[sectionId]}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      toggleSectionVisibility(sectionId);
+                    }}
+                    className={`shrink-0 rounded-md border px-2.5 py-1 text-[11px] font-semibold ${
+                      content.pageSectionVisibility[sectionId]
+                        ? "border-[#b9a17e] bg-[#fff7ea] text-[#6b563a]"
+                        : "border-[#d7c9b1] bg-white text-[#8f8069]"
+                    }`}
+                  >
+                    {content.pageSectionVisibility[sectionId] ? "표시" : "숨김"}
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </SectionCard>
+
         <SectionCard
           isActive={activeSection === "groomInfo"}
           title="신랑 정보"
@@ -1244,8 +1409,13 @@ export default function AdminContentPage() {
               <label className="flex items-center gap-2 text-sm text-[#4f4332]">
                 <input
                   type="checkbox"
-                  checked
-                  readOnly
+                  checked={Boolean(content.weddingData.backgroundMusic?.autoplay)}
+                  onChange={(event) =>
+                    updatePath(
+                      ["weddingData", "backgroundMusic", "autoplay"],
+                      event.target.checked,
+                    )
+                  }
                   className="h-4 w-4"
                 />
                 자동 재생
@@ -1272,7 +1442,6 @@ export default function AdminContentPage() {
                         ["weddingData", "backgroundMusic", "src"],
                         "background-music",
                       );
-                      updatePath(["weddingData", "backgroundMusic", "autoplay"], true);
                       updatePath(["weddingData", "backgroundMusic", "enabled"], true);
                     })();
                     event.target.value = "";
@@ -1306,6 +1475,34 @@ export default function AdminContentPage() {
               />
             </div>
           </div>
+        </SectionCard>
+
+        <SectionCard
+          isActive={activeSection === "calendar"}
+          title="캘린더 문구"
+        >
+          <p className="text-xs text-[#7b6f5c]">
+            `D-` 이후 숫자는 자동 계산되며 수정할 수 없습니다.
+          </p>
+          <TextField
+            label="문구 (D- 앞부분)"
+            value={content.calendarSection.countdownLabel}
+            onChange={(value) =>
+              updatePath(["calendarSection", "countdownLabel"], value)
+            }
+            placeholder="예: 김동현❤️강다연의 결혼식"
+          />
+          <label className="block min-w-0">
+            <span className="mb-1.5 block text-xs font-semibold text-[#6f6350]">
+              미리보기
+            </span>
+            <input
+              type="text"
+              readOnly
+              value={`${content.calendarSection.countdownLabel} D-109`}
+              className="h-10 w-full rounded-lg border border-[#dfd4c1] bg-[#f5f0e7] px-3 text-sm text-[#6f6350] outline-none"
+            />
+          </label>
         </SectionCard>
 
         <SectionCard

@@ -1,4 +1,8 @@
 import { z } from 'zod';
+import {
+  normalizePageSectionOrder,
+  normalizePageSectionVisibility,
+} from '@/lib/wedding-content/section-order';
 import type { WeddingContentV1 } from '@/types';
 
 const personSchema = z.object({
@@ -55,6 +59,18 @@ const invitationSectionSchema = z
     title: section.title ?? '소중한 분들을 초대합니다',
     message: section.message,
   }));
+
+function getGivenName(name: string) {
+  return name.length > 1 ? name.slice(1) : name;
+}
+
+const calendarSectionSchema = z
+  .object({
+    countdownLabel: z.string().optional(),
+    countdownPrefix: z.string().optional(),
+    countdownSuffix: z.string().optional(),
+  })
+  .optional();
 
 const guestbookSectionSchema = z
   .object({
@@ -172,8 +188,9 @@ const interviewSectionSchema = z
     questions: section.questions,
   }));
 
-const weddingContentSchema = z.object({
-  weddingData: z.object({
+const weddingContentSchema = z
+  .object({
+    weddingData: z.object({
     groom: personSchema,
     bride: personSchema,
     date: z.object({
@@ -214,87 +231,102 @@ const weddingContentSchema = z.object({
       })
       .optional(),
   }),
-  heroSection: heroSectionSchema,
-  invitationSection: invitationSectionSchema,
-  gallerySection: gallerySectionSchema,
-  interviewSection: interviewSectionSchema,
-  guestbookSection: guestbookSectionSchema,
-  rsvpSection: rsvpSectionSchema,
-  accountSection: z.object({
-    kicker: z.string().optional(),
-    title: z.string().optional(),
-    description: z.string().optional(),
-    groups: z.array(
-      z.object({
-        id: z.string(),
-        label: z.string(),
-        accounts: z.array(
-          z.object({
-            bank: z.string(),
-            account: z.string(),
-          }),
-        ),
-      }),
-    ),
-  }).transform((section) => ({
-    kicker: section.kicker ?? 'ACCOUNT',
-    title: section.title ?? '마음 전하실 곳',
-    description:
-      section.description ??
-      '참석이 어려우신 분들을 위해\n계좌번호를 기재하였습니다.\n너그러운 마음으로 양해 부탁드립니다.',
-    groups: section.groups,
-  })),
-  snapSection: z.object({
-    kicker: z.string().optional(),
-    title: z.string().optional(),
-    description: z.string(),
-    uploadOpenAt: z.string().optional(),
-    images: z.array(
-      z.object({
-        id: z.string(),
-        url: z.string(),
-        alt: z.string(),
-        rotation: z.number(),
-        offsetX: z.number(),
-      }),
-    ),
-    modal: z.object({
-      backLabel: z.string(),
-      coverImage: z.object({ url: z.string(), alt: z.string() }),
-      coverKicker: z.string(),
-      coverTitle: z.string(),
-      coverNames: z.string(),
-      guideTitle: z.string(),
-      guideLines: z.array(z.string()),
-      guideHighlightLines: z.array(z.string()),
-      nameLabel: z.string(),
-      namePlaceholder: z.string(),
-      uploadEmptyHint: z.string(),
-      attachButtonLabel: z.string(),
-      maxFiles: z.number(),
-      policyLines: z.array(z.string()),
-    }),
-  }).transform((section) => ({
-    kicker: section.kicker ?? 'CAPTURE OUR MOMENTS',
-    title: section.title ?? '스냅',
-    description: section.description,
-    uploadOpenAt: section.uploadOpenAt ?? '2026-06-20T11:30:00+09:00',
-    images: section.images,
-    modal: section.modal,
-  })),
-  closingSection: z
-    .object({
-      image: z.object({ url: z.string(), alt: z.string() }).optional(),
-    })
-    .optional()
-    .transform((section) => ({
-      image: section?.image ?? {
-        url: '/images/placeholder-couple.svg',
-        alt: '감사 인사 이미지',
-      },
+    heroSection: heroSectionSchema,
+    invitationSection: invitationSectionSchema,
+    calendarSection: calendarSectionSchema,
+    gallerySection: gallerySectionSchema,
+    interviewSection: interviewSectionSchema,
+    guestbookSection: guestbookSectionSchema,
+    rsvpSection: rsvpSectionSchema,
+    accountSection: z.object({
+      kicker: z.string().optional(),
+      title: z.string().optional(),
+      description: z.string().optional(),
+      groups: z.array(
+        z.object({
+          id: z.string(),
+          label: z.string(),
+          accounts: z.array(
+            z.object({
+              bank: z.string(),
+              account: z.string(),
+            }),
+          ),
+        }),
+      ),
+    }).transform((section) => ({
+      kicker: section.kicker ?? 'ACCOUNT',
+      title: section.title ?? '마음 전하실 곳',
+      description:
+        section.description ??
+        '참석이 어려우신 분들을 위해\n계좌번호를 기재하였습니다.\n너그러운 마음으로 양해 부탁드립니다.',
+      groups: section.groups,
     })),
-  floatingNavItems: z.array(z.object({ id: z.string(), label: z.string() })),
-}).strict();
+    snapSection: z.object({
+      kicker: z.string().optional(),
+      title: z.string().optional(),
+      description: z.string(),
+      uploadOpenAt: z.string().optional(),
+      images: z.array(
+        z.object({
+          id: z.string(),
+          url: z.string(),
+          alt: z.string(),
+          rotation: z.number(),
+          offsetX: z.number(),
+        }),
+      ),
+      modal: z.object({
+        backLabel: z.string(),
+        coverImage: z.object({ url: z.string(), alt: z.string() }),
+        coverKicker: z.string(),
+        coverTitle: z.string(),
+        coverNames: z.string(),
+        guideTitle: z.string(),
+        guideLines: z.array(z.string()),
+        guideHighlightLines: z.array(z.string()),
+        nameLabel: z.string(),
+        namePlaceholder: z.string(),
+        uploadEmptyHint: z.string(),
+        attachButtonLabel: z.string(),
+        maxFiles: z.number(),
+        policyLines: z.array(z.string()),
+      }),
+    }).transform((section) => ({
+      kicker: section.kicker ?? 'CAPTURE OUR MOMENTS',
+      title: section.title ?? '스냅',
+      description: section.description,
+      uploadOpenAt: section.uploadOpenAt ?? '2026-06-20T11:30:00+09:00',
+      images: section.images,
+      modal: section.modal,
+    })),
+    closingSection: z
+      .object({
+        image: z.object({ url: z.string(), alt: z.string() }).optional(),
+      })
+      .optional()
+      .transform((section) => ({
+        image: section?.image ?? {
+          url: '/images/placeholder-couple.svg',
+          alt: '감사 인사 이미지',
+        },
+      })),
+    pageSectionOrder: z.array(z.string()).optional(),
+    pageSectionVisibility: z.unknown().optional(),
+    floatingNavItems: z.array(z.object({ id: z.string(), label: z.string() })),
+  })
+  .passthrough()
+  .transform((content) => ({
+    ...content,
+    calendarSection: {
+      countdownLabel:
+        content.calendarSection?.countdownLabel ??
+        content.calendarSection?.countdownPrefix ??
+        `${getGivenName(content.weddingData.groom.name)}❤️${getGivenName(content.weddingData.bride.name)}의 결혼식`,
+    },
+    pageSectionOrder: normalizePageSectionOrder(content.pageSectionOrder),
+    pageSectionVisibility: normalizePageSectionVisibility(content.pageSectionVisibility),
+  }));
 
 export function parseWeddingContent(input: unknown): WeddingContentV1 {
   return weddingContentSchema.parse(input) as WeddingContentV1;

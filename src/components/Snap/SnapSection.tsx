@@ -53,6 +53,7 @@ export default function SnapSection({ section }: SnapSectionProps) {
 
   return (
     <section
+      id="snap"
       ref={sectionRef}
       className="mt-12 rounded-[18px] bg-white px-6 py-12"
     >

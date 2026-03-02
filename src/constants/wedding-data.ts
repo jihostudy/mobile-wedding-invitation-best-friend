@@ -15,6 +15,7 @@ import {
   GalleryImage,
   HeroSectionData,
   InvitationSectionData,
+  CalendarSectionData,
   GallerySectionData,
   GuestbookSectionData,
   RsvpSectionData,
@@ -23,7 +24,13 @@ import {
   AccountSectionData,
   ClosingSectionData,
   FloatingNavItem,
+  PageSectionId,
+  PageSectionVisibility,
 } from "@/types";
+import {
+  DEFAULT_PAGE_SECTION_ORDER,
+  DEFAULT_PAGE_SECTION_VISIBILITY,
+} from "@/lib/wedding-content/section-order";
 
 // 1) Core wedding profile
 export const WEDDING_DATA: WeddingInfo = {
@@ -118,6 +125,10 @@ export const INVITATION_SECTION: InvitationSectionData = {
 오셔서 축복해 주시면 더 없는 기쁨으로
 간직하겠습니다.
 `.trim(),
+};
+
+export const CALENDAR_SECTION: CalendarSectionData = {
+  countdownLabel: "동현❤️강다연의 결혼식",
 };
 
 // 4) Gallery
@@ -366,6 +377,11 @@ export const CLOSING_SECTION: ClosingSectionData = {
     url: "/images/placeholder-couple.svg",
     alt: "감사 인사 이미지",
   },
+};
+
+export const PAGE_SECTION_ORDER: PageSectionId[] = [...DEFAULT_PAGE_SECTION_ORDER];
+export const PAGE_SECTION_VISIBILITY: PageSectionVisibility = {
+  ...DEFAULT_PAGE_SECTION_VISIBILITY,
 };
 
 export const FLOATING_NAV_ITEMS: FloatingNavItem[] = [

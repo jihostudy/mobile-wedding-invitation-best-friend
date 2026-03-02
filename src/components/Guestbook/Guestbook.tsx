@@ -4,9 +4,6 @@ import { useState } from "react";
 import type {
   GuestMessage,
   GuestbookSectionData,
-  RsvpSectionData,
-  SnapSectionData,
-  WeddingInfo,
 } from "@/types";
 import {
   useCreateGuestMessageMutation,
@@ -14,23 +11,13 @@ import {
 } from "@/lib/queries/guest-messages";
 import Carousel from "@/components/common/Carousel";
 import useToast from "@/components/common/toast/useToast";
-import RsvpSection from "@/components/Rsvp/RsvpSection";
-import SnapSection from "@/components/Snap/SnapSection";
 import GuestbookModal from "./GuestbookModal";
 
 interface GuestbookProps {
   section: GuestbookSectionData;
-  rsvpSection: RsvpSectionData;
-  snapSection: SnapSectionData;
-  weddingData: WeddingInfo;
 }
 
-export default function Guestbook({
-  section,
-  rsvpSection,
-  snapSection,
-  weddingData,
-}: GuestbookProps) {
+export default function Guestbook({ section }: GuestbookProps) {
   const toast = useToast();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { data, isLoading } = useGuestMessagesQuery(true);
@@ -135,8 +122,6 @@ export default function Guestbook({
             </button>
           </div>
         )}
-        <RsvpSection section={rsvpSection} weddingData={weddingData} />
-        <SnapSection section={snapSection} />
       </div>
 
       <GuestbookModal

@@ -10,6 +10,8 @@ import WeddingCalendar from '@/components/Calendar/WeddingCalendar';
 import ImageGallery from '@/components/Gallery/ImageGallery';
 import VenueInfo from '@/components/Location/VenueInfo';
 import Guestbook from '@/components/Guestbook/Guestbook';
+import RsvpSection from '@/components/Rsvp/RsvpSection';
+import SnapSection from '@/components/Snap/SnapSection';
 import AccountSection from '@/components/Account/AccountSection';
 import FinalThanksSection from '@/components/Closing/FinalThanksSection';
 import FadeInUp from '@/components/common/FadeInUp';
@@ -17,6 +19,7 @@ import useToast from '@/components/common/toast/useToast';
 import { apiFetch } from '@/lib/api/client';
 import { FALLBACK_WEDDING_CONTENT } from '@/lib/wedding-content/fallback';
 import { useWeddingContentQuery } from '@/lib/queries/wedding-content';
+import type { PageSectionId } from '@/types';
 
 export default function HomePageClient() {
   const toast = useToast();
@@ -24,6 +27,90 @@ export default function HomePageClient() {
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
   const { data } = useWeddingContentQuery('main');
   const content = data?.content ?? FALLBACK_WEDDING_CONTENT;
+
+  const renderSection = (sectionId: PageSectionId) => {
+    switch (sectionId) {
+      case 'hero':
+        return (
+          <MainHero
+            groom={content.weddingData.groom}
+            bride={content.weddingData.bride}
+            date={content.weddingData.date}
+            section={content.heroSection}
+          />
+        );
+      case 'invitation':
+        return (
+          <FadeInUp delay={0.05} amount={0.15}>
+            <InvitationMessage
+              section={content.invitationSection}
+              groom={content.weddingData.groom}
+              bride={content.weddingData.bride}
+            />
+          </FadeInUp>
+        );
+      case 'interview':
+        return (
+          <InterviewSection
+            section={content.interviewSection}
+            groom={content.weddingData.groom}
+            bride={content.weddingData.bride}
+          />
+        );
+      case 'gallery':
+        return (
+          <FadeInUp delay={0.15} amount={0.15}>
+            <ImageGallery section={content.gallerySection} />
+          </FadeInUp>
+        );
+      case 'calendar':
+        return (
+          <FadeInUp delay={0.2} amount={0.15}>
+            <WeddingCalendar
+              date={content.weddingData.date}
+              section={content.calendarSection}
+            />
+          </FadeInUp>
+        );
+      case 'location':
+        return <VenueInfo venue={content.weddingData.venue} date={content.weddingData.date} />;
+      case 'guestbook':
+        return (
+          <FadeInUp delay={0.3} amount={0.15}>
+            <Guestbook section={content.guestbookSection} />
+          </FadeInUp>
+        );
+      case 'rsvp':
+        return (
+          <FadeInUp delay={0.33} amount={0.15}>
+            <RsvpSection section={content.rsvpSection} weddingData={content.weddingData} />
+          </FadeInUp>
+        );
+      case 'snap':
+        return (
+          <FadeInUp delay={0.36} amount={0.15}>
+            <SnapSection section={content.snapSection} />
+          </FadeInUp>
+        );
+      case 'account':
+        return (
+          <FadeInUp delay={0.35} amount={0.15}>
+            <AccountSection
+              section={content.accountSection}
+              weddingData={content.weddingData}
+            />
+          </FadeInUp>
+        );
+      case 'closing':
+        return (
+          <FadeInUp delay={0.4} amount={0.15}>
+            <FinalThanksSection section={content.closingSection} />
+          </FadeInUp>
+        );
+      default:
+        return null;
+    }
+  };
 
   useEffect(() => {
     if (hasShownLoginToast.current) return;
@@ -88,53 +175,12 @@ export default function HomePageClient() {
         />
       </div>
       <main className="relative z-10 mx-auto w-full max-w-[425px] border-x border-[#efe2d1] bg-white/95 shadow-[0_24px_64px_rgba(103,76,48,0.16)] backdrop-blur-sm">
-        <MainHero
-          groom={content.weddingData.groom}
-          bride={content.weddingData.bride}
-          date={content.weddingData.date}
-          section={content.heroSection}
-        />
         <div className="relative z-10 bg-white/94">
-          <FadeInUp delay={0.05} amount={0.15}>
-            <InvitationMessage
-              section={content.invitationSection}
-              groom={content.weddingData.groom}
-              bride={content.weddingData.bride}
-            />
-          </FadeInUp>
-          <InterviewSection
-            section={content.interviewSection}
-            groom={content.weddingData.groom}
-            bride={content.weddingData.bride}
-          />
-          <FadeInUp delay={0.15} amount={0.15}>
-            <ImageGallery section={content.gallerySection} />
-          </FadeInUp>
-          <FadeInUp delay={0.2} amount={0.15}>
-            <WeddingCalendar
-              groom={content.weddingData.groom}
-              bride={content.weddingData.bride}
-              date={content.weddingData.date}
-            />
-          </FadeInUp>
-          <VenueInfo venue={content.weddingData.venue} date={content.weddingData.date} />
-          <FadeInUp delay={0.3} amount={0.15}>
-            <Guestbook
-              section={content.guestbookSection}
-              rsvpSection={content.rsvpSection}
-              snapSection={content.snapSection}
-              weddingData={content.weddingData}
-            />
-          </FadeInUp>
-          <FadeInUp delay={0.35} amount={0.15}>
-            <AccountSection
-              section={content.accountSection}
-              weddingData={content.weddingData}
-            />
-          </FadeInUp>
-          <FadeInUp delay={0.4} amount={0.15}>
-            <FinalThanksSection section={content.closingSection} />
-          </FadeInUp>
+          {content.pageSectionOrder
+            .filter((sectionId) => content.pageSectionVisibility[sectionId])
+            .map((sectionId) => (
+              <div key={sectionId}>{renderSection(sectionId)}</div>
+            ))}
         </div>
         <BackgroundMusicPlayer config={content.weddingData.backgroundMusic} />
       </main>

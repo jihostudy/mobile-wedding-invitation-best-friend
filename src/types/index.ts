@@ -110,7 +110,7 @@ export interface InvitationSectionData {
 }
 
 export interface CalendarSectionData {
-  subtitle?: string;
+  countdownLabel: string;
 }
 
 export interface GallerySectionData {
@@ -227,7 +227,6 @@ export interface RsvpResponseInput {
   contact: string;
   extraCount: number;
   eatMeal: boolean;
-  rideBus: boolean;
   note: string;
   agreePrivacy: boolean;
 }
@@ -238,10 +237,26 @@ export interface SnapUploadInput {
   eventSlug?: string;
 }
 
+export type PageSectionId =
+  | "hero"
+  | "invitation"
+  | "interview"
+  | "gallery"
+  | "calendar"
+  | "location"
+  | "guestbook"
+  | "rsvp"
+  | "snap"
+  | "account"
+  | "closing";
+
+export type PageSectionVisibility = Record<PageSectionId, boolean>;
+
 export interface WeddingContentV1 {
   weddingData: WeddingInfo;
   heroSection: HeroSectionData;
   invitationSection: InvitationSectionData;
+  calendarSection: CalendarSectionData;
   gallerySection: GallerySectionData;
   interviewSection: InterviewSectionData;
   guestbookSection: GuestbookSectionData;
@@ -249,6 +264,8 @@ export interface WeddingContentV1 {
   accountSection: AccountSectionData;
   snapSection: SnapSectionData;
   closingSection: ClosingSectionData;
+  pageSectionOrder: PageSectionId[];
+  pageSectionVisibility: PageSectionVisibility;
   floatingNavItems: FloatingNavItem[];
 }
 
@@ -302,7 +319,6 @@ export interface RsvpResponseDto {
   contact: string;
   extraCount: number;
   eatMeal: boolean;
-  rideBus: boolean;
   note: string;
   agreePrivacy: boolean;
   createdAt: string;
