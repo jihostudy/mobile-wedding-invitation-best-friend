@@ -121,7 +121,7 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
 
         {hasImages ? (
           <>
-            <FadeInUp className="px-[20px]" delay={0.1}>
+            <FadeInUp className="px-9" delay={0.1}>
               <div
                 className="relative overflow-hidden rounded-md bg-[#f5f5f5] touch-pan-y select-none"
                 onPointerDown={handlePointerDown}
@@ -184,7 +184,7 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
               </div>
             </FadeInUp>
 
-            <FadeInUp className="mt-4 px-[20px]" delay={0.16}>
+            <FadeInUp className="mt-4 px-9" delay={0.16}>
               <div className="grid grid-cols-5 gap-2">
                 {visibleThumbnails.map((image, index) => {
                   const absoluteIndex = thumbnailStart + index;
