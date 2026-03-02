@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import localFont from "next/font/local";
 import { Crimson_Pro } from "next/font/google";
 import OverlayProvider from "@/components/providers/OverlayProvider";
@@ -84,6 +85,11 @@ export default function RootLayout({
       <body
         className={`${tmoneyRoundWind.className} antialiased bg-gradient-to-b from-[#f8f0e4] via-[#fdf7f0] to-[#f6ecdd]`}
       >
+        <Script
+          id="kakao-sdk"
+          src="https://developers.kakao.com/sdk/js/kakao.js"
+          strategy="afterInteractive"
+        />
         <QueryProvider>
           <ScrollResetProvider />
           <ToastProvider>

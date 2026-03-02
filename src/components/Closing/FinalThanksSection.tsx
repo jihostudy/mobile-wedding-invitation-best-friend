@@ -2,10 +2,7 @@
 
 import Image from "next/image";
 import useToast from "@/components/common/toast/useToast";
-import {
-  ensureKakaoInitialized,
-  type KakaoSdk,
-} from "@/lib/share/kakao";
+import { ensureKakaoInitialized, type KakaoSdk } from "@/lib/share/kakao";
 import type { ClosingSectionData } from "@/types";
 
 interface FinalThanksSectionProps {
@@ -17,29 +14,12 @@ export default function FinalThanksSection({
 }: FinalThanksSectionProps) {
   const toast = useToast();
 
-  const copyCurrentUrl = async () => {
-    if (typeof window === "undefined") return false;
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      toast.success("링크를 복사했어요. 카카오톡에 붙여넣어 공유해 주세요.");
-      return true;
-    } catch (error) {
-      console.error("Failed to copy invitation link:", error);
-      toast.error("링크 복사에 실패했어요. 브라우저 권한을 확인해 주세요.");
-      return false;
-    }
-  };
-
-  const shareKakao = async () => {
+  const shareKakao = () => {
     if (typeof window === "undefined") return;
 
     const kakao = (window as Window & { Kakao?: KakaoSdk }).Kakao;
     if (!kakao) {
       toast.error("카카오 SDK를 불러오지 못했어요.");
-      const copied = await copyCurrentUrl();
-      if (!copied) {
-        toast.error("카카오톡 공유를 사용할 수 없습니다.");
-      }
       return;
     }
 
@@ -50,10 +30,6 @@ export default function FinalThanksSection({
 
     if (!initialized.ok) {
       toast.error(initialized.reason);
-      const copied = await copyCurrentUrl();
-      if (!copied) {
-        toast.error("카카오톡 공유를 사용할 수 없습니다.");
-      }
       return;
     }
 
@@ -64,10 +40,6 @@ export default function FinalThanksSection({
     } catch (error) {
       console.error("Failed to share via Kakao:", error);
       toast.error("카카오톡 공유에 실패했어요.");
-      const copied = await copyCurrentUrl();
-      if (!copied) {
-        toast.error("링크 복사도 실패했어요. 잠시 후 다시 시도해 주세요.");
-      }
     }
   };
 
@@ -96,14 +68,16 @@ export default function FinalThanksSection({
 
         <button
           type="button"
-          className="mx-auto mt-4 flex items-center gap-2 text-base font-medium text-[#2f2f2f]"
-          onClick={() => {
-            void shareKakao();
-          }}
+          className="mx-auto mt-4 flex items-center gap-2 rounded-md bg-white px-4 py-2.5 text-base font-medium text-[#2f2f2f]"
+          onClick={shareKakao}
         >
-          <span className="inline-flex h-5 w-5 items-center justify-center rounded-[3px] bg-[#FEE500] text-[11px] font-bold text-[#3b1d1d]">
-            talk
-          </span>
+          <Image
+            src="/icons/social/kakaotalk.png"
+            alt=""
+            width={20}
+            height={20}
+            className="h-5 w-5"
+          />
           카카오톡으로 초대장 보내기
         </button>
       </div>
