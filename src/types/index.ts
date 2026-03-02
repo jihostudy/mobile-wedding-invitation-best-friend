@@ -103,6 +103,7 @@ export interface ImageAsset {
 export interface AccountItem {
   bank: string;
   account: string;
+  kakaoPayUrl?: string;
 }
 
 export interface AccountGroup {

@@ -2222,7 +2222,7 @@ export default function AdminContentPage() {
             rows={3}
           />
           <p className="text-xs text-[#7a6c58]">
-            예금주 표시는 신랑/신부 및 부모 정보에서 자동으로 연동됩니다. 계좌에는 은행과 계좌번호만 입력하세요.
+            예금주 표시는 신랑/신부 및 부모 정보에서 자동으로 연동됩니다. 계좌별로 은행, 계좌번호, 카카오페이 송금 링크를 입력하세요.
           </p>
 
           <div className="flex justify-end">
@@ -2280,6 +2280,7 @@ export default function AdminContentPage() {
                           {
                             bank: "",
                             account: "",
+                            kakaoPayUrl: "",
                           },
                         )
                       }
@@ -2330,6 +2331,26 @@ export default function AdminContentPage() {
                                 value,
                               )
                             }
+                          />
+                        </div>
+                        <div className="mt-2">
+                          <TextField
+                            label="카카오페이 송금 링크"
+                            value={account.kakaoPayUrl ?? ""}
+                            onChange={(value) =>
+                              updatePath(
+                                [
+                                  "accountSection",
+                                  "groups",
+                                  groupIndex,
+                                  "accounts",
+                                  accountIndex,
+                                  "kakaoPayUrl",
+                                ],
+                                value,
+                              )
+                            }
+                            placeholder="https://link.kakaopay.com/__/..."
                           />
                         </div>
                         <div className="mt-2 flex justify-end">

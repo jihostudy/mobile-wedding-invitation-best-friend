@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import JSZip from "jszip";
 import { Download } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { ApiError } from "@/lib/api/client";
@@ -157,12 +158,76 @@ export default function AdminSnapSubmissionDetailPage() {
     setIsDownloadingAll(true);
 
     try {
+      const zip = new JSZip();
+      const usedNames = new Set<string>();
+      let addedCount = 0;
+      let failedCount = 0;
+
+      const getUniqueFileName = (name: string) => {
+        if (!usedNames.has(name)) {
+          usedNames.add(name);
+          return name;
+        }
+
+        const dotIndex = name.lastIndexOf(".");
+        const base = dotIndex > 0 ? name.slice(0, dotIndex) : name;
+        const ext = dotIndex > 0 ? name.slice(dotIndex) : "";
+
+        let suffix = 2;
+        let candidate = `${base} (${suffix})${ext}`;
+        while (usedNames.has(candidate)) {
+          suffix += 1;
+          candidate = `${base} (${suffix})${ext}`;
+        }
+        usedNames.add(candidate);
+        return candidate;
+      };
+
       for (let index = 0; index < files.length; index += 1) {
         const file = files[index];
-        await downloadSingleFile(file, index);
-        await new Promise((resolve) => setTimeout(resolve, 150));
+        if (!file.publicUrl) {
+          failedCount += 1;
+          continue;
+        }
+
+        try {
+          const response = await fetch(file.publicUrl);
+          if (!response.ok) throw new Error(`download failed: ${response.status}`);
+          const blob = await response.blob();
+          const filename = getUniqueFileName(getFileName(file, index));
+          zip.file(filename, blob);
+          addedCount += 1;
+        } catch {
+          failedCount += 1;
+        }
       }
-      toast.success("전체 다운로드를 시작했습니다.");
+
+      if (addedCount === 0) {
+        toast.error("ZIP으로 묶을 수 있는 이미지가 없습니다.");
+        return;
+      }
+
+      const zipBlob = await zip.generateAsync({ type: "blob" });
+      const safeUploader = (submission?.uploaderName || "snap")
+        .trim()
+        .replace(/[^\p{L}\p{N}_-]+/gu, "_")
+        .replace(/^_+|_+$/g, "")
+        .slice(0, 40);
+      const zipFileName = `스냅사진_${safeUploader || "snap"}_${submissionId.slice(0, 8) || "album"}.zip`;
+      const blobUrl = URL.createObjectURL(zipBlob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = zipFileName;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(blobUrl);
+
+      if (failedCount > 0) {
+        toast.success(`ZIP 다운로드 완료 (${addedCount}개 성공, ${failedCount}개 실패)`);
+      } else {
+        toast.success(`ZIP 다운로드 완료 (${addedCount}개)`);
+      }
     } finally {
       setIsDownloadingAll(false);
     }

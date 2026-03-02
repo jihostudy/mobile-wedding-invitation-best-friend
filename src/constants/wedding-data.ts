@@ -307,14 +307,17 @@ export const ACCOUNT_SECTION: AccountSectionData = {
         {
           bank: "신한은행",
           account: "110-123-456789",
+          kakaoPayUrl: "",
         },
         {
           bank: "우리은행",
           account: "110-000-000001",
+          kakaoPayUrl: "",
         },
         {
           bank: "국민은행",
           account: "110-000-000002",
+          kakaoPayUrl: "",
         },
       ],
     },
@@ -325,14 +328,17 @@ export const ACCOUNT_SECTION: AccountSectionData = {
         {
           bank: "카카오뱅크",
           account: "3333-01-1234567",
+          kakaoPayUrl: "",
         },
         {
           bank: "토스뱅크",
           account: "110-000-000004",
+          kakaoPayUrl: "",
         },
         {
           bank: "카카오뱅크",
           account: "110-000-000005",
+          kakaoPayUrl: "",
         },
       ],
     },

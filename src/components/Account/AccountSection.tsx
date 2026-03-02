@@ -38,12 +38,21 @@ function inferAccountHolderName(
   );
 }
 
+function isValidHttpUrl(value: string) {
+  try {
+    const parsed = new URL(value);
+    return parsed.protocol === "http:" || parsed.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
 export default function AccountSection({
   section,
   weddingData,
 }: AccountSectionProps) {
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(
-    Object.fromEntries(section.groups.map((group) => [group.id, false])),
+    Object.fromEntries(section.groups.map((group) => [group.id, true])),
   );
   const [selectedAccountIndexByGroup, setSelectedAccountIndexByGroup] =
     useState<Record<string, number | null>>(
@@ -72,8 +81,14 @@ export default function AccountSection({
     }));
   };
 
-  const handleKakaoPay = () => {
-    toast.info("카카오페이 송금 연동은 준비 중입니다.");
+  const handleKakaoPay = (kakaoPayUrl?: string) => {
+    const nextUrl = (kakaoPayUrl ?? "").trim();
+    if (!nextUrl || !isValidHttpUrl(nextUrl)) {
+      toast.info("카카오페이 송금 링크가 준비 중입니다.");
+      return;
+    }
+    // Mobile-friendly redirect for KakaoPay transfer links.
+    window.location.href = nextUrl;
   };
 
   return (
@@ -145,7 +160,7 @@ export default function AccountSection({
                   aria-hidden={!openGroups[group.id]}
                 >
                   <div className="space-y-5 bg-[#fdfcf9] px-5 py-6">
-                    <p className="text-center text-[15px] font-medium text-wedding-gray">
+                    <p className="text-center text-[14px] font-medium text-wedding-gray">
                       어떤 분에게 마음을 전하시고 싶으신가요?
                     </p>
 
@@ -186,6 +201,9 @@ export default function AccountSection({
                           }
                           const selectedAccount = group.accounts[selectedIndex];
                           if (!selectedAccount) return null;
+                          const hasKakaoPayLink = isValidHttpUrl(
+                            (selectedAccount.kakaoPayUrl ?? "").trim(),
+                          );
                           const holderName = inferAccountHolderName(
                             group.id,
                             group.label,
@@ -199,21 +217,31 @@ export default function AccountSection({
                                 {holderName} · {selectedAccount.bank}{" "}
                                 {selectedAccount.account}
                               </p>
-                              <div className="mt-5 grid grid-cols-2 gap-3">
-                                <button
-                                  type="button"
-                                  onClick={handleKakaoPay}
-                                  className="inline-flex h-12 items-center justify-center gap-2 rounded-[12px] bg-[#f8e500] px-3 text-xs font-semibold text-[#1f1f1f] transition hover:bg-[#f3df00]"
-                                >
-                                  <Image
-                                    src="/icons/social/kakaopay.svg"
-                                    alt="카카오페이"
-                                    width={28}
-                                    height={28}
-                                    className="h-4 w-auto"
-                                  />
-                                  카카오페이 송금
-                                </button>
+                              <div
+                                className={`mt-5 grid gap-3 ${
+                                  hasKakaoPayLink
+                                    ? "grid-cols-2"
+                                    : "grid-cols-1"
+                                }`}
+                              >
+                                {hasKakaoPayLink ? (
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      handleKakaoPay(selectedAccount.kakaoPayUrl)
+                                    }
+                                    className="inline-flex h-12 items-center justify-center gap-2 rounded-[12px] bg-[#f8e500] px-3 text-xs font-semibold text-[#1f1f1f] transition hover:bg-[#f3df00]"
+                                  >
+                                    <Image
+                                      src="/icons/social/kakaopay.svg"
+                                      alt="카카오페이"
+                                      width={28}
+                                      height={28}
+                                      className="h-4 w-auto"
+                                    />
+                                    카카오페이 송금
+                                  </button>
+                                ) : null}
                                 <button
                                   type="button"
                                   onClick={() =>
