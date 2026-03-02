@@ -91,7 +91,7 @@ export default function LocationNavigation({
   };
 
   return (
-    <section className="mx-8 mt-7 border-t border-gray-300/80 pt-8">
+    <section className="px-9 mt-7  pt-8">
       <h4 className="text-base font-semibold text-wedding-gray">내비게이션</h4>
       <p className="mt-2 text-xs text-wedding-gray-light">{description}</p>
       <div className="mt-4 grid grid-cols-3 gap-2">

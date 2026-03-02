@@ -55,7 +55,7 @@ export default function SnapSection({ section }: SnapSectionProps) {
     <section
       id="snap"
       ref={sectionRef}
-      className="mt-12 rounded-[18px] bg-white px-6 py-12"
+      className="mt-12 rounded-[18px] bg-white px-9 py-12"
     >
       <FadeInUp className="mx-auto w-full max-w-md text-center">
         <div className="relative mx-auto h-[230px] w-full max-w-[320px]">

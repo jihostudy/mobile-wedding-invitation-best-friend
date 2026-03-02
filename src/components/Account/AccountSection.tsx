@@ -92,7 +92,7 @@ export default function AccountSection({
   };
 
   return (
-    <section id="account" className="bg-white px-6 py-16">
+    <section id="account" className="bg-white px-9 py-16">
       <div className="mx-auto w-full max-w-md">
         <div className="text-center">
           <p className="font-crimson text-sm uppercase tracking-[0.33em] text-wedding-brown">
@@ -228,7 +228,9 @@ export default function AccountSection({
                                   <button
                                     type="button"
                                     onClick={() =>
-                                      handleKakaoPay(selectedAccount.kakaoPayUrl)
+                                      handleKakaoPay(
+                                        selectedAccount.kakaoPayUrl,
+                                      )
                                     }
                                     className="inline-flex h-12 items-center justify-center gap-2 rounded-[12px] bg-[#f8e500] px-3 text-xs font-semibold text-[#1f1f1f] transition hover:bg-[#f3df00]"
                                   >

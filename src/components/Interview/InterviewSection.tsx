@@ -34,7 +34,7 @@ export default function InterviewSection({
 
   return (
     <>
-      <section id="interview" className="bg-white px-6 py-16">
+      <section id="interview" className="bg-white px-9 py-16">
         <div className="mx-auto w-full max-w-md text-center">
           <p className="font-crimson text-sm uppercase tracking-[0.33em] text-wedding-brown">
             {section.kicker}

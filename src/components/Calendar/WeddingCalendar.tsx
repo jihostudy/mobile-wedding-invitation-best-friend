@@ -64,7 +64,7 @@ export default function WeddingCalendar({
 
   const weekDays = ["일", "월", "화", "수", "목", "금", "토"];
   return (
-    <section id="calendar" className="bg-white px-6 py-16">
+    <section id="calendar" className="bg-white px-9 py-16">
       <div className="mx-auto w-full max-w-md text-center">
         <FadeInUp delay={0.12} amount={0.15}>
           <div className="border-y border-gray-300/40 px-2 pb-4 pt-6">

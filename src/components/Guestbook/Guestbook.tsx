@@ -42,7 +42,7 @@ export default function Guestbook({ section }: GuestbookProps) {
   const hasMessages = messages.length > 0;
 
   return (
-    <section id="guestbook" className="bg-white px-6 py-16">
+    <section id="guestbook" className="bg-white px-9 py-16">
       <div className="mx-auto w-full max-w-md">
         <div className="text-center">
           <p className="font-crimson text-sm uppercase tracking-[0.33em] text-wedding-brown">

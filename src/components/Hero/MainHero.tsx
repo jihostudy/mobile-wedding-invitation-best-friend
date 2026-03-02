@@ -70,7 +70,7 @@ export default function MainHero({ groom, bride, date, section }: MainHeroProps)
         ))}
       </div>
 
-      <div className="relative z-10 mx-auto flex min-h-[640px] w-full max-w-[425px] flex-col px-6 pb-14 pt-6">
+      <div className="relative z-10 mx-auto flex min-h-[640px] w-full max-w-[425px] flex-col px-9 pb-14 pt-6">
         <h1 className="sr-only">
           {groom.name} 그리고 {bride.name} 결혼합니다. {displayDate}
         </h1>

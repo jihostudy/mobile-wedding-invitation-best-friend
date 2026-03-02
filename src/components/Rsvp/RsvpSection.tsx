@@ -80,7 +80,7 @@ export default function RsvpSection({ section, weddingData }: RsvpSectionProps) 
   ]);
 
   return (
-    <section id="rsvp" className="mt-12 rounded-[18px]  px-6 py-14">
+    <section id="rsvp" className="mt-12 rounded-[18px]  px-9 py-14">
       <FadeInUp className="mx-auto w-full max-w-md text-center">
         <p className="font-crimson text-sm uppercase tracking-[0.33em] text-wedding-brown">
           {section.kicker}

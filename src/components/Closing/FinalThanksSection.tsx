@@ -11,7 +11,7 @@ export default function FinalThanksSection({
   section,
 }: FinalThanksSectionProps) {
   return (
-    <section id="closing" className="bg-white px-6 pb-10">
+    <section id="closing" className="bg-white px-9 pb-10">
       <div className="mx-auto w-full max-w-md">
         <div className="relative h-[560px] w-full overflow-hidden rounded-[4px] bg-[#f3f3f3]">
           <Image
