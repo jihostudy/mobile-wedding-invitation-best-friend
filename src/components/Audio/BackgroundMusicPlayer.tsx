@@ -37,6 +37,7 @@ export default function BackgroundMusicPlayer({
   const [mounted, setMounted] = useState(false);
   const source = config?.src ?? "";
   const hasSource = Boolean(config?.enabled && source);
+  const autoplay = config?.autoplay ?? true;
   const volume = config?.volume ?? 0.4;
   const loop = config?.loop ?? true;
   const title = config?.title ?? "배경음악";
@@ -141,8 +142,12 @@ export default function BackgroundMusicPlayer({
       };
     };
 
-    void tryAutoPlay();
-    const cleanupFirstInteraction = setupFirstInteractionAutoPlay();
+    if (autoplay) {
+      void tryAutoPlay();
+    }
+    const cleanupFirstInteraction = autoplay
+      ? setupFirstInteractionAutoPlay()
+      : () => {};
 
     return () => {
       audio.pause();
@@ -151,7 +156,7 @@ export default function BackgroundMusicPlayer({
       audio.removeEventListener("pause", handlePause);
       audio.removeEventListener("error", handleError);
     };
-  }, [hasSource, loop, playbackError, volume]);
+  }, [autoplay, hasSource, loop, playbackError, volume]);
 
   if (!hasSource) {
     return null;
@@ -202,7 +207,13 @@ export default function BackgroundMusicPlayer({
 
   return (
     <>
-      <audio ref={audioRef} src={source} preload="auto" autoPlay aria-hidden="true" />
+      <audio
+        ref={audioRef}
+        src={source}
+        preload="auto"
+        autoPlay={autoplay}
+        aria-hidden="true"
+      />
       {mounted
         ? createPortal(
             <div className="fixed right-[max(12px,calc(50vw-212.5px+12px))] top-[max(12px,env(safe-area-inset-top))] z-[100]">
