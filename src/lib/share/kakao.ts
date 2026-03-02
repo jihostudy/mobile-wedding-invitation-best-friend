@@ -29,10 +29,6 @@ export interface KakaoSdk {
   Share: {
     sendDefault: (payload: KakaoShareFeedPayload) => void;
     sendScrap: (payload: { requestUrl: string }) => void;
-    sendCustom: (payload: {
-      templateId: number;
-      templateArgs?: Record<string, string>;
-    }) => void;
   };
 }
 
@@ -121,25 +117,4 @@ export function ensureKakaoInitialized(params: {
       reason: "카카오 SDK 초기화에 실패했습니다.",
     };
   }
-}
-
-export function buildKakaoShareTemplateArgs(params: {
-  content: WeddingContentV1;
-  origin: string;
-  url: string;
-}) {
-  const payload = buildKakaoSharePayload({
-    content: params.content,
-    origin: params.origin,
-    url: params.url,
-  });
-
-  return {
-    TITLE: payload.content.title,
-    DESCRIPTION: payload.content.description,
-    IMAGE_URL: payload.content.imageUrl,
-    BUTTON_TITLE: payload.buttons[0]?.title ?? "모바일 청첩장 보기",
-    WEB_URL: payload.content.link.webUrl,
-    MOBILE_WEB_URL: payload.content.link.mobileWebUrl,
-  } satisfies Record<string, string>;
 }
