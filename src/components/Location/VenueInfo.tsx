@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import FadeInUp from "@/components/common/FadeInUp";
+import LocationNavigation from "@/components/Location/LocationNavigation";
 import NaverMap from "@/components/Location/NaverMap";
 import type { Venue, WeddingDate } from "@/types";
 
@@ -89,6 +90,13 @@ export default function VenueInfo({ venue, date }: VenueInfoProps) {
             </div>
           )}
         </div>
+
+        <FadeInUp delay={0.08} amount={0.15}>
+          <LocationNavigation
+            description={venue.transport?.navigation?.description}
+            apps={venue.transport?.navigation?.apps}
+          />
+        </FadeInUp>
 
         <FadeInUp className="mx-8 mt-2 pt-8">
           <h4 className="text-base font-semibold text-wedding-gray">지하철</h4>

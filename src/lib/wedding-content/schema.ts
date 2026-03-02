@@ -64,6 +64,42 @@ function getGivenName(name: string) {
   return name.length > 1 ? name.slice(1) : name;
 }
 
+function encodeNavigationValue(value: string) {
+  return encodeURIComponent(value);
+}
+
+function buildDefaultNavigationApps(
+  venueName: string,
+  lat: number,
+  lng: number,
+) {
+  const encodedName = encodeNavigationValue(venueName);
+
+  return [
+    {
+      id: 'naver' as const,
+      label: '네이버지도',
+      enabled: true,
+      deepLink: `nmap://route/public?dlat=${lat}&dlng=${lng}&dname=${encodedName}&appname=com.wedding.invitation`,
+      webUrl: `https://map.naver.com/v5/directions/-/${lng},${lat},${encodedName}/-/transit`,
+    },
+    {
+      id: 'tmap' as const,
+      label: '티맵',
+      enabled: true,
+      deepLink: `tmap://route?goalx=${lng}&goaly=${lat}&goalname=${encodedName}`,
+      webUrl: `https://m.tmap.co.kr/tmap2/mobile/route.jsp?goalx=${lng}&goaly=${lat}&goalname=${encodedName}`,
+    },
+    {
+      id: 'kakao' as const,
+      label: '카카오내비',
+      enabled: true,
+      deepLink: `kakaonavi://navigate?name=${encodedName}&x=${lng}&y=${lat}`,
+      webUrl: `https://map.kakao.com/link/to/${encodedName},${lat},${lng}`,
+    },
+  ];
+}
+
 const calendarSectionSchema = z
   .object({
     countdownLabel: z.string().optional(),
@@ -200,26 +236,70 @@ const weddingContentSchema = z
       dayOfWeek: z.string(),
       time: z.string(),
     }),
-    venue: z.object({
-      name: z.string(),
-      address: z.string(),
-      floor: z.string().optional(),
-      hall: z.string().optional(),
-      contact: z.string().optional(),
-      coordinates: z.object({ lat: z.number(), lng: z.number() }),
-      parking: z.string().optional(),
-      transport: z
-        .object({
-          subway: z.array(z.string()).optional(),
-          subwayDetails: z.array(z.object({ label: z.string(), color: z.string() })).optional(),
-          busDetails: z.array(z.object({ label: z.string(), color: z.string() })).optional(),
-          bus: z.array(z.string()).optional(),
-          busNote: z.string().optional(),
-          parking: z.string().optional(),
-          shuttlePickup: z.string().optional(),
-        })
-        .optional(),
-    }),
+    venue: z
+      .object({
+        name: z.string(),
+        address: z.string(),
+        floor: z.string().optional(),
+        hall: z.string().optional(),
+        contact: z.string().optional(),
+        coordinates: z.object({ lat: z.number(), lng: z.number() }),
+        parking: z.string().optional(),
+        transport: z
+          .object({
+            navigation: z
+              .object({
+                description: z.string().optional(),
+                apps: z
+                  .array(
+                    z.object({
+                      id: z.enum(['naver', 'tmap', 'kakao']),
+                      label: z.string(),
+                      enabled: z.boolean(),
+                      deepLink: z.string(),
+                      webUrl: z.string(),
+                    }),
+                  )
+                  .optional(),
+              })
+              .optional(),
+            subway: z.array(z.string()).optional(),
+            subwayDetails: z.array(z.object({ label: z.string(), color: z.string() })).optional(),
+            busDetails: z.array(z.object({ label: z.string(), color: z.string() })).optional(),
+            bus: z.array(z.string()).optional(),
+            busNote: z.string().optional(),
+            parking: z.string().optional(),
+            shuttlePickup: z.string().optional(),
+          })
+          .optional(),
+      })
+      .transform((venue) => {
+        if (!venue.transport) {
+          return venue;
+        }
+
+        const defaultApps = buildDefaultNavigationApps(
+          venue.name,
+          venue.coordinates.lat,
+          venue.coordinates.lng,
+        );
+        const apps = venue.transport.navigation?.apps?.length
+          ? venue.transport.navigation.apps
+          : defaultApps;
+
+        return {
+          ...venue,
+          transport: {
+            ...venue.transport,
+            navigation: {
+              description:
+                venue.transport.navigation?.description ??
+                '원하시는 앱을 선택하시면 길안내가 시작됩니다.',
+              apps,
+            },
+          },
+        };
+      }),
     backgroundMusic: z
       .object({
         enabled: z.boolean(),

@@ -204,10 +204,66 @@ function hasAnyParentValue(parents: {
   );
 }
 
+function buildDefaultNavigationApps(
+  venueName: string,
+  lat: number,
+  lng: number,
+) {
+  const encodedName = encodeURIComponent(venueName);
+  return [
+    {
+      id: "naver" as const,
+      label: "네이버지도",
+      enabled: true,
+      deepLink: `nmap://route/public?dlat=${lat}&dlng=${lng}&dname=${encodedName}&appname=com.wedding.invitation`,
+      webUrl: `https://map.naver.com/v5/directions/-/${lng},${lat},${encodedName}/-/transit`,
+    },
+    {
+      id: "tmap" as const,
+      label: "티맵",
+      enabled: true,
+      deepLink: `tmap://route?goalx=${lng}&goaly=${lat}&goalname=${encodedName}`,
+      webUrl: `https://m.tmap.co.kr/tmap2/mobile/route.jsp?goalx=${lng}&goaly=${lat}&goalname=${encodedName}`,
+    },
+    {
+      id: "kakao" as const,
+      label: "카카오내비",
+      enabled: true,
+      deepLink: `kakaonavi://navigate?name=${encodedName}&x=${lng}&y=${lat}`,
+      webUrl: `https://map.kakao.com/link/to/${encodedName},${lat},${lng}`,
+    },
+  ];
+}
+
 function normalizeTransportDetails(content: WeddingContentV1): WeddingContentV1 {
   const next = deepClone(content);
-  const transport = next.weddingData.venue.transport;
+  const venue = next.weddingData.venue;
+  const defaultNavigationApps = buildDefaultNavigationApps(
+    venue.name,
+    venue.coordinates.lat,
+    venue.coordinates.lng,
+  );
+  if (!venue.transport) {
+    venue.transport = {
+      navigation: {
+        description: "원하시는 앱을 선택하시면 길안내가 시작됩니다.",
+        apps: defaultNavigationApps,
+      },
+    };
+  }
+
+  const transport = venue.transport;
   if (transport) {
+    transport.navigation = {
+      description:
+        transport.navigation?.description ??
+        "원하시는 앱을 선택하시면 길안내가 시작됩니다.",
+      apps:
+        transport.navigation?.apps?.length
+          ? transport.navigation.apps
+          : defaultNavigationApps,
+    };
+
     if (
       (!transport.subwayDetails || transport.subwayDetails.length === 0) &&
       transport.subway?.length
@@ -813,6 +869,7 @@ export default function AdminContentPage() {
         }
         return { label: line, color: "#8d8d8d" };
       });
+  const navigationApps = content.weddingData.venue.transport?.navigation?.apps ?? [];
   const sectionNavItems = [
     { id: "sectionOrder", label: "섹션 순서" },
     { id: "groomInfo", label: "신랑 정보" },
@@ -1365,6 +1422,133 @@ export default function AdminContentPage() {
                     )
                   }
                 />
+                <div className="space-y-3 rounded-lg border border-[#efe4d2] bg-[#fffdf9] p-3">
+                  <p className="text-xs font-semibold text-[#6f6350]">
+                    내비게이션 앱
+                  </p>
+                  <TextField
+                    label="내비게이션 안내 문구"
+                    value={
+                      content.weddingData.venue.transport?.navigation
+                        ?.description ?? ""
+                    }
+                    onChange={(value) =>
+                      updatePath(
+                        [
+                          "weddingData",
+                          "venue",
+                          "transport",
+                          "navigation",
+                          "description",
+                        ],
+                        value,
+                      )
+                    }
+                  />
+                  <div className="space-y-2">
+                    {navigationApps.map((app, index) => (
+                      <div
+                        key={`navigation-app-${app.id}-${index}`}
+                        className="rounded-md border border-[#e9dcc7] bg-white p-3"
+                      >
+                        <div className="flex items-center justify-between gap-3">
+                          <p className="text-xs font-semibold text-[#6f6350]">
+                            {app.id.toUpperCase()}
+                          </p>
+                          <label className="flex items-center gap-2 text-xs text-[#5d533f]">
+                            <input
+                              type="checkbox"
+                              checked={Boolean(app.enabled)}
+                              onChange={(event) =>
+                                updatePath(
+                                  [
+                                    "weddingData",
+                                    "venue",
+                                    "transport",
+                                    "navigation",
+                                    "apps",
+                                    index,
+                                    "enabled",
+                                  ],
+                                  event.target.checked,
+                                )
+                              }
+                              className="h-4 w-4"
+                            />
+                            노출
+                          </label>
+                        </div>
+                        <div className="mt-2 grid gap-2 md:grid-cols-2">
+                          <TextField
+                            label="버튼 라벨"
+                            value={app.label}
+                            onChange={(value) =>
+                              updatePath(
+                                [
+                                  "weddingData",
+                                  "venue",
+                                  "transport",
+                                  "navigation",
+                                  "apps",
+                                  index,
+                                  "label",
+                                ],
+                                value,
+                              )
+                            }
+                          />
+                          <label className="block min-w-0">
+                            <span className="mb-1.5 block text-xs font-semibold text-[#6f6350]">
+                              앱 ID (읽기 전용)
+                            </span>
+                            <input
+                              type="text"
+                              readOnly
+                              value={app.id}
+                              className="h-10 w-full rounded-lg border border-[#dfd4c1] bg-[#f5f0e7] px-3 text-sm text-[#6f6350] outline-none"
+                            />
+                          </label>
+                          <TextField
+                            label="딥링크 URL"
+                            value={app.deepLink}
+                            onChange={(value) =>
+                              updatePath(
+                                [
+                                  "weddingData",
+                                  "venue",
+                                  "transport",
+                                  "navigation",
+                                  "apps",
+                                  index,
+                                  "deepLink",
+                                ],
+                                value,
+                              )
+                            }
+                          />
+                          <TextField
+                            label="웹 폴백 URL"
+                            value={app.webUrl}
+                            onChange={(value) =>
+                              updatePath(
+                                [
+                                  "weddingData",
+                                  "venue",
+                                  "transport",
+                                  "navigation",
+                                  "apps",
+                                  index,
+                                  "webUrl",
+                                ],
+                                value,
+                              )
+                            }
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
 
               </div>
             </div>

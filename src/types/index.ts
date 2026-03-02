@@ -58,6 +58,10 @@ export interface Venue {
 }
 
 export interface TransportInfo {
+  navigation?: {
+    description?: string;
+    apps?: NavigationApp[];
+  };
   subway?: string[];
   subwayDetails?: {
     label: string;
@@ -71,6 +75,16 @@ export interface TransportInfo {
   busNote?: string;
   parking?: string;
   shuttlePickup?: string;
+}
+
+export type NavigationAppId = "naver" | "tmap" | "kakao";
+
+export interface NavigationApp {
+  id: NavigationAppId;
+  label: string;
+  enabled: boolean;
+  deepLink: string;
+  webUrl: string;
 }
 
 export interface GalleryImage {
