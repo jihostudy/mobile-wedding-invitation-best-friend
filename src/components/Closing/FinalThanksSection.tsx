@@ -2,7 +2,13 @@
 
 import Image from "next/image";
 import useToast from "@/components/common/toast/useToast";
-import { ensureKakaoInitialized, type KakaoSdk } from "@/lib/share/kakao";
+import { useWeddingContentQuery } from "@/lib/queries/wedding-content";
+import { FALLBACK_WEDDING_CONTENT } from "@/lib/wedding-content/fallback";
+import {
+  buildKakaoShareTemplateArgs,
+  ensureKakaoInitialized,
+  type KakaoSdk,
+} from "@/lib/share/kakao";
 import type { ClosingSectionData } from "@/types";
 
 interface FinalThanksSectionProps {
@@ -13,6 +19,8 @@ export default function FinalThanksSection({
   section,
 }: FinalThanksSectionProps) {
   const toast = useToast();
+  const { data } = useWeddingContentQuery("main");
+  const content = data?.content ?? FALLBACK_WEDDING_CONTENT;
 
   const shareKakao = () => {
     if (typeof window === "undefined") return;
@@ -33,9 +41,21 @@ export default function FinalThanksSection({
       return;
     }
 
+    const templateIdRaw = process.env.NEXT_PUBLIC_KAKAO_TEMPLATE_ID;
+    const templateId = Number(templateIdRaw);
+    if (!templateIdRaw || !Number.isInteger(templateId) || templateId <= 0) {
+      toast.error("카카오 템플릿 ID가 설정되지 않았습니다.");
+      return;
+    }
+
     try {
-      kakao.Share.sendScrap({
-        requestUrl: window.location.href,
+      kakao.Share.sendCustom({
+        templateId,
+        templateArgs: buildKakaoShareTemplateArgs({
+          content,
+          origin: window.location.origin,
+          url: window.location.href,
+        }),
       });
     } catch (error) {
       console.error("Failed to share via Kakao:", error);
