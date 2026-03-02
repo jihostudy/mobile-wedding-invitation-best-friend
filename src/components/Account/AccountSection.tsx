@@ -213,10 +213,15 @@ export default function AccountSection({
 
                           return (
                             <>
-                              <p className="text-sm font-medium text-wedding-gray text-center">
+                              <button
+                                type="button"
+                                onClick={() => handleCopy(selectedAccount.account)}
+                                className="w-full text-center text-sm font-medium text-wedding-gray underline-offset-4 transition hover:underline"
+                                aria-label={`${holderName} ${selectedAccount.bank} ${selectedAccount.account} 계좌번호 복사`}
+                              >
                                 {holderName} · {selectedAccount.bank}{" "}
                                 {selectedAccount.account}
-                              </p>
+                              </button>
                               <div
                                 className={`mt-5 grid gap-3 ${
                                   hasKakaoPayLink
