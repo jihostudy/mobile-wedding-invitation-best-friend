@@ -2,10 +2,7 @@
 
 import Image from "next/image";
 import useToast from "@/components/common/toast/useToast";
-import { useWeddingContentQuery } from "@/lib/queries/wedding-content";
-import { FALLBACK_WEDDING_CONTENT } from "@/lib/wedding-content/fallback";
 import {
-  buildKakaoSharePayload,
   ensureKakaoInitialized,
   type KakaoSdk,
 } from "@/lib/share/kakao";
@@ -19,17 +16,16 @@ export default function FinalThanksSection({
   section,
 }: FinalThanksSectionProps) {
   const toast = useToast();
-  const { data } = useWeddingContentQuery("main");
-  const content = data?.content ?? FALLBACK_WEDDING_CONTENT;
 
   const copyCurrentUrl = async () => {
     if (typeof window === "undefined") return false;
     try {
       await navigator.clipboard.writeText(window.location.href);
-      toast.info("링크를 복사했어요. 카카오톡에 붙여넣어 공유해 주세요.");
+      toast.success("링크를 복사했어요. 카카오톡에 붙여넣어 공유해 주세요.");
       return true;
     } catch (error) {
       console.error("Failed to copy invitation link:", error);
+      toast.error("링크 복사에 실패했어요. 브라우저 권한을 확인해 주세요.");
       return false;
     }
   };
@@ -40,7 +36,10 @@ export default function FinalThanksSection({
     const kakao = (window as Window & { Kakao?: KakaoSdk }).Kakao;
     if (!kakao) {
       toast.error("카카오 SDK를 불러오지 못했어요.");
-      await copyCurrentUrl();
+      const copied = await copyCurrentUrl();
+      if (!copied) {
+        toast.error("카카오톡 공유를 사용할 수 없습니다.");
+      }
       return;
     }
 
@@ -51,22 +50,24 @@ export default function FinalThanksSection({
 
     if (!initialized.ok) {
       toast.error(initialized.reason);
-      await copyCurrentUrl();
+      const copied = await copyCurrentUrl();
+      if (!copied) {
+        toast.error("카카오톡 공유를 사용할 수 없습니다.");
+      }
       return;
     }
 
     try {
-      kakao.Share.sendDefault(
-        buildKakaoSharePayload({
-          content,
-          origin: window.location.origin,
-          url: window.location.href,
-        }),
-      );
+      kakao.Share.sendScrap({
+        requestUrl: window.location.href,
+      });
     } catch (error) {
       console.error("Failed to share via Kakao:", error);
       toast.error("카카오톡 공유에 실패했어요.");
-      await copyCurrentUrl();
+      const copied = await copyCurrentUrl();
+      if (!copied) {
+        toast.error("링크 복사도 실패했어요. 잠시 후 다시 시도해 주세요.");
+      }
     }
   };
 

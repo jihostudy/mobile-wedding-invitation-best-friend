@@ -5,7 +5,6 @@ import useToast from '@/components/common/toast/useToast';
 import { useWeddingContentQuery } from '@/lib/queries/wedding-content';
 import { FALLBACK_WEDDING_CONTENT } from '@/lib/wedding-content/fallback';
 import {
-  buildKakaoSharePayload,
   ensureKakaoInitialized,
   type KakaoSdk,
 } from '@/lib/share/kakao';
@@ -56,13 +55,9 @@ export default function ShareButtons() {
     }
 
     try {
-      kakao.Share.sendDefault(
-        buildKakaoSharePayload({
-          content,
-          origin: window.location.origin,
-          url: window.location.href,
-        }),
-      );
+      kakao.Share.sendScrap({
+        requestUrl: window.location.href,
+      });
     } catch (error) {
       console.error('Failed to share via Kakao:', error);
       toast.error('카카오톡 공유에 실패했습니다. 링크를 복사해 공유해 주세요.');

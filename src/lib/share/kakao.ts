@@ -28,6 +28,7 @@ export interface KakaoSdk {
   isInitialized: () => boolean;
   Share: {
     sendDefault: (payload: KakaoShareFeedPayload) => void;
+    sendScrap: (payload: { requestUrl: string }) => void;
   };
 }
 
