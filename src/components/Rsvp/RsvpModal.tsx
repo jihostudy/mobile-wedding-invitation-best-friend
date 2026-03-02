@@ -92,9 +92,8 @@ export default function RsvpModal({
   const [side, setSide] = useState<Side>("groom");
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
-  const [extraCount, setExtraCount] = useState(0);
+  const [totalCount, setTotalCount] = useState(1);
   const [eatMeal, setEatMeal] = useState(true);
-  const [rideBus, setRideBus] = useState(true);
   const [note, setNote] = useState("");
   const [agreePrivacy, setAgreePrivacy] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -145,23 +144,6 @@ export default function RsvpModal({
             감사하겠습니다.
           </p>
 
-          <div className="mt-8 grid grid-cols-2 gap-4">
-            <SelectCard
-              label="가능"
-              selected={attendStatus === "available"}
-              onClick={() => setAttendStatus("available")}
-              leadingIcon="check"
-              centerContent
-            />
-            <SelectCard
-              label="불가"
-              selected={attendStatus === "unavailable"}
-              onClick={() => setAttendStatus("unavailable")}
-              leadingIcon="x"
-              centerContent
-            />
-          </div>
-
           <form
             className="mt-8 space-y-10"
             onSubmit={async (event) => {
@@ -175,9 +157,8 @@ export default function RsvpModal({
                   side,
                   name: name.trim(),
                   contact: contact.trim(),
-                  extraCount,
+                  extraCount: Math.max(totalCount - 1, 0),
                   eatMeal,
-                  rideBus,
                   note: note.trim(),
                   agreePrivacy,
                 })
@@ -201,187 +182,195 @@ export default function RsvpModal({
               onClose();
             }}
           >
-            <div>
-              <div className="flex items-center justify-between">
-                <label className="text-sm font-semibold text-[#1f1f1f]">
-                  <span className="mr-1 text-[#d62020]">*</span>성함
+            <div className="overflow-hidden rounded-[18px] border border-[#d0d0d0] bg-white shadow-[0_6px_18px_rgba(0,0,0,0.03)]">
+              <div className="grid grid-cols-2 border-b border-[#d0d0d0] bg-[#f8f8f8]">
+                <button
+                  type="button"
+                  onClick={() => setSide("groom")}
+                  aria-pressed={side === "groom"}
+                  className={`px-4 py-5 text-center transition ${
+                    side === "groom"
+                      ? "bg-[#e8f4ff] text-[#2563c7]"
+                      : "bg-white text-[#86a4c8]"
+                  }`}
+                >
+                  <p className="text-base font-semibold leading-none">신랑측</p>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSide("bride")}
+                  aria-pressed={side === "bride"}
+                  className={`border-l border-[#d0d0d0] px-4 py-5 text-center transition ${
+                    side === "bride"
+                      ? "bg-[#ffe9f3] text-[#bf4d86]"
+                      : "bg-white text-[#c797b1]"
+                  }`}
+                >
+                  <p className="text-base font-semibold leading-none">신부측</p>
+                </button>
+              </div>
+              <div className="space-y-10 bg-white px-4 py-5">
+                <div>
+                  <label className="text-sm font-semibold text-[#1f1f1f]">
+                    <span className="mr-1 text-[#d62020]">*</span>참석 가능 여부
+                  </label>
+                  <div className="mt-3 grid grid-cols-2 gap-4">
+                    <SelectCard
+                      label="가능"
+                      selected={attendStatus === "available"}
+                      onClick={() => setAttendStatus("available")}
+                      leadingIcon="check"
+                      centerContent
+                    />
+                    <SelectCard
+                      label="불가"
+                      selected={attendStatus === "unavailable"}
+                      onClick={() => setAttendStatus("unavailable")}
+                      leadingIcon="x"
+                      centerContent
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="text-sm font-semibold text-[#1f1f1f]">
+                    <span className="mr-1 text-[#d62020]">*</span>성함
+                  </label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(event) => setName(event.target.value)}
+                    placeholder="성함을 입력해 주세요."
+                    className="mt-3 h-11 w-full border-0 border-b border-[#c7c7c7] bg-transparent px-1 text-sm text-[#2f2f2f] placeholder:text-[#c2c2c2] focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-semibold text-[#1f1f1f]">
+                    <span className="mr-1 text-[#d62020]">*</span>연락처
+                  </label>
+                  <input
+                    type="text"
+                    value={contact}
+                    onChange={(event) =>
+                      setContact(formatPhoneNumber(event.target.value))
+                    }
+                    placeholder="참석자 대표 연락처를 입력해 주세요."
+                    className="mt-3 h-11 w-full border-0 border-b border-[#c7c7c7] bg-transparent px-1 text-sm text-[#2f2f2f] placeholder:text-[#c2c2c2] focus:outline-none"
+                  />
+                </div>
+
+                <div className="flex items-center justify-between gap-4">
+                  <p className="shrink-0 text-sm font-semibold text-[#1f1f1f]">
+                    <span className="mr-1 text-[#d62020]">*</span>총 인원 (본인
+                    포함)
+                  </p>
+                  <div className="ml-auto flex items-center gap-14">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setTotalCount((prev) => Math.max(prev - 1, 1))
+                      }
+                      className="rounded-full border border-[#d1d1d1] p-1 text-[#b6b6b6]"
+                      aria-label="총 인원 감소"
+                    >
+                      <Icon icon={Minus} size="sm" />
+                    </button>
+                    <span className="min-w-6 text-center text-base font-medium text-[#1f1f1f]">
+                      {totalCount}명
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setTotalCount((prev) => Math.min(prev + 1, 20))
+                      }
+                      className="rounded-full border border-[#bfbfbf] p-1 text-[#7d7d7d]"
+                      aria-label="총 인원 증가"
+                    >
+                      <Icon icon={Plus} size="sm" />
+                    </button>
+                  </div>
+                </div>
+
+                {attendStatus === "available" && (
+                  <div>
+                    <p className="text-sm font-semibold text-[#1f1f1f]">
+                      <span className="mr-1 text-[#d62020]">*</span>식사여부
+                    </p>
+                    <div className="mt-3 grid grid-cols-2 gap-4">
+                      <SelectCard
+                        label="식사함"
+                        selected={eatMeal}
+                        onClick={() => setEatMeal(true)}
+                        leadingIcon="check"
+                        centerContent
+                      />
+                      <SelectCard
+                        label="식사안함"
+                        selected={!eatMeal}
+                        onClick={() => setEatMeal(false)}
+                        leadingIcon="x"
+                        centerContent
+                      />
+                    </div>
+                  </div>
+                )}
+
+                <div>
+                  <label className="text-sm font-semibold text-[#1f1f1f]">
+                    전달사항
+                  </label>
+                  <input
+                    type="text"
+                    value={note}
+                    onChange={(event) =>
+                      setNote(event.target.value.slice(0, 30))
+                    }
+                    placeholder="전달하실 내용을 입력해 주세요. (최대 30자)"
+                    className="mt-3 h-11 w-full border-0 border-b border-[#c7c7c7] bg-transparent px-1 text-xs text-[#2f2f2f] placeholder:text-[#c2c2c2] focus:outline-none"
+                  />
+                </div>
+
+                <label className="block py-4">
+                  <span className="inline-flex items-start gap-3">
+                    <input
+                      type="checkbox"
+                      checked={agreePrivacy}
+                      onChange={(event) =>
+                        setAgreePrivacy(event.target.checked)
+                      }
+                      className="h-5 w-5 rounded border-[#bdbdbd] accent-black"
+                    />
+                    <span>
+                      <p className="text-sm font-semibold text-[#222222]">
+                        동의합니다.
+                      </p>
+                      <p className="mt-2 text-xs leading-5 text-[#808080]">
+                        참석여부 전달을 위한 개인정보 수집 및 이용에
+                        동의해주세요.
+                        <br />
+                        항목: 성함,연락처,동행인 성함 · 보유기간: 청첩장 이용
+                        종료시까지
+                      </p>
+                    </span>
+                  </span>
                 </label>
-                <div className="flex items-center gap-4 text-xs font-semibold text-[#1f1f1f]">
-                  <label className="inline-flex items-center gap-1">
-                    <input
-                      type="radio"
-                      name="side"
-                      value="groom"
-                      checked={side === "groom"}
-                      onChange={() => setSide("groom")}
-                      className="h-5 w-5 accent-black"
-                    />
-                    신랑측
-                  </label>
-                  <label className="inline-flex items-center gap-1">
-                    <input
-                      type="radio"
-                      name="side"
-                      value="bride"
-                      checked={side === "bride"}
-                      onChange={() => setSide("bride")}
-                      className="h-5 w-5 accent-black"
-                    />
-                    신부측
-                  </label>
-                </div>
-              </div>
-              <input
-                type="text"
-                value={name}
-                onChange={(event) => setName(event.target.value)}
-                placeholder="성함을 입력해 주세요."
-                className="mt-3 h-11 w-full border-0 border-b border-[#c7c7c7] bg-transparent px-1 text-sm text-[#2f2f2f] placeholder:text-[#c2c2c2] focus:outline-none"
-              />
-            </div>
 
-            <div>
-              <label className="text-sm font-semibold text-[#1f1f1f]">
-                <span className="mr-1 text-[#d62020]">*</span>연락처
-              </label>
-              <input
-                type="text"
-                value={contact}
-                onChange={(event) =>
-                  setContact(formatPhoneNumber(event.target.value))
-                }
-                placeholder="참석자 대표 연락처를 입력해 주세요."
-                className="mt-3 h-11 w-full border-0 border-b border-[#c7c7c7] bg-transparent px-1 text-sm text-[#2f2f2f] placeholder:text-[#c2c2c2] focus:outline-none"
-              />
-            </div>
+                {submitError && (
+                  <p className="text-xs text-[#d62020]">{submitError}</p>
+                )}
 
-            <div className="flex items-center justify-between gap-4">
-              <p className="shrink-0 text-sm font-semibold text-[#1f1f1f]">
-                <span className="mr-1 text-[#d62020]">*</span>추가인원
-              </p>
-              <div className="ml-auto flex items-center gap-14">
                 <button
-                  type="button"
-                  onClick={() => setExtraCount((prev) => Math.max(prev - 1, 0))}
-                  className="rounded-full border border-[#d1d1d1] p-1 text-[#b6b6b6]"
-                  aria-label="추가 인원 감소"
+                  type="submit"
+                  disabled={!canSubmit || isSubmitting}
+                  className={`h-14 w-full rounded-[12px] border text-sm font-semibold ${
+                    canSubmit && !isSubmitting
+                      ? "bg-wedding-brown-light text-wedding-beige"
+                      : "border-[#d6d6d6] bg-[#f2f2f2] text-[#c6c6c6]"
+                  }`}
                 >
-                  <Icon icon={Minus} size="sm" />
-                </button>
-                <span className="min-w-6 text-center text-base font-medium text-[#1f1f1f]">
-                  {extraCount}명
-                </span>
-                <button
-                  type="button"
-                  onClick={() =>
-                    setExtraCount((prev) => Math.min(prev + 1, 20))
-                  }
-                  className="rounded-full border border-[#bfbfbf] p-1 text-[#7d7d7d]"
-                  aria-label="추가 인원 증가"
-                >
-                  <Icon icon={Plus} size="sm" />
+                  {isSubmitting ? "전달 중..." : "신랑 & 신부에게 전달하기"}
                 </button>
               </div>
             </div>
-
-            {attendStatus === "available" && (
-              <>
-                <div>
-                  <p className="text-sm font-semibold text-[#1f1f1f]">
-                    <span className="mr-1 text-[#d62020]">*</span>식사여부
-                  </p>
-                  <div className="mt-3 grid grid-cols-2 gap-4">
-                    <SelectCard
-                      label="식사함"
-                      selected={eatMeal}
-                      onClick={() => setEatMeal(true)}
-                      leadingIcon="check"
-                      centerContent
-                    />
-                    <SelectCard
-                      label="식사안함"
-                      selected={!eatMeal}
-                      onClick={() => setEatMeal(false)}
-                      leadingIcon="x"
-                      centerContent
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <p className="text-sm font-semibold text-[#1f1f1f]">
-                    <span className="mr-1 text-[#d62020]">*</span>버스 탑승 여부
-                  </p>
-                  <div className="mt-3 grid grid-cols-2 gap-4">
-                    <SelectCard
-                      label="탑승함"
-                      selected={rideBus}
-                      onClick={() => setRideBus(true)}
-                      leadingIcon="check"
-                      centerContent
-                    />
-                    <SelectCard
-                      label="탑승안함"
-                      selected={!rideBus}
-                      onClick={() => setRideBus(false)}
-                      leadingIcon="x"
-                      centerContent
-                    />
-                  </div>
-                </div>
-              </>
-            )}
-
-            <div>
-              <label className="text-sm font-semibold text-[#1f1f1f]">
-                전달사항
-              </label>
-              <input
-                type="text"
-                value={note}
-                onChange={(event) => setNote(event.target.value.slice(0, 30))}
-                placeholder="전달하실 내용을 입력해 주세요. (최대 30자)"
-                className="mt-3 h-11 w-full border-0 border-b border-[#c7c7c7] bg-transparent px-1 text-xs text-[#2f2f2f] placeholder:text-[#c2c2c2] focus:outline-none"
-              />
-            </div>
-
-            <label className="block rounded-[12px] border border-[#d5d5d5] px-4 py-4">
-              <span className="inline-flex items-start gap-3">
-                <input
-                  type="checkbox"
-                  checked={agreePrivacy}
-                  onChange={(event) => setAgreePrivacy(event.target.checked)}
-                  className="h-5 w-5 rounded border-[#bdbdbd] accent-black"
-                />
-                <span>
-                  <p className="text-sm font-semibold text-[#222222]">
-                    동의합니다.
-                  </p>
-                  <p className="mt-2 text-xs leading-5 text-[#808080]">
-                    참석여부 전달을 위한 개인정보 수집 및 이용에 동의해주세요.
-                    <br />
-                    항목: 성함,연락처,동행인 성함 · 보유기간: 청첩장 이용
-                    종료시까지
-                  </p>
-                </span>
-              </span>
-            </label>
-
-            {submitError && (
-              <p className="text-xs text-[#d62020]">{submitError}</p>
-            )}
-
-            <button
-              type="submit"
-              disabled={!canSubmit || isSubmitting}
-              className={`h-14 w-full rounded-[12px] border text-sm font-semibold ${
-                canSubmit && !isSubmitting
-                  ? "bg-wedding-brown-light text-wedding-beige"
-                  : "border-[#d6d6d6] bg-[#f2f2f2] text-[#c6c6c6]"
-              }`}
-            >
-              {isSubmitting ? "전달 중..." : "신랑 & 신부에게 전달하기"}
-            </button>
           </form>
         </div>
       </motion.div>

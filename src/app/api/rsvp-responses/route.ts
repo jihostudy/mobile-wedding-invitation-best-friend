@@ -10,7 +10,6 @@ export async function POST(request: Request) {
     contact?: string;
     extraCount?: number;
     eatMeal?: boolean;
-    rideBus?: boolean;
     note?: string;
     agreePrivacy?: boolean;
   };
@@ -27,7 +26,8 @@ export async function POST(request: Request) {
   const contact = body.contact?.trim() || '';
   const extraCount = typeof body.extraCount === 'number' ? body.extraCount : 0;
   const eatMeal = body.eatMeal ?? true;
-  const rideBus = body.rideBus ?? true;
+  // Shuttle bus is always operated, so keep a fixed value in storage.
+  const rideBus = true;
   const note = body.note?.trim() || '';
   const agreePrivacy = body.agreePrivacy === true;
 

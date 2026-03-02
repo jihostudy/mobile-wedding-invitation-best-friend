@@ -111,7 +111,8 @@ export async function createRsvpResponse(
       contact: input.contact,
       extra_count: input.extraCount,
       eat_meal: input.eatMeal,
-      ride_bus: input.rideBus,
+      // Shuttle bus is fixed-operating; keep persisted value constant.
+      ride_bus: true,
       note: input.note,
       agree_privacy: input.agreePrivacy,
     },
