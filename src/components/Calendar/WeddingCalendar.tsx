@@ -69,7 +69,7 @@ export default function WeddingCalendar({
         <FadeInUp delay={0.12} amount={0.15}>
           <div className="border-y border-gray-300/40 px-2 pb-4 pt-6">
             <p className="text-center text-lg font-semibold text-[#3f3f3f]">
-              {date.year}년 {date.month}월
+              {date.year}년 {date.month}월 {date.day}일
             </p>
             <p className="mt-2 pb-4 text-sm text-[#3f3f3f]">
               {date.dayOfWeek} {date.time}
