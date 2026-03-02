@@ -11,9 +11,9 @@ interface LocationNavigationProps {
 const APP_ORDER: NavigationAppId[] = ["naver", "tmap", "kakao"];
 
 const APP_ICON_MAP: Record<NavigationAppId, string> = {
-  naver: "/icons/map/naver.png",
-  tmap: "/icons/map/tmap.jpeg",
-  kakao: "/icons/map/kakaonavi.png",
+  naver: "/icons/social/naver.png",
+  tmap: "/icons/social/tmap.jpeg",
+  kakao: "/icons/social/kakaonavi.png",
 };
 
 function isMobileDevice() {

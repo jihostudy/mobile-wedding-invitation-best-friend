@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ChevronUp, Copy } from "lucide-react";
+import Image from "next/image";
+import { ChevronDown, ChevronUp, Copy, UserRound } from "lucide-react";
 import Icon from "@/components/common/Icon";
 import useToast from "@/components/common/toast/useToast";
 import type { AccountSectionData, WeddingInfo } from "@/types";
@@ -31,13 +32,23 @@ function inferAccountHolderName(
     person.parents?.father ?? `${side === "groom" ? "신랑" : "신부"} 아버지`,
     person.parents?.mother ?? `${side === "groom" ? "신랑" : "신부"} 어머니`,
   ];
-  return candidates[accountIndex] ?? `${groupLabel || (side === "groom" ? "신랑측" : "신부측")} 계좌`;
+  return (
+    candidates[accountIndex] ??
+    `${groupLabel || (side === "groom" ? "신랑측" : "신부측")} 계좌`
+  );
 }
 
-export default function AccountSection({ section, weddingData }: AccountSectionProps) {
+export default function AccountSection({
+  section,
+  weddingData,
+}: AccountSectionProps) {
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(
-    Object.fromEntries(section.groups.map((group) => [group.id, true])),
+    Object.fromEntries(section.groups.map((group) => [group.id, false])),
   );
+  const [selectedAccountIndexByGroup, setSelectedAccountIndexByGroup] =
+    useState<Record<string, number | null>>(
+      Object.fromEntries(section.groups.map((group) => [group.id, null])),
+    );
   const toast = useToast();
 
   const handleCopy = async (value: string) => {
@@ -52,6 +63,17 @@ export default function AccountSection({ section, weddingData }: AccountSectionP
 
   const toggleGroup = (groupId: string) => {
     setOpenGroups((prev) => ({ ...prev, [groupId]: !prev[groupId] }));
+  };
+
+  const handleSelectAccount = (groupId: string, accountIndex: number) => {
+    setSelectedAccountIndexByGroup((prev) => ({
+      ...prev,
+      [groupId]: accountIndex,
+    }));
+  };
+
+  const handleKakaoPay = () => {
+    toast.info("카카오페이 송금 연동은 준비 중입니다.");
   };
 
   return (
@@ -78,22 +100,27 @@ export default function AccountSection({ section, weddingData }: AccountSectionP
             section.groups.map((group) => (
               <div
                 key={group.id}
-                className="overflow-hidden rounded-t-xl rounded-b-none border border-[#e7dccb] bg-[#faf6ef]"
+                className="overflow-hidden rounded-xl border border-wedding-brown/15 bg-white"
               >
                 <button
                   type="button"
                   onClick={() => toggleGroup(group.id)}
-                  className="relative flex w-full items-center justify-center bg-gradient-to-r from-[#f7eddc] to-[#f4e8d4] px-2 py-3 text-center"
+                  className="relative flex w-full items-center justify-between border-b border-wedding-brown/10 bg-[#faf7f2] px-5 py-4 text-left"
                   aria-expanded={openGroups[group.id]}
                 >
-                  <span className="text-sm font-medium text-[#6f5a3d]">
+                  <span className="inline-flex items-center gap-2 text-base font-medium text-wedding-gray">
+                    <Icon
+                      icon={UserRound}
+                      size="md"
+                      className="text-wedding-brown-light"
+                    />
                     {group.label}
                   </span>
-                  <span
-                    className={`absolute right-5 text-sm text-[#7a6445] transition-transform ${openGroups[group.id] ? "" : "rotate-180"}`}
-                  >
-                    <Icon icon={ChevronUp} size="sm" />
-                  </span>
+                  <Icon
+                    icon={openGroups[group.id] ? ChevronUp : ChevronDown}
+                    size="md"
+                    className="text-wedding-brown-light"
+                  />
                 </button>
 
                 <motion.div
@@ -117,40 +144,92 @@ export default function AccountSection({ section, weddingData }: AccountSectionP
                   className="overflow-hidden"
                   aria-hidden={!openGroups[group.id]}
                 >
-                  <div className="border-t border-[#e7dccb] bg-white">
-                    {group.accounts.map((account, index) => {
-                      const rowKey = `${group.id}-${index}`;
-                      const holderName = inferAccountHolderName(
-                        group.id,
-                        group.label,
-                        index,
-                        weddingData,
-                      );
-                      return (
-                        <div
-                          key={rowKey}
-                          className="flex items-start justify-between gap-4 px-5 py-4"
-                        >
-                          <div>
-                            <p className="text-[16px] text-gray-800">
-                              {holderName}
-                            </p>
-                            <p className="mt-2 text-sm text-gray-700">
-                              {account.bank} {account.account}
-                            </p>
-                          </div>
+                  <div className="space-y-5 bg-[#fdfcf9] px-5 py-6">
+                    <p className="text-center text-[15px] font-medium text-wedding-gray">
+                      어떤 분에게 마음을 전하시고 싶으신가요?
+                    </p>
 
+                    <div className="flex flex-wrap items-center justify-center gap-3">
+                      {group.accounts.map((_, index) => {
+                        const holderName = inferAccountHolderName(
+                          group.id,
+                          group.label,
+                          index,
+                          weddingData,
+                        );
+                        const isSelected =
+                          selectedAccountIndexByGroup[group.id] === index;
+                        return (
                           <button
+                            key={`${group.id}-selector-${index}`}
                             type="button"
-                            onClick={() => handleCopy(account.account)}
-                            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#d5d5d5] bg-white text-[#5f5f5f] transition hover:bg-[#f5f5f5]"
-                            aria-label={`${holderName} 계좌번호 복사`}
+                            onClick={() => handleSelectAccount(group.id, index)}
+                            className={`flex h-[84px] w-[84px] items-center justify-center rounded-full px-2 text-[14px] font-medium leading-tight transition ${
+                              isSelected
+                                ? "bg-wedding-brown text-white shadow-[0_8px_18px_rgba(95,78,57,0.22)]"
+                                : "border border-wedding-brown/20 bg-white text-wedding-brown hover:bg-[#fbf8f2]"
+                            }`}
                           >
-                            <Icon icon={Copy} size="sm" />
+                            {holderName}
                           </button>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
+
+                    {selectedAccountIndexByGroup[group.id] !== null && (
+                      <div className="rounded-2xl border border-wedding-brown/15 bg-white px-3 py-5">
+                        {(() => {
+                          const selectedIndex =
+                            selectedAccountIndexByGroup[group.id];
+                          if (selectedIndex === null) {
+                            return null;
+                          }
+                          const selectedAccount = group.accounts[selectedIndex];
+                          if (!selectedAccount) return null;
+                          const holderName = inferAccountHolderName(
+                            group.id,
+                            group.label,
+                            selectedIndex,
+                            weddingData,
+                          );
+
+                          return (
+                            <>
+                              <p className="text-sm font-medium text-wedding-gray text-center">
+                                {holderName} · {selectedAccount.bank}{" "}
+                                {selectedAccount.account}
+                              </p>
+                              <div className="mt-5 grid grid-cols-2 gap-3">
+                                <button
+                                  type="button"
+                                  onClick={handleKakaoPay}
+                                  className="inline-flex h-12 items-center justify-center gap-2 rounded-[12px] bg-[#f8e500] px-3 text-xs font-semibold text-[#1f1f1f] transition hover:bg-[#f3df00]"
+                                >
+                                  <Image
+                                    src="/icons/social/kakaopay.svg"
+                                    alt="카카오페이"
+                                    width={28}
+                                    height={28}
+                                    className="h-4 w-auto"
+                                  />
+                                  카카오페이 송금
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    handleCopy(selectedAccount.account)
+                                  }
+                                  className="inline-flex h-11 items-center justify-center gap-1 rounded-[12px] border border-wedding-brown/20 bg-white px-3 text-xs font-semibold text-wedding-brown transition hover:bg-[#fbf8f2]"
+                                >
+                                  <Icon icon={Copy} size="sm" />
+                                  계좌번호 복사
+                                </button>
+                              </div>
+                            </>
+                          );
+                        })()}
+                      </div>
+                    )}
                   </div>
                 </motion.div>
               </div>
