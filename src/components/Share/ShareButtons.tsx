@@ -1,79 +1,83 @@
 'use client';
 
 import { useState } from 'react';
-
-interface KakaoApi {
-  isInitialized: () => boolean;
-  Share: {
-    sendDefault: (options: unknown) => void;
-  };
-}
-
-declare global {
-  interface Window {
-    Kakao?: KakaoApi;
-  }
-}
+import useToast from '@/components/common/toast/useToast';
+import { useWeddingContentQuery } from '@/lib/queries/wedding-content';
+import { FALLBACK_WEDDING_CONTENT } from '@/lib/wedding-content/fallback';
+import {
+  buildKakaoSharePayload,
+  ensureKakaoInitialized,
+  type KakaoSdk,
+} from '@/lib/share/kakao';
 
 /**
  * 공유 버튼 컴포넌트
  * 카카오톡, 링크 복사 등
  */
 export default function ShareButtons() {
+  const toast = useToast();
   const [copied, setCopied] = useState(false);
+  const { data } = useWeddingContentQuery('main');
+  const content = data?.content ?? FALLBACK_WEDDING_CONTENT;
 
-  // 카카오톡 공유
-  const shareKakao = () => {
-    if (typeof window === 'undefined') return;
-
-    // 카카오톡 SDK 로드 확인
-    if (!window.Kakao) {
-      alert('카카오톡 공유 기능을 사용할 수 없습니다.');
-      return;
-    }
-
-    const kakao = window.Kakao;
-
-    if (!kakao.isInitialized()) {
-      // 카카오 JavaScript 키로 초기화 (실제 키 필요)
-      // kakao.init('YOUR_KAKAO_JAVASCRIPT_KEY');
-      alert('카카오톡 SDK 초기화가 필요합니다.');
-      return;
-    }
-
-    kakao.Share.sendDefault({
-      objectType: 'feed',
-      content: {
-        title: '동현❤️다연의 결혼식에 초대합니다',
-        description: '2025년 3월 1일 토요일 오후 2시 50분',
-        imageUrl: `${window.location.origin}/images/placeholder-couple.svg`,
-        link: {
-          mobileWebUrl: window.location.href,
-          webUrl: window.location.href,
-        },
-      },
-      buttons: [
-        {
-          title: '청첩장 보기',
-          link: {
-            mobileWebUrl: window.location.href,
-            webUrl: window.location.href,
-          },
-        },
-      ],
-    });
-  };
-
-  // 링크 복사
-  const copyLink = async () => {
+  const copyCurrentUrl = async () => {
+    if (typeof window === 'undefined') return false;
     try {
       await navigator.clipboard.writeText(window.location.href);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+      return true;
     } catch (error) {
       console.error('Failed to copy:', error);
-      alert('링크 복사에 실패했습니다.');
+      return false;
     }
+  };
+
+  // 카카오톡 공유
+  const shareKakao = async () => {
+    if (typeof window === 'undefined') return;
+
+    // 카카오톡 SDK 로드 확인
+    const kakao = (window as Window & { Kakao?: KakaoSdk }).Kakao;
+    if (!kakao) {
+      toast.error('카카오톡 SDK를 불러오지 못했습니다. 링크를 복사해 공유해 주세요.');
+      await copyCurrentUrl();
+      return;
+    }
+
+    const initResult = ensureKakaoInitialized({
+      kakao,
+      appKey: process.env.NEXT_PUBLIC_KAKAO_JS_KEY,
+    });
+    if (!initResult.ok) {
+      toast.error(`${initResult.reason} 링크 복사로 공유해 주세요.`);
+      await copyCurrentUrl();
+      return;
+    }
+
+    try {
+      kakao.Share.sendDefault(
+        buildKakaoSharePayload({
+          content,
+          origin: window.location.origin,
+          url: window.location.href,
+        }),
+      );
+    } catch (error) {
+      console.error('Failed to share via Kakao:', error);
+      toast.error('카카오톡 공유에 실패했습니다. 링크를 복사해 공유해 주세요.');
+      await copyCurrentUrl();
+    }
+  };
+
+  // 링크 복사
+  const copyLink = async () => {
+    const copiedSuccessfully = await copyCurrentUrl();
+    if (copiedSuccessfully) {
+      toast.success('링크가 복사되었습니다.');
+      return;
+    }
+    toast.error('링크 복사에 실패했습니다.');
   };
 
   // 페이스북 공유
@@ -89,7 +93,9 @@ export default function ShareButtons() {
   // 트위터 공유
   const shareTwitter = () => {
     const url = encodeURIComponent(window.location.href);
-    const text = encodeURIComponent('동현❤️다연의 결혼식에 초대합니다');
+    const text = encodeURIComponent(
+      `${content.weddingData.groom.name} ❤️ ${content.weddingData.bride.name} 결혼합니다`,
+    );
     window.open(
       `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
       '_blank',

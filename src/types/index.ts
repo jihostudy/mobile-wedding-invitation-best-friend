@@ -9,6 +9,7 @@ export interface WeddingInfo {
   date: WeddingDate;
   venue: Venue;
   backgroundMusic?: BackgroundMusicConfig;
+  display?: DisplayConfig;
 }
 
 export interface BackgroundMusicConfig {
@@ -18,6 +19,10 @@ export interface BackgroundMusicConfig {
   loop?: boolean;
   autoplay?: boolean;
   title?: string;
+}
+
+export interface DisplayConfig {
+  disableZoom?: boolean;
 }
 
 export interface Person {
@@ -213,6 +218,13 @@ export interface ClosingSectionData {
   image: ImageAsset;
 }
 
+export interface KakaoShareCardData {
+  title: string;
+  description: string;
+  buttonTitle: string;
+  imageUrl: string;
+}
+
 export interface FloatingNavItem {
   id: string;
   label: string;
@@ -279,6 +291,7 @@ export interface WeddingContentV1 {
   accountSection: AccountSectionData;
   snapSection: SnapSectionData;
   closingSection: ClosingSectionData;
+  kakaoShareCard: KakaoShareCardData;
   pageSectionOrder: PageSectionId[];
   pageSectionVisibility: PageSectionVisibility;
   floatingNavItems: FloatingNavItem[];

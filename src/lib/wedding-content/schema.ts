@@ -1,9 +1,9 @@
-import { z } from 'zod';
+import { z } from "zod";
 import {
   normalizePageSectionOrder,
   normalizePageSectionVisibility,
-} from '@/lib/wedding-content/section-order';
-import type { WeddingContentV1 } from '@/types';
+} from "@/lib/wedding-content/section-order";
+import type { WeddingContentV1 } from "@/types";
 
 const personSchema = z.object({
   name: z.string(),
@@ -21,14 +21,30 @@ const personSchema = z.object({
 });
 
 const fallbackHeroImage = {
-  url: '/images/placeholder-couple.svg',
-  alt: '웨딩 메인 이미지',
+  url: "/images/placeholder-couple.svg",
+  alt: "웨딩 메인 이미지",
 };
 
-const heroImageSchema = z.object({
-  url: z.string(),
-  alt: z.string(),
-});
+function normalizeImageAsset(
+  input: { url?: string; alt?: string },
+  fallbackAlt: string,
+) {
+  const nextUrl = (input.url ?? "").trim() || fallbackHeroImage.url;
+  const nextAlt = (input.alt ?? "").trim() || fallbackAlt;
+  return {
+    url: nextUrl,
+    alt: nextAlt,
+  };
+}
+
+const imageAssetSchema = z
+  .object({
+    url: z.string().optional(),
+    alt: z.string().optional(),
+  })
+  .transform((image) => normalizeImageAsset(image, fallbackHeroImage.alt));
+
+const heroImageSchema = imageAssetSchema;
 
 const heroSectionSchema = z
   .object({
@@ -39,12 +55,14 @@ const heroSectionSchema = z
     titleText: z.string().optional(),
   })
   .transform((hero) => {
-    const primaryImage = hero.primaryImage ?? hero.mainImage ?? fallbackHeroImage;
-    const secondaryImage = hero.secondaryImage ?? hero.mainImage ?? primaryImage;
+    const primaryImage =
+      hero.primaryImage ?? hero.mainImage ?? fallbackHeroImage;
+    const secondaryImage =
+      hero.secondaryImage ?? hero.mainImage ?? primaryImage;
     return {
       primaryImage,
       secondaryImage,
-      titleText: hero.titleText ?? '결혼합니다',
+      titleText: hero.titleText ?? "결혼합니다",
     };
   });
 
@@ -55,13 +73,28 @@ const invitationSectionSchema = z
     message: z.string(),
   })
   .transform((section) => ({
-    kicker: section.kicker ?? 'INVITATION',
-    title: section.title ?? '소중한 분들을 초대합니다',
+    kicker: section.kicker ?? "INVITATION",
+    title: section.title ?? "소중한 분들을 초대합니다",
     message: section.message,
   }));
 
 function getGivenName(name: string) {
   return name.length > 1 ? name.slice(1) : name;
+}
+
+function buildDefaultKakaoDescription(params: {
+  year: number;
+  month: number;
+  day: number;
+  dayOfWeek: string;
+  time: string;
+  venueName: string;
+  floor?: string;
+  hall?: string;
+}) {
+  const venueSuffix = [params.floor, params.hall].filter(Boolean).join(" ");
+  const venueLine = `${params.venueName}${venueSuffix ? ` ${venueSuffix}` : ""}`;
+  return `${params.year}년 ${params.month}월 ${params.day}일 (${params.dayOfWeek}) ${params.time}\n${venueLine}`;
 }
 
 function encodeNavigationValue(value: string) {
@@ -77,22 +110,22 @@ function buildDefaultNavigationApps(
 
   return [
     {
-      id: 'naver' as const,
-      label: '네이버지도',
+      id: "naver" as const,
+      label: "네이버지도",
       enabled: true,
       deepLink: `nmap://route/public?dlat=${lat}&dlng=${lng}&dname=${encodedName}&appname=com.wedding.invitation`,
       webUrl: `https://map.naver.com/v5/directions/-/${lng},${lat},${encodedName}/-/transit`,
     },
     {
-      id: 'tmap' as const,
-      label: '티맵',
+      id: "tmap" as const,
+      label: "티맵",
       enabled: true,
       deepLink: `tmap://route?goalx=${lng}&goaly=${lat}&goalname=${encodedName}`,
       webUrl: `https://m.tmap.co.kr/tmap2/mobile/route.jsp?goalx=${lng}&goaly=${lat}&goalname=${encodedName}`,
     },
     {
-      id: 'kakao' as const,
-      label: '카카오내비',
+      id: "kakao" as const,
+      label: "카카오내비",
       enabled: true,
       deepLink: `kakaonavi://navigate?name=${encodedName}&x=${lng}&y=${lat}`,
       webUrl: `https://map.kakao.com/link/to/${encodedName},${lat},${lng}`,
@@ -114,8 +147,8 @@ const guestbookSectionSchema = z
     title: z.string().optional(),
   })
   .transform((section) => ({
-    kicker: section.kicker ?? 'GUESTBOOK',
-    title: section.title ?? '방명록',
+    kicker: section.kicker ?? "GUESTBOOK",
+    title: section.title ?? "방명록",
   }));
 
 const rsvpSectionSchema = z
@@ -125,9 +158,11 @@ const rsvpSectionSchema = z
     description: z.string().optional(),
   })
   .transform((section) => ({
-    kicker: section.kicker ?? 'R.S.V.P.',
-    title: section.title ?? '참석 의사 전달',
-    description: section.description ?? '신랑, 신부에게 참석의사를\n미리 전달할 수 있어요.',
+    kicker: section.kicker ?? "R.S.V.P.",
+    title: section.title ?? "참석 의사 전달",
+    description:
+      section.description ??
+      "신랑, 신부에게 참석의사를\n미리 전달할 수 있어요.",
   }));
 
 const gallerySectionSchema = z
@@ -136,30 +171,35 @@ const gallerySectionSchema = z
     title: z.string().optional(),
     batchSize: z.number().optional(),
     images: z.array(
-      z.object({
-        id: z.string(),
-        url: z.string(),
-        alt: z.string(),
-        width: z.number(),
-        height: z.number(),
-      }),
+      z
+        .object({
+          id: z.string(),
+          url: z.string().optional(),
+          alt: z.string().optional(),
+          width: z.number(),
+          height: z.number(),
+        })
+        .transform((image) => ({
+          ...image,
+          ...normalizeImageAsset(image, "웨딩 갤러리 이미지"),
+        })),
     ),
   })
   .transform((section) => ({
     // Keep gallery paging predictable: at least 2 and always even.
     batchSize: Math.max(2, Math.floor((section.batchSize ?? 6) / 2) * 2),
-    kicker: section.kicker ?? 'GALLERY',
-    title: section.title ?? '웨딩 갤러리',
+    kicker: section.kicker ?? "GALLERY",
+    title: section.title ?? "웨딩 갤러리",
     images: section.images,
   }));
 
 const interviewAnswerSchema = z.object({
-  side: z.enum(['groom', 'bride']),
+  side: z.enum(["groom", "bride"]),
   content: z.string(),
 });
 
 const interviewLegacyAnswerSchema = z.object({
-  side: z.enum(['groom', 'bride']).optional(),
+  side: z.enum(["groom", "bride"]).optional(),
   role: z.string().optional(),
   name: z.string().optional(),
   content: z.string().optional(),
@@ -169,30 +209,34 @@ const interviewLegacyAnswerSchema = z.object({
 function inferInterviewSide(
   answer: z.infer<typeof interviewLegacyAnswerSchema>,
   index: number,
-): 'groom' | 'bride' {
+): "groom" | "bride" {
   if (answer.side) return answer.side;
-  if (answer.role?.includes('신부')) return 'bride';
-  if (answer.role?.includes('신랑')) return 'groom';
-  return index === 0 ? 'groom' : 'bride';
+  if (answer.role?.includes("신부")) return "bride";
+  if (answer.role?.includes("신랑")) return "groom";
+  return index === 0 ? "groom" : "bride";
 }
 
 function normalizeInterviewAnswerContent(
   answer: z.infer<typeof interviewLegacyAnswerSchema>,
 ): string {
-  if (typeof answer.content === 'string') return answer.content;
+  if (typeof answer.content === "string") return answer.content;
   if (Array.isArray(answer.paragraphs)) {
-    return answer.paragraphs.filter((paragraph) => paragraph.trim().length > 0).join('\n\n');
+    return answer.paragraphs
+      .filter((paragraph) => paragraph.trim().length > 0)
+      .join("\n\n");
   }
-  return '';
+  return "";
 }
 
 const interviewQuestionSchema = z
   .object({
     question: z.string(),
-    answers: z.array(z.union([interviewAnswerSchema, interviewLegacyAnswerSchema])),
+    answers: z.array(
+      z.union([interviewAnswerSchema, interviewLegacyAnswerSchema]),
+    ),
   })
   .transform((question) => {
-    const normalizedBySide = new Map<'groom' | 'bride', string>();
+    const normalizedBySide = new Map<"groom" | "bride", string>();
     question.answers.forEach((answer, index) => {
       const side = inferInterviewSide(answer, index);
       if (normalizedBySide.has(side)) return;
@@ -202,8 +246,14 @@ const interviewQuestionSchema = z
     return {
       question: question.question,
       answers: [
-        { side: 'groom' as const, content: normalizedBySide.get('groom') ?? '' },
-        { side: 'bride' as const, content: normalizedBySide.get('bride') ?? '' },
+        {
+          side: "groom" as const,
+          content: normalizedBySide.get("groom") ?? "",
+        },
+        {
+          side: "bride" as const,
+          content: normalizedBySide.get("bride") ?? "",
+        },
       ],
     };
   });
@@ -213,12 +263,12 @@ const interviewSectionSchema = z
     kicker: z.string().optional(),
     title: z.string().optional(),
     description: z.string(),
-    image: z.object({ url: z.string(), alt: z.string() }),
+    image: imageAssetSchema,
     questions: z.array(interviewQuestionSchema),
   })
   .transform((section) => ({
-    kicker: section.kicker ?? 'INTERVIEW',
-    title: section.title ?? '우리 두 사람의 이야기',
+    kicker: section.kicker ?? "INTERVIEW",
+    title: section.title ?? "우리 두 사람의 이야기",
     description: section.description,
     image: section.image,
     questions: section.questions,
@@ -226,91 +276,107 @@ const interviewSectionSchema = z
 
 const weddingContentSchema = z
   .object({
-    weddingData: z.object({
-    groom: personSchema,
-    bride: personSchema,
-    date: z.object({
-      year: z.number(),
-      month: z.number(),
-      day: z.number(),
-      dayOfWeek: z.string(),
-      time: z.string(),
-    }),
-    venue: z
+    weddingData: z
       .object({
-        name: z.string(),
-        address: z.string(),
-        floor: z.string().optional(),
-        hall: z.string().optional(),
-        contact: z.string().optional(),
-        coordinates: z.object({ lat: z.number(), lng: z.number() }),
-        parking: z.string().optional(),
-        transport: z
+        groom: personSchema,
+        bride: personSchema,
+        date: z.object({
+          year: z.number(),
+          month: z.number(),
+          day: z.number(),
+          dayOfWeek: z.string(),
+          time: z.string(),
+        }),
+        venue: z
           .object({
-            navigation: z
+            name: z.string(),
+            address: z.string(),
+            floor: z.string().optional(),
+            hall: z.string().optional(),
+            contact: z.string().optional(),
+            coordinates: z.object({ lat: z.number(), lng: z.number() }),
+            parking: z.string().optional(),
+            transport: z
               .object({
-                description: z.string().optional(),
-                apps: z
-                  .array(
-                    z.object({
-                      id: z.enum(['naver', 'tmap', 'kakao']),
-                      label: z.string(),
-                      enabled: z.boolean(),
-                      deepLink: z.string(),
-                      webUrl: z.string(),
-                    }),
-                  )
+                navigation: z
+                  .object({
+                    description: z.string().optional(),
+                    apps: z
+                      .array(
+                        z.object({
+                          id: z.enum(["naver", "tmap", "kakao"]),
+                          label: z.string(),
+                          enabled: z.boolean(),
+                          deepLink: z.string(),
+                          webUrl: z.string(),
+                        }),
+                      )
+                      .optional(),
+                  })
                   .optional(),
+                subway: z.array(z.string()).optional(),
+                subwayDetails: z
+                  .array(z.object({ label: z.string(), color: z.string() }))
+                  .optional(),
+                busDetails: z
+                  .array(z.object({ label: z.string(), color: z.string() }))
+                  .optional(),
+                bus: z.array(z.string()).optional(),
+                busNote: z.string().optional(),
+                parking: z.string().optional(),
+                shuttlePickup: z.string().optional(),
               })
               .optional(),
-            subway: z.array(z.string()).optional(),
-            subwayDetails: z.array(z.object({ label: z.string(), color: z.string() })).optional(),
-            busDetails: z.array(z.object({ label: z.string(), color: z.string() })).optional(),
-            bus: z.array(z.string()).optional(),
-            busNote: z.string().optional(),
-            parking: z.string().optional(),
-            shuttlePickup: z.string().optional(),
+          })
+          .transform((venue) => {
+            if (!venue.transport) {
+              return venue;
+            }
+
+            const defaultApps = buildDefaultNavigationApps(
+              venue.name,
+              venue.coordinates.lat,
+              venue.coordinates.lng,
+            );
+            const apps = venue.transport.navigation?.apps?.length
+              ? venue.transport.navigation.apps
+              : defaultApps;
+
+            return {
+              ...venue,
+              transport: {
+                ...venue.transport,
+                navigation: {
+                  description:
+                    venue.transport.navigation?.description ??
+                    "원하시는 앱을 선택하시면 길안내가 시작됩니다.",
+                  apps,
+                },
+              },
+            };
+          }),
+        backgroundMusic: z
+          .object({
+            enabled: z.boolean(),
+            src: z.string().optional(),
+            volume: z.number().optional(),
+            loop: z.boolean().optional(),
+            autoplay: z.boolean().optional(),
+            title: z.string().optional(),
+          })
+          .optional(),
+        display: z
+          .object({
+            disableZoom: z.boolean().optional(),
           })
           .optional(),
       })
-      .transform((venue) => {
-        if (!venue.transport) {
-          return venue;
-        }
-
-        const defaultApps = buildDefaultNavigationApps(
-          venue.name,
-          venue.coordinates.lat,
-          venue.coordinates.lng,
-        );
-        const apps = venue.transport.navigation?.apps?.length
-          ? venue.transport.navigation.apps
-          : defaultApps;
-
-        return {
-          ...venue,
-          transport: {
-            ...venue.transport,
-            navigation: {
-              description:
-                venue.transport.navigation?.description ??
-                '원하시는 앱을 선택하시면 길안내가 시작됩니다.',
-              apps,
-            },
-          },
-        };
-      }),
-    backgroundMusic: z
-      .object({
-        enabled: z.boolean(),
-        src: z.string().optional(),
-        volume: z.number().optional(),
-        loop: z.boolean().optional(),
-        autoplay: z.boolean().optional(),
-        title: z.string().optional(),
-      })
-      .optional(),
-  }),
+      .transform((weddingData) => ({
+        ...weddingData,
+        display: {
+          disableZoom: weddingData.display?.disableZoom ?? true,
+        },
+      })),
     heroSection: heroSectionSchema,
     invitationSection: invitationSectionSchema,
     calendarSection: calendarSectionSchema,
@@ -318,80 +384,94 @@ const weddingContentSchema = z
     interviewSection: interviewSectionSchema,
     guestbookSection: guestbookSectionSchema,
     rsvpSection: rsvpSectionSchema,
-    accountSection: z.object({
-      kicker: z.string().optional(),
-      title: z.string().optional(),
-      description: z.string().optional(),
-      groups: z.array(
-        z.object({
-          id: z.string(),
-          label: z.string(),
-          accounts: z.array(
-            z.object({
-              bank: z.string(),
-              account: z.string(),
-              kakaoPayUrl: z.string().optional(),
-            }),
-          ),
+    accountSection: z
+      .object({
+        kicker: z.string().optional(),
+        title: z.string().optional(),
+        description: z.string().optional(),
+        groups: z.array(
+          z.object({
+            id: z.string(),
+            label: z.string(),
+            accounts: z.array(
+              z.object({
+                bank: z.string(),
+                account: z.string(),
+                kakaoPayUrl: z.string().optional(),
+              }),
+            ),
+          }),
+        ),
+      })
+      .transform((section) => ({
+        kicker: section.kicker ?? "ACCOUNT",
+        title: section.title ?? "마음 전하실 곳",
+        description:
+          section.description ??
+          "참석이 어려우신 분들을 위해\n계좌번호를 기재하였습니다.\n너그러운 마음으로 양해 부탁드립니다.",
+        groups: section.groups,
+      })),
+    snapSection: z
+      .object({
+        kicker: z.string().optional(),
+        title: z.string().optional(),
+        description: z.string(),
+        uploadOpenAt: z.string().optional(),
+        images: z.array(
+          z
+            .object({
+              id: z.string(),
+              url: z.string().optional(),
+              alt: z.string().optional(),
+              rotation: z.number(),
+              offsetX: z.number(),
+            })
+            .transform((image) => ({
+              ...image,
+              ...normalizeImageAsset(image, "스냅 이미지"),
+            })),
+        ),
+        modal: z.object({
+          backLabel: z.string(),
+          coverImage: imageAssetSchema,
+          coverKicker: z.string(),
+          coverTitle: z.string(),
+          coverNames: z.string(),
+          guideTitle: z.string(),
+          guideLines: z.array(z.string()),
+          guideHighlightLines: z.array(z.string()),
+          nameLabel: z.string(),
+          namePlaceholder: z.string(),
+          uploadEmptyHint: z.string(),
+          attachButtonLabel: z.string(),
+          maxFiles: z.number(),
+          policyLines: z.array(z.string()),
         }),
-      ),
-    }).transform((section) => ({
-      kicker: section.kicker ?? 'ACCOUNT',
-      title: section.title ?? '마음 전하실 곳',
-      description:
-        section.description ??
-        '참석이 어려우신 분들을 위해\n계좌번호를 기재하였습니다.\n너그러운 마음으로 양해 부탁드립니다.',
-      groups: section.groups,
-    })),
-    snapSection: z.object({
-      kicker: z.string().optional(),
-      title: z.string().optional(),
-      description: z.string(),
-      uploadOpenAt: z.string().optional(),
-      images: z.array(
-        z.object({
-          id: z.string(),
-          url: z.string(),
-          alt: z.string(),
-          rotation: z.number(),
-          offsetX: z.number(),
-        }),
-      ),
-      modal: z.object({
-        backLabel: z.string(),
-        coverImage: z.object({ url: z.string(), alt: z.string() }),
-        coverKicker: z.string(),
-        coverTitle: z.string(),
-        coverNames: z.string(),
-        guideTitle: z.string(),
-        guideLines: z.array(z.string()),
-        guideHighlightLines: z.array(z.string()),
-        nameLabel: z.string(),
-        namePlaceholder: z.string(),
-        uploadEmptyHint: z.string(),
-        attachButtonLabel: z.string(),
-        maxFiles: z.number(),
-        policyLines: z.array(z.string()),
-      }),
-    }).transform((section) => ({
-      kicker: section.kicker ?? 'CAPTURE OUR MOMENTS',
-      title: section.title ?? '스냅',
-      description: section.description,
-      uploadOpenAt: section.uploadOpenAt ?? '2026-06-20T11:30:00+09:00',
-      images: section.images,
-      modal: section.modal,
-    })),
+      })
+      .transform((section) => ({
+        kicker: section.kicker ?? "CAPTURE OUR MOMENTS",
+        title: section.title ?? "스냅",
+        description: section.description,
+        uploadOpenAt: section.uploadOpenAt ?? "2026-06-20T11:30:00+09:00",
+        images: section.images,
+        modal: section.modal,
+      })),
     closingSection: z
       .object({
-        image: z.object({ url: z.string(), alt: z.string() }).optional(),
+        image: imageAssetSchema.optional(),
       })
       .optional()
       .transform((section) => ({
-        image: section?.image ?? {
-          url: '/images/placeholder-couple.svg',
-          alt: '감사 인사 이미지',
-        },
+        image: section?.image ?? normalizeImageAsset({}, "감사 인사 이미지"),
       })),
+    kakaoShareCard: z
+      .object({
+        title: z.string().optional(),
+        description: z.string().optional(),
+        buttonTitle: z.string().optional(),
+        imageUrl: z.string().optional(),
+      })
+      .optional(),
     pageSectionOrder: z.array(z.string()).optional(),
     pageSectionVisibility: z.unknown().optional(),
     floatingNavItems: z.array(z.object({ id: z.string(), label: z.string() })),
@@ -399,6 +479,28 @@ const weddingContentSchema = z
   .passthrough()
   .transform((content) => ({
     ...content,
+    kakaoShareCard: {
+      title:
+        content.kakaoShareCard?.title?.trim() ||
+        `${content.weddingData.groom.name} ❤️ ${content.weddingData.bride.name} 결혼합니다`,
+      description:
+        content.kakaoShareCard?.description?.trim() ||
+        buildDefaultKakaoDescription({
+          year: content.weddingData.date.year,
+          month: content.weddingData.date.month,
+          day: content.weddingData.date.day,
+          dayOfWeek: content.weddingData.date.dayOfWeek,
+          time: content.weddingData.date.time,
+          venueName: content.weddingData.venue.name,
+          floor: content.weddingData.venue.floor,
+          hall: content.weddingData.venue.hall,
+        }),
+      buttonTitle: content.kakaoShareCard?.buttonTitle?.trim() || "모바일 청첩장 보기",
+      imageUrl:
+        content.kakaoShareCard?.imageUrl?.trim() ||
+        content.heroSection.primaryImage.url ||
+        "/images/placeholder-couple.svg",
+    },
     calendarSection: {
       countdownLabel:
         content.calendarSection?.countdownLabel ??
@@ -406,7 +508,9 @@ const weddingContentSchema = z
         `${getGivenName(content.weddingData.groom.name)}❤️${getGivenName(content.weddingData.bride.name)}의 결혼식`,
     },
     pageSectionOrder: normalizePageSectionOrder(content.pageSectionOrder),
-    pageSectionVisibility: normalizePageSectionVisibility(content.pageSectionVisibility),
+    pageSectionVisibility: normalizePageSectionVisibility(
+      content.pageSectionVisibility,
+    ),
   }));
 
 export function parseWeddingContent(input: unknown): WeddingContentV1 {

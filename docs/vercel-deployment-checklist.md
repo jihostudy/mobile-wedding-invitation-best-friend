@@ -7,12 +7,14 @@
 ### 필수
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `NEXT_PUBLIC_KAKAO_JS_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `ADMIN_SESSION_SECRET`
 - `ADMIN_BOOTSTRAP_TOKEN`
 
 ### 선택
 - `NEXT_PUBLIC_NAVER_MAP_CLIENT_ID`
+- `NEXT_PUBLIC_SITE_URL`
 
 ### 로컬/CI 사전 검증
 ```bash
@@ -82,4 +84,4 @@ curl -i -X POST "https://<your-domain>/api/admin/auth/bootstrap" \
 
 ## 5) 현재 리스크 메모
 
-- 카카오 공유는 현재 코드에서 `Kakao.init(...)`가 구현되지 않아 실사용 시 실패할 수 있습니다.
+- 카카오 앱 설정에서 Web 도메인이 누락되면 SDK 공유가 실패할 수 있습니다.

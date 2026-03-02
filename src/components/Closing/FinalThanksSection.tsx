@@ -1,6 +1,14 @@
 "use client";
 
 import Image from "next/image";
+import useToast from "@/components/common/toast/useToast";
+import { useWeddingContentQuery } from "@/lib/queries/wedding-content";
+import { FALLBACK_WEDDING_CONTENT } from "@/lib/wedding-content/fallback";
+import {
+  buildKakaoSharePayload,
+  ensureKakaoInitialized,
+  type KakaoSdk,
+} from "@/lib/share/kakao";
 import type { ClosingSectionData } from "@/types";
 
 interface FinalThanksSectionProps {
@@ -10,6 +18,58 @@ interface FinalThanksSectionProps {
 export default function FinalThanksSection({
   section,
 }: FinalThanksSectionProps) {
+  const toast = useToast();
+  const { data } = useWeddingContentQuery("main");
+  const content = data?.content ?? FALLBACK_WEDDING_CONTENT;
+
+  const copyCurrentUrl = async () => {
+    if (typeof window === "undefined") return false;
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      toast.info("링크를 복사했어요. 카카오톡에 붙여넣어 공유해 주세요.");
+      return true;
+    } catch (error) {
+      console.error("Failed to copy invitation link:", error);
+      return false;
+    }
+  };
+
+  const shareKakao = async () => {
+    if (typeof window === "undefined") return;
+
+    const kakao = (window as Window & { Kakao?: KakaoSdk }).Kakao;
+    if (!kakao) {
+      toast.error("카카오 SDK를 불러오지 못했어요.");
+      await copyCurrentUrl();
+      return;
+    }
+
+    const initialized = ensureKakaoInitialized({
+      kakao,
+      appKey: process.env.NEXT_PUBLIC_KAKAO_JS_KEY,
+    });
+
+    if (!initialized.ok) {
+      toast.error(initialized.reason);
+      await copyCurrentUrl();
+      return;
+    }
+
+    try {
+      kakao.Share.sendDefault(
+        buildKakaoSharePayload({
+          content,
+          origin: window.location.origin,
+          url: window.location.href,
+        }),
+      );
+    } catch (error) {
+      console.error("Failed to share via Kakao:", error);
+      toast.error("카카오톡 공유에 실패했어요.");
+      await copyCurrentUrl();
+    }
+  };
+
   return (
     <section id="closing" className="bg-white px-9 pb-10">
       <div className="mx-auto w-full max-w-md">
@@ -36,7 +96,9 @@ export default function FinalThanksSection({
         <button
           type="button"
           className="mx-auto mt-4 flex items-center gap-2 text-base font-medium text-[#2f2f2f]"
-          onClick={() => alert("카카오톡 공유 연동은 추후 연결 예정입니다.")}
+          onClick={() => {
+            void shareKakao();
+          }}
         >
           <span className="inline-flex h-5 w-5 items-center justify-center rounded-[3px] bg-[#FEE500] text-[11px] font-bold text-[#3b1d1d]">
             talk

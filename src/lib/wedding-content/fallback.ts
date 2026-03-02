@@ -13,6 +13,7 @@ import {
   RSVP_SECTION,
   SNAP_SECTION,
   WEDDING_DATA,
+  KAKAO_SHARE_CARD,
 } from '@/constants/wedding-data';
 import type { WeddingContentV1 } from '@/types';
 
@@ -28,6 +29,7 @@ export const FALLBACK_WEDDING_CONTENT: WeddingContentV1 = {
   accountSection: ACCOUNT_SECTION,
   snapSection: SNAP_SECTION,
   closingSection: CLOSING_SECTION,
+  kakaoShareCard: KAKAO_SHARE_CARD,
   pageSectionOrder: PAGE_SECTION_ORDER,
   pageSectionVisibility: PAGE_SECTION_VISIBILITY,
   floatingNavItems: FLOATING_NAV_ITEMS,

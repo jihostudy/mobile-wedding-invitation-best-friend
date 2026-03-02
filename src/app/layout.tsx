@@ -7,6 +7,10 @@ import ToastProvider from "@/components/common/toast/ToastProvider";
 import QueryProvider from "@/components/providers/QueryProvider";
 import "./globals.css";
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+const weddingTitle = "동현 ❤️ 다연 결혼합니다";
+const weddingDescription = "2026년 6월 20일 토요일 낮 12시 30분 · 루클라비더화이트";
+
 const tmoneyRoundWind = localFont({
   src: "../../public/fonts/TmoneyRoundWindRegular.woff2",
   variable: "--font-tmoney",
@@ -39,12 +43,13 @@ const pretendard = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "동현❤️다연의 결혼식에 초대합니다",
-  description: "2025년 3월 1일 토요일 오후 2시 50분",
+  metadataBase: new URL(siteUrl),
+  title: weddingTitle,
+  description: weddingDescription,
   keywords: ["결혼", "청첩장", "모바일청첩장", "웨딩"],
   openGraph: {
-    title: "동현❤️다연의 결혼식에 초대합니다",
-    description: "2025년 3월 1일 토요일 오후 2시 50분",
+    title: weddingTitle,
+    description: weddingDescription,
     type: "website",
     locale: "ko_KR",
     images: [

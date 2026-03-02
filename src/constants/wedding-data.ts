@@ -23,6 +23,7 @@ import {
   InterviewSectionData,
   AccountSectionData,
   ClosingSectionData,
+  KakaoShareCardData,
   FloatingNavItem,
   PageSectionId,
   PageSectionVisibility,
@@ -125,6 +126,9 @@ export const WEDDING_DATA: WeddingInfo = {
     loop: true,
     volume: 0.4,
     title: "웨딩 배경음악",
+  },
+  display: {
+    disableZoom: true,
   },
 };
 
@@ -415,6 +419,13 @@ export const CLOSING_SECTION: ClosingSectionData = {
     url: "/images/placeholder-couple.svg",
     alt: "감사 인사 이미지",
   },
+};
+
+export const KAKAO_SHARE_CARD: KakaoShareCardData = {
+  title: `${WEDDING_DATA.groom.name} ❤️ ${WEDDING_DATA.bride.name} 결혼합니다`,
+  description: `${WEDDING_DATA.date.year}년 ${WEDDING_DATA.date.month}월 ${WEDDING_DATA.date.day}일 (${WEDDING_DATA.date.dayOfWeek}) ${WEDDING_DATA.date.time}\n${WEDDING_DATA.venue.name} ${WEDDING_DATA.venue.floor ?? ""}`.trim(),
+  buttonTitle: "모바일 청첩장 보기",
+  imageUrl: HERO_SECTION.primaryImage.url,
 };
 
 export const PAGE_SECTION_ORDER: PageSectionId[] = [...DEFAULT_PAGE_SECTION_ORDER];

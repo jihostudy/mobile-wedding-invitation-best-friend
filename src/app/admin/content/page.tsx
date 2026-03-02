@@ -12,6 +12,7 @@ import {
   useUpdateWeddingContentMutation,
   useUploadWeddingContentAssetMutation,
 } from "@/lib/queries/wedding-content";
+import { buildKakaoSharePayload } from "@/lib/share/kakao";
 import { useAdminGuestMessagesQuery } from "@/lib/queries/admin-guest-messages";
 import { useAdminRsvpResponsesQuery } from "@/lib/queries/rsvp";
 import { useAdminSnapSubmissionsQuery } from "@/lib/queries/snap";
@@ -308,6 +309,13 @@ function normalizeTransportDetails(content: WeddingContentV1): WeddingContentV1 
       volume: 0.4,
       src: "",
     };
+  }
+  if (!next.weddingData.display) {
+    next.weddingData.display = {
+      disableZoom: true,
+    };
+  } else if (typeof next.weddingData.display.disableZoom !== "boolean") {
+    next.weddingData.display.disableZoom = true;
   }
 
   return next;
@@ -885,6 +893,7 @@ export default function AdminContentPage() {
     { id: "rsvp", label: "참석 의사 전달" },
     { id: "snap", label: "스냅" },
     { id: "account", label: "계좌 정보" },
+    { id: "kakaoShare", label: "카카오 공유 카드" },
     { id: "closing", label: "마지막 감사 이미지" },
   ];
   const snapNoticeText = [
@@ -908,6 +917,15 @@ export default function AdminContentPage() {
     account: content.accountSection.kicker,
     closing: "CLOSING",
   };
+  const previewOrigin =
+    typeof window !== "undefined" ? window.location.origin : "http://localhost:3000";
+  const previewUrl =
+    typeof window !== "undefined" ? window.location.href : "http://localhost:3000";
+  const kakaoPreviewPayload = buildKakaoSharePayload({
+    content,
+    origin: previewOrigin,
+    url: previewUrl,
+  });
 
   return (
     <main className="mx-auto w-full max-w-[980px] px-6 py-10 pb-28">
@@ -1657,6 +1675,27 @@ export default function AdminContentPage() {
                   )
                 }
               />
+            </div>
+
+            <div className="mt-4 rounded-lg border border-[#efe4d2] bg-white p-3">
+              <p className="text-xs font-semibold text-[#6f6350]">페이지 설정</p>
+              <label className="mt-2 flex items-center gap-2 text-sm text-[#4f4332]">
+                <input
+                  type="checkbox"
+                  checked={Boolean(content.weddingData.display?.disableZoom)}
+                  onChange={(event) =>
+                    updatePath(
+                      ["weddingData", "display", "disableZoom"],
+                      event.target.checked,
+                    )
+                  }
+                  className="h-4 w-4"
+                />
+                확대/축소 비활성화
+              </label>
+              <p className="mt-2 text-xs text-[#7e705b]">
+                체크하면 모바일 브라우저에서 핀치 줌이 제한됩니다.
+              </p>
             </div>
           </div>
         </SectionCard>
@@ -2647,6 +2686,99 @@ export default function AdminContentPage() {
                 }}
                 rows={10}
               />
+            </div>
+          </div>
+        </SectionCard>
+
+        <SectionCard
+          isActive={activeSection === "kakaoShare"}
+          title="카카오 공유 카드"
+        >
+          <div className="space-y-4 rounded-xl border border-[#eadfcb] bg-[#fffcf7] p-3">
+            <p className="text-xs text-[#7b6f5c]">
+              카카오 공유 버튼을 눌렀을 때 보이는 카드 문구와 이미지를 설정합니다.
+            </p>
+            <div className="grid gap-4 md:grid-cols-2">
+              <TextField
+                label="카드 제목"
+                value={content.kakaoShareCard.title}
+                onChange={(value) => updatePath(["kakaoShareCard", "title"], value)}
+              />
+              <TextField
+                label="버튼 문구"
+                value={content.kakaoShareCard.buttonTitle}
+                onChange={(value) =>
+                  updatePath(["kakaoShareCard", "buttonTitle"], value)
+                }
+              />
+            </div>
+            <TextAreaField
+              label="카드 설명"
+              value={content.kakaoShareCard.description}
+              onChange={(value) =>
+                updatePath(["kakaoShareCard", "description"], value)
+              }
+              rows={4}
+            />
+            <TextField
+              label="카드 이미지 URL"
+              value={content.kakaoShareCard.imageUrl}
+              onChange={(value) => updatePath(["kakaoShareCard", "imageUrl"], value)}
+            />
+            <div className="flex items-center justify-end border-t border-[#efe4d2] pt-3">
+              <label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(event) => {
+                    const file = event.target.files?.[0];
+                    if (!file) return;
+                    void handleUpload(
+                      file,
+                      ["kakaoShareCard", "imageUrl"],
+                      "kakao-share-image",
+                    );
+                    event.target.value = "";
+                  }}
+                />
+                <span className="inline-flex h-10 cursor-pointer items-center rounded-lg border border-[#d7c9b1] bg-white px-3 text-xs font-medium text-[#574938]">
+                  {uploadingKey === "kakao-share-image"
+                    ? "업로드 중..."
+                    : "카드 이미지 업로드"}
+                </span>
+              </label>
+            </div>
+
+            <div className="rounded-xl border border-[#e4d7c2] bg-white p-3">
+              <p className="text-xs font-semibold text-[#6f6350]">미리보기</p>
+              <div className="mt-2 overflow-hidden rounded-lg border border-[#ece2d1]">
+                <div className="relative aspect-[4/3] w-full bg-[#f4efe6]">
+                  <Image
+                    src={kakaoPreviewPayload.content.imageUrl}
+                    alt="카카오 공유 카드 미리보기 이미지"
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 980px) 100vw, 420px"
+                    unoptimized
+                  />
+                </div>
+                <div className="space-y-3 bg-white p-4">
+                  <p className="text-base font-semibold text-[#2f271b]">
+                    {kakaoPreviewPayload.content.title}
+                  </p>
+                  <p className="whitespace-pre-line text-sm leading-6 text-[#6a5d47]">
+                    {kakaoPreviewPayload.content.description}
+                  </p>
+                  <button
+                    type="button"
+                    className="h-10 w-full rounded-md bg-[#f3efe8] text-sm font-semibold text-[#3b3123]"
+                    disabled
+                  >
+                    {kakaoPreviewPayload.buttons[0]?.title ?? "모바일 청첩장 보기"}
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </SectionCard>
