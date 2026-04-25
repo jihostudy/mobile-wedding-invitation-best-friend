@@ -848,6 +848,48 @@ export default function AdminContentPage() {
     toast.success("변경사항을 취소했습니다.");
   };
 
+  if (contentQuery.isError) {
+    const message =
+      contentQuery.error instanceof ApiError
+        ? contentQuery.error.status === 401
+          ? "관리자 세션이 만료되었습니다. 다시 로그인해 주세요."
+          : contentQuery.error.message
+        : "콘텐츠를 불러오지 못했습니다.";
+
+    return (
+      <main className="mx-auto w-full max-w-[980px] px-6 py-10">
+        <h1 className="text-2xl font-semibold text-[#2f271b]">
+          메인 콘텐츠 편집
+        </h1>
+        <div className="mt-6 rounded-2xl border border-[#ead8bf] bg-white/85 p-6 shadow-[0_12px_30px_rgba(70,55,25,0.08)]">
+          <p className="text-sm font-semibold text-[#5f4630]">
+            콘텐츠를 불러오지 못했습니다.
+          </p>
+          <p className="mt-2 text-sm text-[#7e705b]">{message}</p>
+          <div className="mt-5 flex flex-wrap gap-3">
+            <button
+              type="button"
+              onClick={() => void contentQuery.refetch()}
+              className="rounded-lg border border-[#cdbb9f] bg-white px-4 py-2 text-sm font-semibold text-[#5f4630] transition hover:bg-[#fff8ed]"
+            >
+              다시 불러오기
+            </button>
+            {contentQuery.error instanceof ApiError &&
+            contentQuery.error.status === 401 ? (
+              <button
+                type="button"
+                onClick={() => router.replace("/admin")}
+                className="rounded-lg bg-[#5f4630] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#493522]"
+              >
+                로그인 화면으로 이동
+              </button>
+            ) : null}
+          </div>
+        </div>
+      </main>
+    );
+  }
+
   if (contentQuery.isLoading || !draftContent || !sourceContent) {
     return (
       <main className="mx-auto w-full max-w-[980px] px-6 py-10">

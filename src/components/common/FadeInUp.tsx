@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { fadeInUpVariants } from "@/lib/animations/fadeInUp";
 
@@ -19,9 +19,14 @@ export default function FadeInUp({
   once = true,
   amount = 0.2,
 }: FadeInUpProps) {
+  const [isMounted, setIsMounted] = useState(false);
   const prefersReducedMotion = useReducedMotion();
 
-  if (prefersReducedMotion) {
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted || prefersReducedMotion) {
     return <div className={className}>{children}</div>;
   }
 

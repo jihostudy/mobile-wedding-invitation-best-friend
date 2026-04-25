@@ -9,30 +9,30 @@ import { ApiError, apiFetch } from "@/lib/api/client";
 export default function AdminPage() {
   const router = useRouter();
   const toast = useToast();
-  const [checkingSession, setCheckingSession] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     let cancelled = false;
 
-    void apiFetch<{ authenticated: boolean }>("/api/admin/auth/session")
+    void apiFetch<{ authenticated: boolean }>("/api/admin/auth/session", {
+      timeoutMs: 5000,
+    })
       .then((result) => {
         if (cancelled) return;
         if (result.authenticated) {
           router.replace("/admin/content");
         }
       })
-      .catch(() => {})
-      .finally(() => {
+      .catch(() => {
         if (cancelled) return;
-        setCheckingSession(false);
-      });
+        setErrorMessage("세션 확인에 실패했습니다. 다시 로그인해 주세요.");
+      })
 
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [router]);
 
   const login = async (password: string) => {
     setErrorMessage("");
@@ -55,14 +55,6 @@ export default function AdminPage() {
       setIsSubmitting(false);
     }
   };
-
-  if (checkingSession) {
-    return (
-      <main className="mx-auto flex min-h-[50vh] w-full max-w-[425px] items-center justify-center rounded-3xl border border-[#ece4d7] bg-[radial-gradient(circle_at_top_right,#fff9ef_0%,#f8f3ea_48%,#f5f0e6_100%)] px-6 py-10 shadow-[0_18px_40px_rgba(70,55,25,0.10)]">
-        <p className="text-sm text-[#7e705b]">세션 확인 중...</p>
-      </main>
-    );
-  }
 
   return (
     <AdminLoginModal

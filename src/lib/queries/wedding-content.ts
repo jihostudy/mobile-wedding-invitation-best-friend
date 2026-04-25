@@ -23,6 +23,7 @@ export function useAdminWeddingContentQuery(slug = 'main') {
     queryFn: () =>
       apiFetch<WeddingContentResponse>(
         `/api/admin/wedding-content?slug=${encodeURIComponent(slug)}`,
+        { timeoutMs: 8000 },
       ),
     staleTime: 5 * 60 * 1000,
   });
