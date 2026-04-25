@@ -938,11 +938,11 @@ export default function AdminContentPage() {
     { id: "kakaoShare", label: "카카오 공유 카드" },
     { id: "closing", label: "마지막 감사 이미지" },
   ];
-  const snapNoticeText = [
+  const snapGuideText = [
     ...(content.snapSection.modal.guideLines ?? []),
     ...(content.snapSection.modal.guideHighlightLines ?? []),
-    ...(content.snapSection.modal.policyLines ?? []),
   ].join("\n");
+  const snapPolicyText = (content.snapSection.modal.policyLines ?? []).join("\n");
   const sectionKickers: Record<
     WeddingContentV1["pageSectionOrder"][number],
     string
@@ -1662,9 +1662,12 @@ export default function AdminContentPage() {
                   }
                   className="h-4 w-4"
                 />
-                자동 재생
+                이전 허용 방문자 자동 재생
               </label>
             </div>
+            <p className="mt-2 text-xs text-[#7e705b]">
+              소리가 갑자기 나오지 않도록, 방문자가 음악 버튼을 눌러 허용한 적이 있을 때만 자동 재생됩니다.
+            </p>
 
             <div className="mt-3 flex items-center justify-between gap-3 rounded-lg border border-[#efe4d2] bg-white p-3">
               <div className="text-xs text-[#7e705b]">
@@ -2701,6 +2704,20 @@ export default function AdminContentPage() {
                 }
               />
               <TextField
+                label="이름 입력 라벨"
+                value={content.snapSection.modal.nameLabel}
+                onChange={(value) =>
+                  updatePath(["snapSection", "modal", "nameLabel"], value)
+                }
+              />
+              <TextField
+                label="이름 입력 안내 문구"
+                value={content.snapSection.modal.namePlaceholder}
+                onChange={(value) =>
+                  updatePath(["snapSection", "modal", "namePlaceholder"], value)
+                }
+              />
+              <TextField
                 label="최대 파일 수"
                 type="number"
                 value={String(content.snapSection.modal.maxFiles)}
@@ -2712,19 +2729,24 @@ export default function AdminContentPage() {
                 }
               />
             </div>
-            <p className="mt-3 text-xs text-[#7b6f5c]">
-              뒤로가기 라벨, 이름 라벨, 이름 입력 안내 문구는 고정 문구로 표시됩니다.
-            </p>
 
-            <div className="mt-4">
+            <div className="mt-4 grid gap-4 md:grid-cols-2">
               <TextAreaField
-                label="모달 안내 문구 (줄바꿈으로 구분)"
-                value={snapNoticeText}
+                label="모달 가이드 문구 (상단 표시)"
+                value={snapGuideText}
                 onChange={(value) => {
                   const lines = value.replace(/\r\n?/g, "\n").split("\n");
                   updatePath(["snapSection", "modal", "guideLines"], lines);
                   updatePath(["snapSection", "modal", "guideHighlightLines"], []);
-                  updatePath(["snapSection", "modal", "policyLines"], []);
+                }}
+                rows={10}
+              />
+              <TextAreaField
+                label="업로드 안내/정책 문구 (하단 표시)"
+                value={snapPolicyText}
+                onChange={(value) => {
+                  const lines = value.replace(/\r\n?/g, "\n").split("\n");
+                  updatePath(["snapSection", "modal", "policyLines"], lines);
                 }}
                 rows={10}
               />

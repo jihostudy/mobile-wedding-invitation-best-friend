@@ -26,8 +26,8 @@ interface SelectedImage {
 }
 
 const SNAP_COVER_IMAGE_ALT = "스냅 업로드 커버 이미지";
-const SNAP_NAME_LABEL = "이름";
-const SNAP_NAME_PLACEHOLDER = "이름을 입력해 주세요.";
+const DEFAULT_SNAP_NAME_LABEL = "이름";
+const DEFAULT_SNAP_NAME_PLACEHOLDER = "이름을 입력해 주세요.";
 
 export default function SnapUploadModal({
   isOpen,
@@ -80,14 +80,15 @@ export default function SnapUploadModal({
   const noticeText = [
     ...section.guideLines,
     ...section.guideHighlightLines,
-    ...section.policyLines,
   ].join("\n");
-  const noticeLines = [
+  const defaultNoticeLines = [
     `한 번에 최대 ${section.maxFiles}장까지 업로드하실 수 있습니다.`,
     "가능하면 여러 장을 한 번에 묶어서 업로드해 주세요.",
     "파일 크기는 사진 1장당 10MB 이하입니다.",
     "예식 당일부터 다음날까지 업로드 가능합니다.",
   ];
+  const noticeLines =
+    section.policyLines.length > 0 ? section.policyLines : defaultNoticeLines;
 
   if (!isOpen) return null;
 
@@ -230,14 +231,16 @@ export default function SnapUploadModal({
               htmlFor="snap-uploader-name"
               className="text-[15px] font-semibold text-[#2f2f2f]"
             >
-              {SNAP_NAME_LABEL}
+              {section.nameLabel || DEFAULT_SNAP_NAME_LABEL}
             </label>
             <input
               id="snap-uploader-name"
               type="text"
               value={name}
               onChange={(event) => setName(event.target.value)}
-              placeholder={SNAP_NAME_PLACEHOLDER}
+              placeholder={
+                section.namePlaceholder || DEFAULT_SNAP_NAME_PLACEHOLDER
+              }
               className="mt-2 h-12 w-full rounded-[10px] border border-transparent bg-wedding-beige-dark px-4 text-[15px] text-[#3a3a3a] placeholder:text-[#bababa] focus:outline-none text-sm"
             />
           </div>

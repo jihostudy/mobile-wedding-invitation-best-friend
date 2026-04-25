@@ -37,7 +37,7 @@ export default function BackgroundMusicPlayer({
   const [mounted, setMounted] = useState(false);
   const source = config?.src ?? "";
   const hasSource = Boolean(config?.enabled && source);
-  const autoplay = config?.autoplay ?? true;
+  const autoplay = config?.autoplay ?? false;
   const volume = config?.volume ?? 0.4;
   const loop = config?.loop ?? true;
   const title = config?.title ?? "배경음악";
@@ -77,15 +77,13 @@ export default function BackgroundMusicPlayer({
     audio.addEventListener("error", handleError);
 
     const tryAutoPlay = async () => {
+      if (!hasConsent) return;
       // Attempt muted autoplay first for stricter mobile browsers.
       // If user previously consented, play with sound.
-      audio.muted = !hasConsent;
+      audio.muted = false;
       try {
         await audio.play();
-        if (hasConsent) {
-          audio.muted = false;
-          setStoredMusicConsent();
-        }
+        setStoredMusicConsent();
       } catch (error) {
         // Autoplay may be blocked by browser policy; keep manual control available.
         setIsPlaying(false);
@@ -97,61 +95,12 @@ export default function BackgroundMusicPlayer({
       }
     };
 
-    const playOnFirstInteraction = async () => {
-      if (playbackError) return;
-      try {
-        audio.muted = false;
-        audio.volume = normalizedVolume;
-        await audio.play();
-        setStoredMusicConsent();
-      } catch (error) {
-        const isBlockedByPolicy =
-          error instanceof DOMException && error.name === "NotAllowedError";
-        if (!isBlockedByPolicy) {
-          console.warn(
-            "Background music playback failed after user interaction.",
-            error
-          );
-        }
-      }
-    };
-
-    const setupFirstInteractionAutoPlay = () => {
-      if (typeof window === "undefined") return () => {};
-      const hasConsent = getStoredMusicConsent();
-      if (hasConsent) return () => {};
-
-      let handled = false;
-      const onFirstInteraction = () => {
-        if (handled) return;
-        handled = true;
-        void playOnFirstInteraction();
-        window.removeEventListener("pointerdown", onFirstInteraction);
-        window.removeEventListener("keydown", onFirstInteraction);
-        window.removeEventListener("touchstart", onFirstInteraction);
-      };
-
-      window.addEventListener("pointerdown", onFirstInteraction);
-      window.addEventListener("keydown", onFirstInteraction);
-      window.addEventListener("touchstart", onFirstInteraction);
-
-      return () => {
-        window.removeEventListener("pointerdown", onFirstInteraction);
-        window.removeEventListener("keydown", onFirstInteraction);
-        window.removeEventListener("touchstart", onFirstInteraction);
-      };
-    };
-
     if (autoplay) {
       void tryAutoPlay();
     }
-    const cleanupFirstInteraction = autoplay
-      ? setupFirstInteractionAutoPlay()
-      : () => {};
 
     return () => {
       audio.pause();
-      cleanupFirstInteraction();
       audio.removeEventListener("playing", handlePlaying);
       audio.removeEventListener("pause", handlePause);
       audio.removeEventListener("error", handleError);
@@ -211,7 +160,7 @@ export default function BackgroundMusicPlayer({
         ref={audioRef}
         src={source}
         preload="auto"
-        autoPlay={autoplay}
+        autoPlay={false}
         aria-hidden="true"
       />
       {mounted
