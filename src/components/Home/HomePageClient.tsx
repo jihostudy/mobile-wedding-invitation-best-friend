@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { type CSSProperties, useEffect, useRef, useState } from 'react';
 import MainHero from '@/components/Hero/MainHero';
-import BackgroundMusicPlayer from '@/components/Audio/BackgroundMusicPlayer';
 import InvitationMessage from '@/components/Invitation/InvitationMessage';
 import InterviewSection from '@/components/Interview/InterviewSection';
 import WeddingCalendar from '@/components/Calendar/WeddingCalendar';
@@ -182,7 +181,6 @@ export default function HomePageClient() {
               <div key={sectionId}>{renderSection(sectionId)}</div>
             ))}
         </div>
-        <BackgroundMusicPlayer config={content.weddingData.backgroundMusic} />
       </main>
       {isAdminAuthenticated ? (
         <Link
