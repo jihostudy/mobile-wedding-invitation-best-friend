@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import Image from "next/image";
 import { ChevronDown, ChevronUp, Copy, UserRound } from "lucide-react";
 import Icon from "@/components/common/Icon";
 import useToast from "@/components/common/toast/useToast";
@@ -239,13 +238,6 @@ export default function AccountSection({
                                     }
                                     className="inline-flex h-12 items-center justify-center gap-2 rounded-[12px] bg-[#f8e500] px-3 text-xs font-semibold text-[#1f1f1f] transition hover:bg-[#f3df00]"
                                   >
-                                    <Image
-                                      src="/icons/social/kakaopay.svg"
-                                      alt="카카오페이"
-                                      width={28}
-                                      height={28}
-                                      className="h-4 w-auto"
-                                    />
                                     카카오페이 송금
                                   </button>
                                 ) : null}
