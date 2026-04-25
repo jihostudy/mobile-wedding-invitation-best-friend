@@ -30,6 +30,14 @@ export interface KakaoSdk {
     sendDefault: (payload: KakaoShareFeedPayload) => void;
     sendScrap: (payload: { requestUrl: string }) => void;
   };
+  Navi?: {
+    start: (params: {
+      name: string;
+      x: number;
+      y: number;
+      coordType: "wgs84" | "katec";
+    }) => void;
+  };
 }
 
 function toAbsoluteUrl(url: string, origin: string) {
