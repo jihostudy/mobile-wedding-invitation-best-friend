@@ -142,6 +142,8 @@ export default function SnapSection({ section }: SnapSectionProps) {
                     fill
                     className="object-cover"
                     sizes="160px"
+                    quality={100}
+                    unoptimized
                   />
                   {index === 1 ? <FireflyOverlay /> : null}
                 </motion.div>

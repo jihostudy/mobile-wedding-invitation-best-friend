@@ -18,7 +18,6 @@ interface ImageGalleryProps {
   section: GallerySectionData;
 }
 
-const THUMBNAILS_PER_PAGE = 5;
 const SWIPE_THRESHOLD_PX = 40;
 
 export default function ImageGallery({ section }: ImageGalleryProps) {
@@ -28,25 +27,29 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
   const [transitionDirection, setTransitionDirection] = useState<1 | -1>(1);
   const pointerStartRef = useRef<{ x: number; y: number } | null>(null);
   const hasImages = imageCount > 0;
+  const configuredBatchSize = Number.isFinite(section.batchSize)
+    ? section.batchSize
+    : 6;
+  const thumbnailsPerPage = Math.max(1, Math.floor(configuredBatchSize));
   const pageCount = useMemo(
-    () => Math.max(1, Math.ceil(imageCount / THUMBNAILS_PER_PAGE)),
-    [imageCount],
+    () => Math.max(1, Math.ceil(imageCount / thumbnailsPerPage)),
+    [imageCount, thumbnailsPerPage],
   );
-  const thumbnailStart = thumbnailPage * THUMBNAILS_PER_PAGE;
+  const thumbnailStart = thumbnailPage * thumbnailsPerPage;
   const visibleThumbnails = section.images.slice(
     thumbnailStart,
-    thumbnailStart + THUMBNAILS_PER_PAGE,
+    thumbnailStart + thumbnailsPerPage,
   );
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const hiddenImages = section.images.slice(THUMBNAILS_PER_PAGE);
+    const hiddenImages = section.images.slice(thumbnailsPerPage);
     hiddenImages.forEach((image) => {
       const preloader = new window.Image();
       preloader.decoding = "async";
       preloader.src = image.url;
     });
-  }, [section.images]);
+  }, [section.images, thumbnailsPerPage]);
 
   useEffect(() => {
     if (imageCount === 0) {
@@ -54,13 +57,18 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
       setThumbnailPage(0);
       return;
     }
+    const clampedPage = Math.min(thumbnailPage, pageCount - 1);
+    if (clampedPage !== thumbnailPage) {
+      setThumbnailPage(clampedPage);
+      return;
+    }
     const clampedIndex = Math.min(selectedIndex, imageCount - 1);
     if (clampedIndex !== selectedIndex) {
       setSelectedIndex(clampedIndex);
-      setThumbnailPage(Math.floor(clampedIndex / THUMBNAILS_PER_PAGE));
+      setThumbnailPage(Math.floor(clampedIndex / thumbnailsPerPage));
       return;
     }
-  }, [imageCount, selectedIndex]);
+  }, [imageCount, pageCount, selectedIndex, thumbnailPage, thumbnailsPerPage]);
 
   const selectImage = (nextIndex: number, direction: 1 | -1) => {
     if (!hasImages || nextIndex === selectedIndex) return;
@@ -73,10 +81,10 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
     const nextIndex = (selectedIndex + direction + imageCount) % imageCount;
     selectImage(nextIndex, direction);
 
-    const pageStart = thumbnailPage * THUMBNAILS_PER_PAGE;
-    const pageEnd = pageStart + THUMBNAILS_PER_PAGE - 1;
+    const pageStart = thumbnailPage * thumbnailsPerPage;
+    const pageEnd = pageStart + thumbnailsPerPage - 1;
     if (nextIndex < pageStart || nextIndex > pageEnd) {
-      setThumbnailPage(Math.floor(nextIndex / THUMBNAILS_PER_PAGE));
+      setThumbnailPage(Math.floor(nextIndex / thumbnailsPerPage));
     }
   };
 
@@ -148,6 +156,8 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
                         draggable={false}
                         className="h-auto w-full object-contain"
                         sizes="(max-width: 425px) 100vw, 420px"
+                        quality={100}
+                        unoptimized
                         priority
                       />
                     </motion.div>
@@ -185,7 +195,12 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
             </FadeInUp>
 
             <FadeInUp className="mt-4 px-9" delay={0.16}>
-              <div className="grid grid-cols-5 gap-2">
+              <div
+                className="grid gap-2"
+                style={{
+                  gridTemplateColumns: `repeat(${thumbnailsPerPage}, minmax(0, 1fr))`,
+                }}
+              >
                 {visibleThumbnails.map((image, index) => {
                   const absoluteIndex = thumbnailStart + index;
                   const isActive = absoluteIndex === selectedIndex;
@@ -214,6 +229,7 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
                         draggable={false}
                         className="object-cover object-center"
                         sizes="(max-width: 425px) 20vw, 80px"
+                        quality={60}
                       />
                     </button>
                   );
