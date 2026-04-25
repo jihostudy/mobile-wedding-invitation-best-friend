@@ -55,14 +55,13 @@ const heroSectionSchema = z
     titleText: z.string().optional(),
   })
   .transform((hero) => {
-    const primaryImage =
-      hero.primaryImage ?? hero.mainImage ?? fallbackHeroImage;
-    const secondaryImage =
-      hero.secondaryImage ?? hero.mainImage ?? primaryImage;
+    const mainImage =
+      hero.mainImage ??
+      hero.primaryImage ??
+      hero.secondaryImage ??
+      fallbackHeroImage;
     return {
-      primaryImage,
-      secondaryImage,
-      titleText: hero.titleText ?? "결혼합니다",
+      mainImage,
     };
   });
 
@@ -498,7 +497,7 @@ const weddingContentSchema = z
       buttonTitle: content.kakaoShareCard?.buttonTitle?.trim() || "모바일 청첩장 보기",
       imageUrl:
         content.kakaoShareCard?.imageUrl?.trim() ||
-        content.heroSection.primaryImage.url ||
+        content.heroSection.mainImage.url ||
         "/images/placeholder-couple.svg",
     },
     calendarSection: {

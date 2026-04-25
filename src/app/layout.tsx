@@ -10,14 +10,21 @@ import "./globals.css";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const weddingTitle = "동현 ❤️ 다연 결혼합니다";
-const weddingDescription = "2026년 6월 20일 토요일 낮 12시 30분 · 루클라비더화이트";
+const weddingDescription =
+  "2026년 6월 20일 토요일 낮 12시 30분 · 루클라비더화이트";
 
 const tmoneyRoundWind = localFont({
   src: "../../public/fonts/TmoneyRoundWindRegular.woff2",
   variable: "--font-tmoney",
   display: "swap",
   preload: true,
-  fallback: ["Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "system-ui", "sans-serif"],
+  fallback: [
+    "Apple SD Gothic Neo",
+    "Noto Sans KR",
+    "Malgun Gothic",
+    "system-ui",
+    "sans-serif",
+  ],
 });
 
 const crimsonPro = Crimson_Pro({
@@ -32,7 +39,13 @@ const nanumHyejun = localFont({
   variable: "--font-hyejun",
   display: "swap",
   preload: true,
-  fallback: ["Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "system-ui", "sans-serif"],
+  fallback: [
+    "Apple SD Gothic Neo",
+    "Noto Sans KR",
+    "Malgun Gothic",
+    "system-ui",
+    "sans-serif",
+  ],
 });
 
 const pretendard = localFont({
@@ -40,7 +53,13 @@ const pretendard = localFont({
   variable: "--font-pretendard",
   display: "swap",
   preload: false,
-  fallback: ["Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "system-ui", "sans-serif"],
+  fallback: [
+    "Apple SD Gothic Neo",
+    "Noto Sans KR",
+    "Malgun Gothic",
+    "system-ui",
+    "sans-serif",
+  ],
 });
 
 export const metadata: Metadata = {
@@ -82,9 +101,7 @@ export default function RootLayout({
       lang="ko"
       className={`${tmoneyRoundWind.variable} ${crimsonPro.variable} ${nanumHyejun.variable} ${pretendard.variable}`}
     >
-      <body
-        className={`${tmoneyRoundWind.className} antialiased bg-gradient-to-b from-[#f8f0e4] via-[#fdf7f0] to-[#f6ecdd]`}
-      >
+      <body className={`${tmoneyRoundWind.className} antialiased bg-[#eedbc8]`}>
         <Script
           id="kakao-sdk"
           src="https://developers.kakao.com/sdk/js/kakao.js"

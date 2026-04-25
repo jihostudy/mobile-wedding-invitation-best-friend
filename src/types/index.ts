@@ -118,9 +118,7 @@ export interface AccountGroup {
 }
 
 export interface HeroSectionData {
-  primaryImage: ImageAsset;
-  secondaryImage: ImageAsset;
-  titleText: string;
+  mainImage: ImageAsset;
 }
 
 export interface InvitationSectionData {

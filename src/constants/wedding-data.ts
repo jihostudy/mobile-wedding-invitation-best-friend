@@ -134,15 +134,10 @@ export const WEDDING_DATA: WeddingInfo = {
 
 // 2) Hero
 export const HERO_SECTION: HeroSectionData = {
-  primaryImage: {
+  mainImage: {
     url: "/images/placeholder-couple.svg",
     alt: `${WEDDING_DATA.groom.name}과 ${WEDDING_DATA.bride.name}의 결혼식`,
   },
-  secondaryImage: {
-    url: "/images/placeholder-couple.svg",
-    alt: `${WEDDING_DATA.groom.name}과 ${WEDDING_DATA.bride.name}의 결혼식`,
-  },
-  titleText: "결혼합니다",
 };
 
 // 3) Invitation
@@ -425,7 +420,7 @@ export const KAKAO_SHARE_CARD: KakaoShareCardData = {
   title: `${WEDDING_DATA.groom.name} ❤️ ${WEDDING_DATA.bride.name} 결혼합니다`,
   description: `${WEDDING_DATA.date.year}년 ${WEDDING_DATA.date.month}월 ${WEDDING_DATA.date.day}일 (${WEDDING_DATA.date.dayOfWeek}) ${WEDDING_DATA.date.time}\n${WEDDING_DATA.venue.name} ${WEDDING_DATA.venue.floor ?? ""}`.trim(),
   buttonTitle: "모바일 청첩장 보기",
-  imageUrl: HERO_SECTION.primaryImage.url,
+  imageUrl: HERO_SECTION.mainImage.url,
 };
 
 export const PAGE_SECTION_ORDER: PageSectionId[] = [...DEFAULT_PAGE_SECTION_ORDER];

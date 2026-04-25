@@ -1,35 +1,36 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { type CSSProperties, useEffect, useRef, useState } from 'react';
-import MainHero from '@/components/Hero/MainHero';
-import InvitationMessage from '@/components/Invitation/InvitationMessage';
-import InterviewSection from '@/components/Interview/InterviewSection';
-import WeddingCalendar from '@/components/Calendar/WeddingCalendar';
-import ImageGallery from '@/components/Gallery/ImageGallery';
-import VenueInfo from '@/components/Location/VenueInfo';
-import Guestbook from '@/components/Guestbook/Guestbook';
-import RsvpSection from '@/components/Rsvp/RsvpSection';
-import SnapSection from '@/components/Snap/SnapSection';
-import AccountSection from '@/components/Account/AccountSection';
-import FinalThanksSection from '@/components/Closing/FinalThanksSection';
-import FadeInUp from '@/components/common/FadeInUp';
-import useToast from '@/components/common/toast/useToast';
-import { apiFetch } from '@/lib/api/client';
-import { FALLBACK_WEDDING_CONTENT } from '@/lib/wedding-content/fallback';
-import { useWeddingContentQuery } from '@/lib/queries/wedding-content';
-import type { PageSectionId } from '@/types';
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import MainHero from "@/components/Hero/MainHero";
+import EnvelopeLetterFrame from "@/components/Home/EnvelopeLetterFrame";
+import InvitationMessage from "@/components/Invitation/InvitationMessage";
+import InterviewSection from "@/components/Interview/InterviewSection";
+import WeddingCalendar from "@/components/Calendar/WeddingCalendar";
+import ImageGallery from "@/components/Gallery/ImageGallery";
+import VenueInfo from "@/components/Location/VenueInfo";
+import Guestbook from "@/components/Guestbook/Guestbook";
+import RsvpSection from "@/components/Rsvp/RsvpSection";
+import SnapSection from "@/components/Snap/SnapSection";
+import AccountSection from "@/components/Account/AccountSection";
+import FinalThanksSection from "@/components/Closing/FinalThanksSection";
+import FadeInUp from "@/components/common/FadeInUp";
+import useToast from "@/components/common/toast/useToast";
+import { apiFetch } from "@/lib/api/client";
+import { FALLBACK_WEDDING_CONTENT } from "@/lib/wedding-content/fallback";
+import { useWeddingContentQuery } from "@/lib/queries/wedding-content";
+import type { PageSectionId } from "@/types";
 
 export default function HomePageClient() {
   const toast = useToast();
   const hasShownLoginToast = useRef(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
-  const { data } = useWeddingContentQuery('main');
+  const { data } = useWeddingContentQuery("main");
   const content = data?.content ?? FALLBACK_WEDDING_CONTENT;
 
   const renderSection = (sectionId: PageSectionId) => {
     switch (sectionId) {
-      case 'hero':
+      case "hero":
         return (
           <MainHero
             groom={content.weddingData.groom}
@@ -38,7 +39,7 @@ export default function HomePageClient() {
             section={content.heroSection}
           />
         );
-      case 'invitation':
+      case "invitation":
         return (
           <FadeInUp delay={0.05} amount={0.15}>
             <InvitationMessage
@@ -48,7 +49,7 @@ export default function HomePageClient() {
             />
           </FadeInUp>
         );
-      case 'interview':
+      case "interview":
         return (
           <InterviewSection
             section={content.interviewSection}
@@ -56,13 +57,13 @@ export default function HomePageClient() {
             bride={content.weddingData.bride}
           />
         );
-      case 'gallery':
+      case "gallery":
         return (
           <FadeInUp delay={0.15} amount={0.15}>
             <ImageGallery section={content.gallerySection} />
           </FadeInUp>
         );
-      case 'calendar':
+      case "calendar":
         return (
           <FadeInUp delay={0.2} amount={0.15}>
             <WeddingCalendar
@@ -71,27 +72,35 @@ export default function HomePageClient() {
             />
           </FadeInUp>
         );
-      case 'location':
-        return <VenueInfo venue={content.weddingData.venue} date={content.weddingData.date} />;
-      case 'guestbook':
+      case "location":
+        return (
+          <VenueInfo
+            venue={content.weddingData.venue}
+            date={content.weddingData.date}
+          />
+        );
+      case "guestbook":
         return (
           <FadeInUp delay={0.3} amount={0.15}>
             <Guestbook section={content.guestbookSection} />
           </FadeInUp>
         );
-      case 'rsvp':
+      case "rsvp":
         return (
           <FadeInUp delay={0.33} amount={0.15}>
-            <RsvpSection section={content.rsvpSection} weddingData={content.weddingData} />
+            <RsvpSection
+              section={content.rsvpSection}
+              weddingData={content.weddingData}
+            />
           </FadeInUp>
         );
-      case 'snap':
+      case "snap":
         return (
           <FadeInUp delay={0.36} amount={0.15}>
             <SnapSection section={content.snapSection} />
           </FadeInUp>
         );
-      case 'account':
+      case "account":
         return (
           <FadeInUp delay={0.35} amount={0.15}>
             <AccountSection
@@ -100,7 +109,7 @@ export default function HomePageClient() {
             />
           </FadeInUp>
         );
-      case 'closing':
+      case "closing":
         return (
           <FadeInUp delay={0.4} amount={0.15}>
             <FinalThanksSection section={content.closingSection} />
@@ -115,13 +124,14 @@ export default function HomePageClient() {
     if (hasShownLoginToast.current) return;
 
     let cancelled = false;
-    void apiFetch<{ authenticated: boolean }>('/api/admin/auth/session')
+    void apiFetch<{ authenticated: boolean }>("/api/admin/auth/session")
       .then((result) => {
         if (cancelled) return;
         setIsAdminAuthenticated(result.authenticated);
-        if (cancelled || !result.authenticated || hasShownLoginToast.current) return;
+        if (cancelled || !result.authenticated || hasShownLoginToast.current)
+          return;
         hasShownLoginToast.current = true;
-        toast.success('로그인되었습니다.');
+        toast.success("로그인되었습니다.");
       })
       .catch(() => {
         // no-op: main page should remain accessible regardless of admin session check failures
@@ -134,45 +144,17 @@ export default function HomePageClient() {
 
   return (
     <>
-      <div aria-hidden className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="ambient-gradient-layer" />
-        <div
-          className="ambient-gradient-blob -left-28 top-[10%] h-[24rem] w-[24rem] bg-[#ffccd6]/60"
-          style={
-            {
-              "--blob-drift-x": "22px",
-              "--blob-drift-y": "-26px",
-              "--blob-scale": "1.16",
-              "--blob-duration": "24s",
-              "--blob-delay": "-4s",
-            } as CSSProperties
-          }
-        />
-        <div
-          className="ambient-gradient-blob -right-28 top-[30%] h-[28rem] w-[28rem] bg-[#ffe4bd]/58"
-          style={
-            {
-              "--blob-drift-x": "-20px",
-              "--blob-drift-y": "22px",
-              "--blob-scale": "1.13",
-              "--blob-duration": "30s",
-              "--blob-delay": "-11s",
-            } as CSSProperties
-          }
-        />
-        <div
-          className="ambient-gradient-blob left-1/2 top-[68%] h-[21rem] w-[21rem] -translate-x-1/2 bg-[#ffd8df]/54"
-          style={
-            {
-              "--blob-drift-x": "16px",
-              "--blob-drift-y": "-18px",
-              "--blob-scale": "1.12",
-              "--blob-duration": "27s",
-              "--blob-delay": "-7s",
-            } as CSSProperties
-          }
-        />
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0 bg-[#EEDBC8]"
+      >
+        <div className="mx-auto h-full w-full max-w-[425px] bg-white" />
       </div>
+      <EnvelopeLetterFrame
+        groomName={content.weddingData.groom.name}
+        brideName={content.weddingData.bride.name}
+        date={content.weddingData.date}
+      />
       <main className="relative z-10 mx-auto w-full max-w-[425px] border-x border-[#efe2d1] bg-white/95 shadow-[0_24px_64px_rgba(103,76,48,0.16)] backdrop-blur-sm">
         <div className="relative z-10 bg-white/94">
           {content.pageSectionOrder

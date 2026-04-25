@@ -64,7 +64,7 @@ export function buildKakaoSharePayload(params: {
     buildFallbackDescription(params.content);
   const imageUrl = toAbsoluteUrl(
     params.content.kakaoShareCard?.imageUrl?.trim() ||
-      params.content.heroSection.primaryImage.url,
+      params.content.heroSection.mainImage.url,
     params.origin,
   );
   const link: KakaoShareLink = {

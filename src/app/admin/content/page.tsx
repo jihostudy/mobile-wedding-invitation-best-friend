@@ -1777,103 +1777,49 @@ export default function AdminContentPage() {
           isActive={activeSection === "hero"}
           title="상단 소개"
         >
-          <TextField
-            label="문구"
-            value={content.heroSection.titleText}
-            onChange={(value) => updatePath(["heroSection", "titleText"], value)}
-          />
-
-          <div className="grid grid-cols-2 gap-3">
-            <div className="rounded-xl border border-[#eadfcb] bg-[#fffcf7] p-3">
-              <p className="text-sm font-semibold text-[#4e422f]">첫 번째 사진</p>
-              <div className="mt-3 overflow-hidden rounded-lg border border-[#e5dccb] bg-[#f7f2e8]">
-                <div className="relative aspect-square w-full">
-                  {content.heroSection.primaryImage.url ? (
-                    <Image
-                      src={content.heroSection.primaryImage.url}
-                      alt={content.heroSection.primaryImage.alt}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 980px) 100vw, 420px"
-                    />
-                  ) : (
-                    <div className="flex h-full items-center justify-center text-xs text-[#8f816b]">
-                      업로드된 이미지가 없습니다.
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="mt-3 flex items-center justify-end border-t border-[#efe4d2] pt-3">
-                <label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(event) => {
-                      const file = event.target.files?.[0];
-                      if (!file) return;
-                      void handleUpload(
-                        file,
-                        ["heroSection", "primaryImage", "url"],
-                        "hero-primary-image",
-                        { altPath: ["heroSection", "primaryImage", "alt"] },
-                      );
-                      event.target.value = "";
-                    }}
+          <div className="rounded-xl border border-[#eadfcb] bg-[#fffcf7] p-3">
+            <p className="text-sm font-semibold text-[#4e422f]">대표 사진</p>
+            <div className="mt-3 overflow-hidden rounded-lg border border-[#e5dccb] bg-[#f7f2e8]">
+              <div className="relative aspect-[329/372] w-full">
+                {content.heroSection.mainImage.url ? (
+                  <Image
+                    src={content.heroSection.mainImage.url}
+                    alt={content.heroSection.mainImage.alt}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 980px) 100vw, 420px"
                   />
-                  <span className="inline-flex h-10 cursor-pointer items-center rounded-lg border border-[#d7c9b1] bg-white px-3 text-xs font-medium text-[#574938]">
-                    {uploadingKey === "hero-primary-image"
-                      ? "업로드 중..."
-                      : "이미지 업로드"}
-                  </span>
-                </label>
+                ) : (
+                  <div className="flex h-full items-center justify-center text-xs text-[#8f816b]">
+                    업로드된 이미지가 없습니다.
+                  </div>
+                )}
               </div>
             </div>
-
-            <div className="rounded-xl border border-[#eadfcb] bg-[#fffcf7] p-3">
-              <p className="text-sm font-semibold text-[#4e422f]">두 번째 사진</p>
-              <div className="mt-3 overflow-hidden rounded-lg border border-[#e5dccb] bg-[#f7f2e8]">
-                <div className="relative aspect-square w-full">
-                  {content.heroSection.secondaryImage.url ? (
-                    <Image
-                      src={content.heroSection.secondaryImage.url}
-                      alt={content.heroSection.secondaryImage.alt}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 980px) 100vw, 420px"
-                    />
-                  ) : (
-                    <div className="flex h-full items-center justify-center text-xs text-[#8f816b]">
-                      업로드된 이미지가 없습니다.
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="mt-3 flex items-center justify-end border-t border-[#efe4d2] pt-3">
-                <label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(event) => {
-                      const file = event.target.files?.[0];
-                      if (!file) return;
-                      void handleUpload(
-                        file,
-                        ["heroSection", "secondaryImage", "url"],
-                        "hero-secondary-image",
-                        { altPath: ["heroSection", "secondaryImage", "alt"] },
-                      );
-                      event.target.value = "";
-                    }}
-                  />
-                  <span className="inline-flex h-10 cursor-pointer items-center rounded-lg border border-[#d7c9b1] bg-white px-3 text-xs font-medium text-[#574938]">
-                    {uploadingKey === "hero-secondary-image"
-                      ? "업로드 중..."
-                      : "이미지 업로드"}
-                  </span>
-                </label>
-              </div>
+            <div className="mt-3 flex items-center justify-end border-t border-[#efe4d2] pt-3">
+              <label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(event) => {
+                    const file = event.target.files?.[0];
+                    if (!file) return;
+                    void handleUpload(
+                      file,
+                      ["heroSection", "mainImage", "url"],
+                      "hero-main-image",
+                      { altPath: ["heroSection", "mainImage", "alt"] },
+                    );
+                    event.target.value = "";
+                  }}
+                />
+                <span className="inline-flex h-10 cursor-pointer items-center rounded-lg border border-[#d7c9b1] bg-white px-3 text-xs font-medium text-[#574938]">
+                  {uploadingKey === "hero-main-image"
+                    ? "업로드 중..."
+                    : "이미지 업로드"}
+                </span>
+              </label>
             </div>
           </div>
         </SectionCard>

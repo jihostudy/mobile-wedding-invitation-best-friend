@@ -240,50 +240,6 @@
   }
 }
 
-@keyframes heroSnowFall {
-  0% {
-    transform: translate3d(
-        var(--snow-drift-start, -72px),
-        -14%,
-        var(--snow-depth, -40px)
-      )
-      scale(calc(var(--snow-scale, 1) * 0.82));
-    opacity: 0;
-  }
-  12% {
-    opacity: 1;
-  }
-  24% {
-    transform: translate3d(
-        var(--snow-drift-mid, 0px),
-        24vh,
-        calc(var(--snow-depth, -40px) * 0.7)
-      )
-      scale(calc(var(--snow-scale, 1) * 0.9));
-  }
-  49% {
-    transform: translate3d(
-        calc(var(--snow-drift-mid, 0px) + 36px),
-        52vh,
-        calc(var(--snow-depth, -40px) * 0.35)
-      )
-      scale(calc(var(--snow-scale, 1) * 0.98));
-  }
-  74% {
-    transform: translate3d(
-        calc(var(--snow-drift-end, 24px) * 0.72),
-        80vh,
-        calc(var(--snow-depth, -40px) * 0.12)
-      )
-      scale(calc(var(--snow-scale, 1) * 1.05));
-  }
-  100% {
-    transform: translate3d(var(--snow-drift-end, 24px), 118vh, 0)
-      scale(calc(var(--snow-scale, 1) * 1.12));
-    opacity: 0;
-  }
-}
-
 @keyframes adminPetalFall {
   0% {
     transform: translate3d(var(--admin-petal-drift-start, -12px), -12vh, 0)
@@ -353,25 +309,6 @@
 }
 
 @layer utilities {
-  .hero-snow-layer {
-    mix-blend-mode: normal;
-    perspective: 680px;
-    transform-style: preserve-3d;
-  }
-
-  .hero-snowflake {
-    position: absolute;
-    top: -8%;
-    border-radius: 9999px;
-    background: rgba(236, 145, 161, 0.92);
-    box-shadow: 0 0 10px rgba(236, 145, 161, 0.72);
-    animation-name: heroSnowFall;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-    transform-style: preserve-3d;
-    will-change: transform, opacity, filter;
-  }
-
   .wedding-day-pulse {
     animation: weddingDayPulse 1.8s ease-in-out infinite;
     will-change: transform, background-color, box-shadow;
@@ -457,11 +394,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-snowflake {
-    animation: none;
-    opacity: 0;
-  }
-
   .admin-petal {
     animation: none;
     opacity: 0;
