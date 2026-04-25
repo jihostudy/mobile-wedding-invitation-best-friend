@@ -136,6 +136,9 @@ export default function VenueInfo({ venue, date }: VenueInfoProps) {
             {venue.transport?.shuttlePickup ??
               `${date.month}월 ${date.day}일 강남구청역 인근 셔틀 탑승`}
           </p>
+          <p className="mt-3 text-xs leading-5 text-wedding-gray-light">
+            예식장 사정상 화환 반입은 어렵습니다. 너른 양해 부탁드립니다.
+          </p>
         </FadeInUp>
       </div>
     </section>
