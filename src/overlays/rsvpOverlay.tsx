@@ -6,8 +6,10 @@ import { overlay } from "overlay-kit";
 import RsvpEntryPromptOverlay from "@/components/Rsvp/RsvpEntryPromptOverlay";
 import RsvpModal from "@/components/Rsvp/RsvpModal";
 
-const RSVP_ENTRY_PROMPT_OVERLAY_ID = "rsvp-entry-prompt";
-const RSVP_FORM_OVERLAY_ID = "rsvp-form";
+const RSVP_OVERLAY_ID_PREFIX = {
+  entryPrompt: "rsvp-entry-prompt",
+  form: "rsvp-form",
+} as const;
 const ENTRY_PROMPT_EXIT_DURATION_MS = 300;
 
 interface OverlayControllerProps {
@@ -31,6 +33,42 @@ interface OpenRsvpFormOverlayParams {
   onComplete?: () => void;
 }
 
+type RsvpOverlayType = keyof typeof RSVP_OVERLAY_ID_PREFIX;
+
+const activeRsvpOverlayIds: Partial<Record<RsvpOverlayType, string>> = {};
+let overlayIdSequence = 0;
+
+function createRsvpOverlayId(type: RsvpOverlayType) {
+  overlayIdSequence += 1;
+  return `${RSVP_OVERLAY_ID_PREFIX[type]}-${Date.now()}-${overlayIdSequence}`;
+}
+
+function releaseRsvpOverlay(type: RsvpOverlayType, overlayId: string) {
+  if (activeRsvpOverlayIds[type] === overlayId) {
+    delete activeRsvpOverlayIds[type];
+  }
+}
+
+function openSingleRsvpOverlay(
+  type: RsvpOverlayType,
+  controller: FC<OverlayControllerProps>,
+) {
+  const activeOverlayId = activeRsvpOverlayIds[type];
+  if (activeOverlayId) {
+    return activeOverlayId;
+  }
+
+  const overlayId = createRsvpOverlayId(type);
+  activeRsvpOverlayIds[type] = overlayId;
+
+  try {
+    return overlay.open(controller, { overlayId });
+  } catch (error) {
+    releaseRsvpOverlay(type, overlayId);
+    throw error;
+  }
+}
+
 interface RsvpEntryPromptOverlayViewProps extends OverlayControllerProps {
   onOpenRsvp: () => void;
   onHideToday: () => void;
@@ -42,6 +80,7 @@ interface RsvpEntryPromptOverlayViewProps extends OverlayControllerProps {
 }
 
 function RsvpEntryPromptOverlayView({
+  overlayId,
   isOpen,
   close,
   unmount,
@@ -62,10 +101,13 @@ function RsvpEntryPromptOverlayView({
     }
 
     if (hasOpenedRef.current) {
-      const timer = window.setTimeout(unmount, ENTRY_PROMPT_EXIT_DURATION_MS);
+      const timer = window.setTimeout(() => {
+        releaseRsvpOverlay("entryPrompt", overlayId);
+        unmount();
+      }, ENTRY_PROMPT_EXIT_DURATION_MS);
       return () => window.clearTimeout(timer);
     }
-  }, [isOpen, unmount]);
+  }, [isOpen, overlayId, unmount]);
 
   return (
     <RsvpEntryPromptOverlay
@@ -95,6 +137,7 @@ interface RsvpFormOverlayViewProps extends OverlayControllerProps {
 }
 
 function RsvpFormOverlayView({
+  overlayId,
   isOpen,
   close,
   unmount,
@@ -109,9 +152,10 @@ function RsvpFormOverlayView({
     }
 
     if (hasOpenedRef.current) {
+      releaseRsvpOverlay("form", overlayId);
       unmount();
     }
-  }, [isOpen, unmount]);
+  }, [isOpen, overlayId, unmount]);
 
   return <RsvpModal isOpen={isOpen} onClose={close} onComplete={onComplete} />;
 }
@@ -138,7 +182,7 @@ export function openRsvpEntryPromptOverlay({
     />
   );
 
-  return overlay.open(controller, { overlayId: RSVP_ENTRY_PROMPT_OVERLAY_ID });
+  return openSingleRsvpOverlay("entryPrompt", controller);
 }
 
 export function openRsvpFormOverlay({ onComplete }: OpenRsvpFormOverlayParams) {
@@ -146,5 +190,5 @@ export function openRsvpFormOverlay({ onComplete }: OpenRsvpFormOverlayParams) {
     <RsvpFormOverlayView {...overlayProps} onComplete={onComplete} />
   );
 
-  return overlay.open(controller, { overlayId: RSVP_FORM_OVERLAY_ID });
+  return openSingleRsvpOverlay("form", controller);
 }

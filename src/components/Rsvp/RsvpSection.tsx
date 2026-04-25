@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { Armchair } from "lucide-react";
 import FadeInUp from "@/components/common/FadeInUp";
 import Icon from "@/components/common/Icon";
@@ -18,6 +18,7 @@ interface RsvpSectionProps {
 export default function RsvpSection({ section, weddingData }: RsvpSectionProps) {
   const HIDE_KEY = "rsvp_prompt_hide_until";
   const SUBMITTED_KEY = "rsvp_submitted_at";
+  const hasOpenedEntryPromptRef = useRef(false);
 
   const todayLabel = useMemo(() => {
     const today = new Date();
@@ -59,7 +60,8 @@ export default function RsvpSection({ section, weddingData }: RsvpSectionProps) 
     const shouldHideToday = hiddenUntil === todayLabel;
     const hasSubmitted = Boolean(submittedAt);
 
-    if (!shouldHideToday && !hasSubmitted) {
+    if (!shouldHideToday && !hasSubmitted && !hasOpenedEntryPromptRef.current) {
+      hasOpenedEntryPromptRef.current = true;
       openRsvpEntryPromptOverlay({
         onHideToday: hidePromptToday,
         onOpenRsvp: openRsvpForm,
