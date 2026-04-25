@@ -5,6 +5,7 @@ import { parseWeddingContent } from '@/lib/wedding-content/schema';
 import type { WeddingContentResponse, WeddingContentV1 } from '@/types';
 
 export async function getWeddingContent(slug = 'main'): Promise<WeddingContentResponse> {
+  console.log('[wedding-content] fetching content from Supabase', { slug });
   const supabase = createServerSupabaseClient();
   const { data, error } = await supabase
     .from('wedding_content')
@@ -14,7 +15,9 @@ export async function getWeddingContent(slug = 'main'): Promise<WeddingContentRe
 
   if (error || !data) {
     if (error) {
-      console.error('Failed to fetch wedding content:', error);
+      console.error('[wedding-content] Supabase fetch failed, using fallback', { slug, error });
+    } else {
+      console.warn('[wedding-content] no content row found, using fallback', { slug });
     }
     return {
       slug,
@@ -25,13 +28,21 @@ export async function getWeddingContent(slug = 'main'): Promise<WeddingContentRe
 
   try {
     const parsed = parseWeddingContent(data.content);
+    console.log('[wedding-content] Supabase fetch succeeded', {
+      slug: data.slug,
+      version: data.version,
+    });
     return {
       slug: data.slug,
       version: data.version,
       content: toViewWeddingContent(parsed),
     };
   } catch (parseError) {
-    console.error('Invalid wedding content schema, using fallback:', parseError);
+    console.error('[wedding-content] invalid schema, using fallback', {
+      slug,
+      version: data.version,
+      parseError,
+    });
     return {
       slug,
       version: data.version ?? 1,
