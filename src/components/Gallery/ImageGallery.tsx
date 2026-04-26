@@ -10,7 +10,39 @@ import FadeInUp from "@/components/common/FadeInUp";
 import Icon from "@/components/common/Icon";
 import ModalPortal from "@/components/common/ModalPortal";
 import useModalLayer from "@/hooks/useModalLayer";
-import type { GallerySectionData } from "@/types";
+import type { GalleryImage, GallerySectionData } from "@/types";
+
+function GalleryModalImage({ item }: { item: GalleryImage }) {
+  const [isFullLoaded, setIsFullLoaded] = useState(false);
+
+  return (
+    <div className="relative h-full w-full">
+      {/* 썸네일: 캐시된 작은 이미지를 원본 비율 그대로 중앙에 표시 */}
+      <Image
+        src={item.url}
+        alt=""
+        aria-hidden
+        fill
+        className="object-contain object-center"
+        sizes="(max-width: 425px) 33vw, 140px"
+        quality={92}
+      />
+      {/* 원본: 로드 완료 시 페이드인 */}
+      <Image
+        src={item.url}
+        alt={item.alt}
+        fill
+        draggable={false}
+        className={`object-contain object-center transition-opacity duration-500 ${
+          isFullLoaded ? "opacity-100" : "opacity-0"
+        }`}
+        sizes="(max-width: 430px) 100vw, 430px"
+        quality={90}
+        onLoad={() => setIsFullLoaded(true)}
+      />
+    </div>
+  );
+}
 
 interface ImageGalleryProps {
   section: GallerySectionData;
@@ -173,19 +205,7 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
                 nextAriaLabel="다음 갤러리 사진 보기"
                 renderItem={(item) => (
                   <div className="flex h-[100dvh] w-full items-center justify-center bg-white py-16">
-                    <div className="relative h-full w-full">
-                      <Image
-                        src={item.url}
-                        alt={item.alt}
-                        fill
-                        draggable={false}
-                        className="object-contain object-center"
-                        sizes="(max-width: 430px) 100vw, 430px"
-                        quality={90}
-                        placeholder="blur"
-                        blurDataURL={BLUR_PLACEHOLDER}
-                      />
-                    </div>
+                    <GalleryModalImage item={item} />
                   </div>
                 )}
               />
