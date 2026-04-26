@@ -4,7 +4,6 @@ import Image from "next/image";
 import { BLUR_PLACEHOLDER } from "@/lib/image-placeholder";
 import useToast from "@/components/common/toast/useToast";
 import {
-  KAKAO_SDK_SRC,
   ensureKakaoInitialized,
   buildKakaoSharePayload,
   type KakaoSdk,
@@ -16,52 +15,16 @@ interface FinalThanksSectionProps {
   content: WeddingContentV1;
 }
 
-let kakaoSdkLoadPromise: Promise<KakaoSdk> | null = null;
-
-function getKakaoSdk() {
-  return (window as Window & { Kakao?: KakaoSdk }).Kakao;
-}
-
-function loadKakaoSdk() {
-  const currentKakao = getKakaoSdk();
-  if (currentKakao) return Promise.resolve(currentKakao);
-  if (kakaoSdkLoadPromise) return kakaoSdkLoadPromise;
-
-  kakaoSdkLoadPromise = new Promise<KakaoSdk>((resolve, reject) => {
-    const existingScript = document.getElementById("kakao-sdk");
-    if (existingScript) {
-      existingScript.remove();
-    }
-
-    const script = document.createElement("script");
-    script.id = "kakao-sdk";
-    script.src = KAKAO_SDK_SRC;
-    script.async = true;
-    script.onload = () => {
-      const loadedKakao = getKakaoSdk();
-      if (loadedKakao) resolve(loadedKakao);
-      else reject(new Error("Kakao SDK loaded without window.Kakao"));
-    };
-    script.onerror = () => reject(new Error("Kakao SDK script failed to load"));
-    document.head.appendChild(script);
-  });
-
-  return kakaoSdkLoadPromise;
-}
-
 export default function FinalThanksSection({
   section,
   content,
 }: FinalThanksSectionProps) {
   const toast = useToast();
 
-  const shareKakao = async () => {
+  const shareKakao = () => {
     if (typeof window === "undefined") return;
 
-    const kakao = await loadKakaoSdk().catch((error: unknown) => {
-      console.error("Failed to load Kakao SDK:", error);
-      return null;
-    });
+    const kakao = (window as Window & { Kakao?: KakaoSdk }).Kakao;
 
     if (!kakao) {
       toast.error("카카오 SDK를 불러오지 못했어요.");
