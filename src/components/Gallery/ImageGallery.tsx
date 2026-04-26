@@ -267,10 +267,7 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
  *   const [transitionDirection, setTransitionDirection] = useState<1 | -1>(1);
  *   const pointerStartRef = useRef<{ x: number; y: number } | null>(null);
  *   const hasImages = imageCount > 0;
- *   const configuredBatchSize = Number.isFinite(section.batchSize)
- *     ? section.batchSize
- *     : 6;
- *   const thumbnailsPerPage = Math.max(1, Math.floor(configuredBatchSize));
+ *   const thumbnailsPerPage = 6;
  *   const pageCount = useMemo(
  *     () => Math.max(1, Math.ceil(imageCount / thumbnailsPerPage)),
  *     [imageCount, thumbnailsPerPage],

@@ -168,7 +168,6 @@ const gallerySectionSchema = z
   .object({
     kicker: z.string().optional(),
     title: z.string().optional(),
-    batchSize: z.number().optional(),
     images: z.array(
       z
         .object({
@@ -185,8 +184,6 @@ const gallerySectionSchema = z
     ),
   })
   .transform((section) => ({
-    // Keep gallery paging predictable: at least 2 and always even.
-    batchSize: Math.max(2, Math.floor((section.batchSize ?? 6) / 2) * 2),
     kicker: section.kicker ?? "GALLERY",
     title: section.title ?? "웨딩 갤러리",
     images: section.images,

@@ -232,7 +232,6 @@ const GALLERY_IMAGES: GalleryImage[] = [
 export const GALLERY_SECTION: GallerySectionData = {
   kicker: "GALLERY",
   title: "웨딩 갤러리",
-  batchSize: 6,
   images: GALLERY_IMAGES,
 };
 

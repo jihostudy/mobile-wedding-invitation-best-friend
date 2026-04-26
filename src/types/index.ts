@@ -133,7 +133,6 @@ export interface CalendarSectionData {
 export interface GallerySectionData {
   kicker: string;
   title: string;
-  batchSize: number;
   images: GalleryImage[];
 }
 

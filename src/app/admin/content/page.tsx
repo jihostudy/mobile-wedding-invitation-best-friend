@@ -2069,24 +2069,6 @@ export default function AdminContentPage() {
               updatePath(["gallerySection", "title"], value)
             }
           />
-          <label className="block min-w-0">
-            <span className="mb-1.5 block text-xs font-semibold text-[#6f6350]">
-              한 번에 보여줄 개수
-            </span>
-            <select
-              value={String(content.gallerySection.batchSize)}
-              onChange={(event) =>
-                updatePath(["gallerySection", "batchSize"], Number(event.target.value))
-              }
-              className="h-10 w-full rounded-lg border border-[#dfd4c1] bg-white px-3 text-sm text-[#2e261b] outline-none focus:border-[#b9a17e]"
-            >
-              {[2, 4, 6, 8, 10, 12].map((count) => (
-                <option key={count} value={count}>
-                  {count}개
-                </option>
-              ))}
-            </select>
-          </label>
           <div className="flex justify-end">
             <button
               type="button"
