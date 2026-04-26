@@ -105,7 +105,7 @@ export default function AccountSection({
                 aria-expanded={openGroups[group.id]}
               >
                 <span className="text-base font-medium tracking-[0.04em] text-wedding-brown">
-                  {group.label} 계좌번호
+                  {group.label}
                 </span>
                 <Icon
                   icon={openGroups[group.id] ? ChevronUp : ChevronDown}
