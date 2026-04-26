@@ -2128,7 +2128,7 @@ export default function AdminContentPage() {
                   </div>
                 </div>
                 <div className="mt-3 overflow-hidden rounded-lg border border-[#e5dccb] bg-[#f7f2e8]">
-                  <div className="relative aspect-square w-full">
+                  <div className="relative aspect-[2/3] w-full">
                     {image.url ? (
                       <Image
                         src={image.url}

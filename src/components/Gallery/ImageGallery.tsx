@@ -84,7 +84,7 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
                       key={`${image.id}-${image.url}-${index}-${
                         shouldRevealImage ? revealRunId : 0
                       }`}
-                      className={`relative block aspect-square w-full overflow-hidden bg-[#f5f5f5] ${
+                      className={`relative block aspect-[2/3] w-full overflow-hidden bg-[#f5f5f5] ${
                         shouldRevealImage
                           ? "animate-gallery-image-shade-in"
                           : ""
