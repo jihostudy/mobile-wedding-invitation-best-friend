@@ -92,7 +92,7 @@ export default function RsvpEntryPromptOverlay({
                 </div>
               </div>
 
-              <div className="mt-6 text-left px-5 text-sm font-medium leading-7 text-[#2f2f2f]">
+              <div className="mt-6 text-sm px-5 text-center font-medium leading-7 text-[#2f2f2f]">
                 <p>참석해 주시는 모든 분들을</p>
                 <p>감사한 마음으로 정중히 모시고자 하오니</p>
                 <p>참석 여부를 전달해 주시면 감사드리겠습니다.</p>
