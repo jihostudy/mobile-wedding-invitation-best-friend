@@ -14,7 +14,7 @@
 
 ### 선택
 - `NEXT_PUBLIC_NAVER_MAP_CLIENT_ID`
-- `NEXT_PUBLIC_SITE_URL`
+- `NEXT_PUBLIC_SITE_URL=https://dhdy-marriage.vercel.app`
 
 ### 로컬/CI 사전 검증
 ```bash
@@ -43,7 +43,7 @@ pnpm check:deploy-env .env.local
 `admin_credentials`가 비어 있다면:
 
 ```bash
-curl -i -X POST "https://<your-domain>/api/admin/auth/bootstrap" \
+curl -i -X POST "https://dhdy-marriage.vercel.app/api/admin/auth/bootstrap" \
   -H "content-type: application/json" \
   -H "x-bootstrap-token: <ADMIN_BOOTSTRAP_TOKEN>" \
   --data '{"password":"<admin-password>"}'
