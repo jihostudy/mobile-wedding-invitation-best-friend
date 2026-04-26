@@ -21,7 +21,7 @@ import type { WeddingContentV1 } from "@/types";
 type PathSegment = string | number;
 type Indexable = Record<string | number, unknown>;
 type DropPosition = "before" | "after";
-const MAX_ASSET_UPLOAD_SIZE_BYTES = 4 * 1024 * 1024;
+const MAX_ASSET_UPLOAD_SIZE_BYTES = 50 * 1024 * 1024;
 const GALLERY_IMAGE_ALT = "신랑신부 사진";
 const SNAP_COVER_IMAGE_ALT = "스냅 업로드 커버 이미지";
 
