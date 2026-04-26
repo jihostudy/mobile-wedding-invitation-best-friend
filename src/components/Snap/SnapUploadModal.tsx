@@ -84,7 +84,6 @@ export default function SnapUploadModal({
   const defaultNoticeLines = [
     `한 번에 최대 ${section.maxFiles}장까지 업로드하실 수 있습니다.`,
     "가능하면 여러 장을 한 번에 묶어서 업로드해 주세요.",
-    "파일 크기는 사진 1장당 10MB 이하입니다.",
     "예식 당일부터 다음날까지 업로드 가능합니다.",
   ];
   const noticeLines =

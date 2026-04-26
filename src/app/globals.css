@@ -13,8 +13,9 @@
 
   body {
     @apply text-wedding-brown;
-    font-family: var(--font-tmoney), "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", system-ui,
-      sans-serif;
+    font-family:
+      var(--font-tmoney), "Apple SD Gothic Neo", "Noto Sans KR",
+      "Malgun Gothic", system-ui, sans-serif;
     font-size-adjust: 0.5;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
@@ -214,6 +215,22 @@
   animation: fadeInUp 0.8s ease-out;
 }
 
+@keyframes galleryImageShadeIn {
+  from {
+    opacity: 0;
+    filter: brightness(0.35);
+  }
+  to {
+    opacity: 1;
+    filter: brightness(1);
+  }
+}
+
+.animate-gallery-image-shade-in {
+  animation: galleryImageShadeIn 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+  will-change: opacity, filter;
+}
+
 @keyframes musicEqPulse {
   0%,
   100% {
@@ -298,7 +315,11 @@
     opacity: 0.58;
   }
   50% {
-    transform: translate3d(var(--blob-drift-x, 18px), var(--blob-drift-y, -20px), 0)
+    transform: translate3d(
+        var(--blob-drift-x, 18px),
+        var(--blob-drift-y, -20px),
+        0
+      )
       scale(var(--blob-scale, 1.12));
     opacity: 0.72;
   }
@@ -310,6 +331,8 @@
 
 @layer utilities {
   .wedding-day-pulse {
+    background-color: #ef8d98;
+    box-shadow: 0 0 0 4px rgba(239, 141, 152, 0.14);
     animation: weddingDayPulse 1.8s ease-in-out infinite;
     will-change: transform, background-color, box-shadow;
   }
@@ -390,7 +413,6 @@
     animation-delay: var(--blob-delay, 0s);
     will-change: transform, opacity;
   }
-
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -409,6 +431,4 @@
     transform: none;
     opacity: 0.55;
   }
-
 }
-

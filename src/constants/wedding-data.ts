@@ -306,17 +306,14 @@ export const ACCOUNT_SECTION: AccountSectionData = {
         {
           bank: "신한은행",
           account: "110-123-456789",
-          kakaoPayUrl: "",
         },
         {
           bank: "우리은행",
           account: "110-000-000001",
-          kakaoPayUrl: "",
         },
         {
           bank: "국민은행",
           account: "110-000-000002",
-          kakaoPayUrl: "",
         },
       ],
     },
@@ -327,17 +324,14 @@ export const ACCOUNT_SECTION: AccountSectionData = {
         {
           bank: "카카오뱅크",
           account: "3333-01-1234567",
-          kakaoPayUrl: "",
         },
         {
           bank: "토스뱅크",
           account: "110-000-000004",
-          kakaoPayUrl: "",
         },
         {
           bank: "카카오뱅크",
           account: "110-000-000005",
-          kakaoPayUrl: "",
         },
       ],
     },
@@ -403,7 +397,6 @@ export const SNAP_SECTION: SnapSectionData = {
     policyLines: [
       "한 번에 최대 40장까지 업로드하실 수 있습니다.",
       "가능하면 여러 장을 한 번에 묶어서 업로드해 주세요.",
-      "업로드 가능한 파일 크기는 사진 1장당 10MB 이하입니다.",
       "업로드는 예식 당일부터 다음날까지 가능합니다.",
     ],
   },

@@ -21,7 +21,6 @@ import type { WeddingContentV1 } from "@/types";
 type PathSegment = string | number;
 type Indexable = Record<string | number, unknown>;
 type DropPosition = "before" | "after";
-const MAX_ASSET_UPLOAD_SIZE_BYTES = 50 * 1024 * 1024;
 const GALLERY_IMAGE_ALT = "신랑신부 사진";
 const SNAP_COVER_IMAGE_ALT = "스냅 업로드 커버 이미지";
 
@@ -132,12 +131,6 @@ function getDisplayFileNameFromUrl(url: string) {
   } catch {
     return "";
   }
-}
-
-function formatFileSize(bytes: number) {
-  if (bytes < 1024) return `${bytes}B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)}KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)}MB`;
 }
 
 function toDateTimeLocalInputValue(isoString: string) {
@@ -742,14 +735,6 @@ export default function AdminContentPage() {
     ) => {
       try {
         const isAudioFile = file.type.startsWith("audio/");
-        if (file.size > MAX_ASSET_UPLOAD_SIZE_BYTES) {
-          toast.error(
-            isAudioFile
-              ? "음원 파일 용량이 커서 업로드할 수 없습니다. 관리자에게 문의해 주세요."
-              : `이미지 파일 용량이 너무 큽니다. 최대 ${formatFileSize(MAX_ASSET_UPLOAD_SIZE_BYTES)}까지 업로드할 수 있습니다.`,
-          );
-          return;
-        }
 
         setUploadingKey(key);
         const result = await uploadAssetMutation.mutateAsync({ file });
@@ -791,8 +776,8 @@ export default function AdminContentPage() {
         const message =
           error instanceof ApiError && error.status === 413
             ? isAudioFile
-              ? "음원 파일 용량이 커서 업로드할 수 없습니다. 관리자에게 문의해 주세요."
-              : "이미지 파일 용량이 너무 커서 업로드할 수 없습니다."
+              ? "음원 업로드에 실패했습니다. 서버 업로드 설정을 확인해 주세요."
+              : "이미지 업로드에 실패했습니다. 서버 업로드 설정을 확인해 주세요."
             : error instanceof ApiError
             ? error.message
             : isAudioFile
@@ -2258,7 +2243,8 @@ export default function AdminContentPage() {
             rows={3}
           />
           <p className="text-xs text-[#7a6c58]">
-            예금주 표시는 신랑/신부 및 부모 정보에서 자동으로 연동됩니다. 계좌별로 은행, 계좌번호, 카카오페이 송금 링크를 입력하세요.
+            예금주 표시는 신랑/신부 및 부모 정보에서 자동으로 연동됩니다.
+            계좌별로 은행과 계좌번호를 입력하세요.
           </p>
 
           <div className="flex justify-end">
@@ -2316,7 +2302,6 @@ export default function AdminContentPage() {
                           {
                             bank: "",
                             account: "",
-                            kakaoPayUrl: "",
                           },
                         )
                       }
@@ -2367,26 +2352,6 @@ export default function AdminContentPage() {
                                 value,
                               )
                             }
-                          />
-                        </div>
-                        <div className="mt-2">
-                          <TextField
-                            label="카카오페이 송금 링크"
-                            value={account.kakaoPayUrl ?? ""}
-                            onChange={(value) =>
-                              updatePath(
-                                [
-                                  "accountSection",
-                                  "groups",
-                                  groupIndex,
-                                  "accounts",
-                                  accountIndex,
-                                  "kakaoPayUrl",
-                                ],
-                                value,
-                              )
-                            }
-                            placeholder="https://link.kakaopay.com/__/..."
                           />
                         </div>
                         <div className="mt-2 flex justify-end">

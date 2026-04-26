@@ -591,7 +591,7 @@ values (
           "id": "groom",
           "label": "신랑측",
           "accounts": [
-            {"holder":"김동현","bank":"신한은행","account":"110-123-456789","kakaoPayLink":"https://pay.kakao.com"},
+            {"holder":"김동현","bank":"신한은행","account":"110-123-456789"},
             {"holder":"김○○","bank":"우리은행","account":"110-000-000001"},
             {"holder":"○○○","bank":"국민은행","account":"110-000-000002"}
           ]
@@ -600,7 +600,7 @@ values (
           "id": "bride",
           "label": "신부측",
           "accounts": [
-            {"holder":"강다연","bank":"카카오뱅크","account":"3333-01-1234567","kakaoPayLink":"https://pay.kakao.com"},
+            {"holder":"강다연","bank":"카카오뱅크","account":"3333-01-1234567"},
             {"holder":"강○○","bank":"토스뱅크","account":"110-000-000004"},
             {"holder":"○○○","bank":"카카오뱅크","account":"110-000-000005"}
           ]

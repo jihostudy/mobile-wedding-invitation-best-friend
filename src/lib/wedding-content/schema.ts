@@ -396,7 +396,6 @@ const weddingContentSchema = z
               z.object({
                 bank: z.string(),
                 account: z.string(),
-                kakaoPayUrl: z.string().optional(),
               }),
             ),
           }),
