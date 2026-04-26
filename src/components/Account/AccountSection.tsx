@@ -41,19 +41,9 @@ export default function AccountSection({
   section,
   weddingData,
 }: AccountSectionProps) {
-  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => {
-    const hasBrideGroup = section.groups.some(
-      (group) => group.id.includes("bride") || group.label.includes("신부"),
-    );
-    return Object.fromEntries(
-      section.groups.map((group, index) => [
-        group.id,
-        group.id.includes("bride") ||
-          group.label.includes("신부") ||
-          (!hasBrideGroup && index === 0),
-      ]),
-    );
-  });
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() =>
+    Object.fromEntries(section.groups.map((group) => [group.id, false])),
+  );
   const toast = useToast();
   const visibleGroups = useMemo(
     () =>
@@ -157,7 +147,7 @@ export default function AccountSection({
                     return (
                       <div
                         key={`${group.id}-account-${accountIndex}`}
-                        className="grid min-h-[104px] grid-cols-[1fr_auto] items-center gap-4 bg-white px-5 py-5"
+                        className="grid min-h-[104px] grid-cols-[1fr_auto] items-center gap-2 bg-white px-3 py-5"
                       >
                         <div className="min-w-0 text-left">
                           <p className="text-base font-medium leading-6 text-wedding-gray">
