@@ -198,12 +198,31 @@
   }
 }
 
+/* descender(g, y 등)가 박스 아래로 삐져나오는 폰트용 — bottom에 여유 공간 확보 */
+@keyframes writeClipOpen {
+  from {
+    clip-path: inset(0 100% -24px 0);
+  }
+  to {
+    clip-path: inset(0 0% -24px 0);
+  }
+}
+
 @keyframes heroTextFadeOut {
   from {
     opacity: 1;
   }
   to {
     opacity: 0;
+  }
+}
+
+@keyframes heroTextFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 

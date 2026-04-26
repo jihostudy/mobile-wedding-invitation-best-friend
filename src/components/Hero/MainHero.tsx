@@ -130,6 +130,17 @@ export default function MainHero({
   }, []);
 
   useEffect(() => {
+    document.body.style.overflowY = "hidden";
+    const unlockTimer = setTimeout(() => {
+      document.body.style.overflowY = "";
+    }, 6300);
+    return () => {
+      clearTimeout(unlockTimer);
+      document.body.style.overflowY = "";
+    };
+  }, []);
+
+  useEffect(() => {
     const blossomTimer = setTimeout(() => setBlossomActive(true), 5500);
 
     const rsvpTimer = setTimeout(() => {
@@ -167,7 +178,7 @@ export default function MainHero({
   ]);
 
   return (
-    <section id="hero" className="relative h-screen overflow-hidden">
+    <section id="hero" className="relative h-screen overflow-hidden" style={{ height: '100svh' }}>
       <h1 className="sr-only">
         {groom.name} 그리고 {bride.name} 결혼합니다.
       </h1>
@@ -233,11 +244,17 @@ export default function MainHero({
           </div>
         ))}
 
-      {/* 상단: 이름 */}
-      <div className="absolute inset-x-0 top-10 text-center">
+      {/* 상단: 이름 — 오버레이 사라진 후 등장 */}
+      <div
+        className="absolute inset-x-0 top-10 text-center"
+        style={{ animation: "heroTextFadeIn 0.8s ease-out 6.3s both" }}
+      >
         <p
-          className="font-crimson text-sm uppercase tracking-[0.3em] text-white"
-          style={{ textShadow: "0 1px 8px rgba(0,0,0,0.5)" }}
+          className="font-crimson text-sm uppercase tracking-[0.3em]"
+          style={{
+            color: "#e8d5bc",
+            textShadow: "0 1px 10px rgba(60, 35, 15, 0.45)",
+          }}
         >
           {groomGivenName} &amp; {brideGivenName}
         </p>
@@ -250,7 +267,7 @@ export default function MainHero({
             className="font-sacramento text-[clamp(35px,9vw,48px)] tracking-[0.06em] leading-snug text-white px-4 pt-3 pb-2"
             style={{
               animation:
-                "writeClip 2.2s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both, heroTextFadeOut 0.8s ease-out 5.5s both",
+                "writeClipOpen 2.2s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both, heroTextFadeOut 0.8s ease-out 5.5s both",
               textShadow: "0 2px 16px rgba(0,0,0,0.4)",
             }}
           >
@@ -262,7 +279,7 @@ export default function MainHero({
             className="font-sacramento text-[clamp(35px,9vw,48px)] tracking-[0.06em] leading-snug text-white px-4 pt-2 pb-5"
             style={{
               animation:
-                "writeClip 2.4s cubic-bezier(0.4, 0, 0.2, 1) 2.7s both, heroTextFadeOut 0.8s ease-out 5.5s both",
+                "writeClipOpen 2.4s cubic-bezier(0.4, 0, 0.2, 1) 2.7s both, heroTextFadeOut 0.8s ease-out 5.5s both",
               textShadow: "0 2px 16px rgba(0,0,0,0.4)",
             }}
           >
@@ -271,15 +288,24 @@ export default function MainHero({
         </div>
       </div>
 
-      {/* 하단: 날짜 및 장소 */}
+      {/* 하단: 날짜 및 장소 — 오버레이 사라진 후 등장 */}
       <div
-        className="absolute inset-x-0 bottom-10 text-center space-y-1.5"
-        style={{ textShadow: "0 1px 8px rgba(0,0,0,0.5)" }}
+        className="absolute inset-x-0 bottom-0 text-center space-y-1.5 px-6 pt-10 pb-10"
+        style={{
+          background: "linear-gradient(to top, rgba(0,0,0,0.52) 0%, transparent 100%)",
+          animation: "heroTextFadeIn 0.8s ease-out 6.3s both",
+        }}
       >
-        <p className="font-crimson text-lg tracking-[0.06em] text-white">
+        <p
+          className="font-crimson text-lg tracking-[0.06em] text-white"
+          style={{ textShadow: "0 1px 8px rgba(0,0,0,0.5)" }}
+        >
           {dateLabel}
         </p>
-        <p className="font-crimson text-lg tracking-[0.06em] text-white">
+        <p
+          className="font-crimson text-lg tracking-[0.06em] text-white"
+          style={{ textShadow: "0 1px 8px rgba(0,0,0,0.5)" }}
+        >
           {venueLine}
         </p>
       </div>
