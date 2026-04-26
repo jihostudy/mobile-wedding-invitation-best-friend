@@ -3,12 +3,50 @@
 import Image from "next/image";
 import { BLUR_PLACEHOLDER } from "@/lib/image-placeholder";
 import useToast from "@/components/common/toast/useToast";
-import { ensureKakaoInitialized, buildKakaoSharePayload, type KakaoSdk } from "@/lib/share/kakao";
+import {
+  KAKAO_SDK_SRC,
+  ensureKakaoInitialized,
+  buildKakaoSharePayload,
+  type KakaoSdk,
+} from "@/lib/share/kakao";
 import type { ClosingSectionData, WeddingContentV1 } from "@/types";
 
 interface FinalThanksSectionProps {
   section: ClosingSectionData;
   content: WeddingContentV1;
+}
+
+let kakaoSdkLoadPromise: Promise<KakaoSdk> | null = null;
+
+function getKakaoSdk() {
+  return (window as Window & { Kakao?: KakaoSdk }).Kakao;
+}
+
+function loadKakaoSdk() {
+  const currentKakao = getKakaoSdk();
+  if (currentKakao) return Promise.resolve(currentKakao);
+  if (kakaoSdkLoadPromise) return kakaoSdkLoadPromise;
+
+  kakaoSdkLoadPromise = new Promise<KakaoSdk>((resolve, reject) => {
+    const existingScript = document.getElementById("kakao-sdk");
+    if (existingScript) {
+      existingScript.remove();
+    }
+
+    const script = document.createElement("script");
+    script.id = "kakao-sdk";
+    script.src = KAKAO_SDK_SRC;
+    script.async = true;
+    script.onload = () => {
+      const loadedKakao = getKakaoSdk();
+      if (loadedKakao) resolve(loadedKakao);
+      else reject(new Error("Kakao SDK loaded without window.Kakao"));
+    };
+    script.onerror = () => reject(new Error("Kakao SDK script failed to load"));
+    document.head.appendChild(script);
+  });
+
+  return kakaoSdkLoadPromise;
 }
 
 export default function FinalThanksSection({
@@ -17,10 +55,14 @@ export default function FinalThanksSection({
 }: FinalThanksSectionProps) {
   const toast = useToast();
 
-  const shareKakao = () => {
+  const shareKakao = async () => {
     if (typeof window === "undefined") return;
 
-    const kakao = (window as Window & { Kakao?: KakaoSdk }).Kakao;
+    const kakao = await loadKakaoSdk().catch((error: unknown) => {
+      console.error("Failed to load Kakao SDK:", error);
+      return null;
+    });
+
     if (!kakao) {
       toast.error("카카오 SDK를 불러오지 못했어요.");
       return;
