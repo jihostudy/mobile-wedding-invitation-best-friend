@@ -152,7 +152,7 @@ export default function MainHero({
     document.body.style.overflowY = "hidden";
     const unlockTimer = setTimeout(() => {
       document.body.style.overflowY = "";
-    }, 6300);
+    }, 5200);
     return () => {
       clearTimeout(unlockTimer);
       document.body.style.overflowY = "";
@@ -160,7 +160,7 @@ export default function MainHero({
   }, []);
 
   useEffect(() => {
-    const blossomTimer = setTimeout(() => setBlossomActive(true), 5500);
+    const blossomTimer = setTimeout(() => setBlossomActive(true), 4400);
 
     const rsvpTimer = setTimeout(() => {
       if (hasOpenedRsvpRef.current) return;
@@ -181,7 +181,7 @@ export default function MainHero({
         onHideToday: hidePromptToday,
         onOpenRsvp: openRsvpForm,
       });
-    }, 5500);
+    }, 4400);
 
     return () => {
       clearTimeout(blossomTimer);
@@ -222,7 +222,7 @@ export default function MainHero({
       {/* 검은 오버레이 — 텍스트 가독성용, 텍스트와 함께 사라짐 */}
       <div
         className="absolute inset-0 bg-black/50"
-        style={{ animation: "heroTextFadeOut 0.8s ease-out 5.5s both" }}
+        style={{ animation: "heroTextFadeOut 0.8s ease-out 4.4s both" }}
       />
 
       {/* 벚꽃 떨어지는 효과 */}
@@ -282,12 +282,12 @@ export default function MainHero({
 
       {/* 중앙: 글씨 작성 애니메이션 */}
       <div className="absolute inset-0 flex flex-col items-center justify-center -translate-y-4">
-        <div>
+        <div className="-translate-x-8">
           <p
-            className="font-sacramento text-[clamp(35px,9vw,48px)] font-normal leading-snug text-white/85 px-4 pt-3 pb-2"
+            className="font-tangerine text-[clamp(30px,8vw,40px)] font-normal leading-snug text-white/85 px-4 pt-3 pb-2"
             style={{
               animation:
-                "writeClipOpen 1.8s cubic-bezier(0.25, 1, 0.5, 1) 0.25s both, heroTextFadeOut 0.8s ease-out 5.5s both",
+                "writeClipOpen 1.8s cubic-bezier(0.25, 1, 0.5, 1) 0.25s both, heroTextFadeOut 0.8s ease-out 4.4s both",
               WebkitFontSmoothing: "antialiased",
               textShadow: "0 1px 6px rgba(0,0,0,0.18)",
             }}
@@ -295,12 +295,12 @@ export default function MainHero({
             Welcome to
           </p>
         </div>
-        <div className="mt-1">
+        <div className="mt-1 translate-x-8">
           <p
-            className="font-sacramento text-[clamp(35px,9vw,48px)] font-normal leading-snug text-white/85 px-4 pt-2 pb-5"
+            className="font-tangerine text-[clamp(30px,8vw,40px)] font-normal leading-snug text-white/85 px-4 pt-2 pb-5"
             style={{
               animation:
-                "writeClipOpen 1.95s cubic-bezier(0.25, 1, 0.5, 1) 2.1s both, heroTextFadeOut 0.8s ease-out 5.5s both",
+                "writeClipOpen 1.95s cubic-bezier(0.25, 1, 0.5, 1) 1.75s both, heroTextFadeOut 0.8s ease-out 4.4s both",
               WebkitFontSmoothing: "antialiased",
               textShadow: "0 1px 6px rgba(0,0,0,0.18)",
             }}

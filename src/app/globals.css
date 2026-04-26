@@ -125,8 +125,8 @@
     letter-spacing: 0.01em;
   }
 
-  .font-sacramento {
-    font-family: var(--font-sacramento), cursive;
+  .font-tangerine {
+    font-family: var(--font-tangerine), cursive;
   }
 
   /* 텍스트 섀도우 */
@@ -198,13 +198,13 @@
   }
 }
 
-/* descender(g, y 등)가 박스 아래로 삐져나오는 폰트용 — bottom에 여유 공간 확보 */
+/* 글씨 획이 박스 밖으로 삐져나오는 필기체용 여유 공간 확보 */
 @keyframes writeClipOpen {
   from {
-    clip-path: inset(0 100% -24px 0);
+    clip-path: inset(-24px 100% -24px 0);
   }
   to {
-    clip-path: inset(0 0% -24px 0);
+    clip-path: inset(-24px 0% -24px 0);
   }
 }
 
