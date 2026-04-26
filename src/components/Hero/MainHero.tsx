@@ -266,11 +266,8 @@ export default function MainHero({
           </div>
         ))}
 
-      {/* 상단: 이름 — 오버레이 사라진 후 등장 */}
-      <div
-        className="absolute inset-x-0 top-10 text-center"
-        style={{ animation: "heroTextFadeIn 0.8s ease-out 6.3s both" }}
-      >
+      {/* 상단: 이름 */}
+      <div className="absolute inset-x-0 top-10 text-center">
         <p
           className="font-crimson text-sm uppercase tracking-[0.3em]"
           style={{
@@ -310,12 +307,11 @@ export default function MainHero({
         </div>
       </div>
 
-      {/* 하단: 날짜 및 장소 — 오버레이 사라진 후 등장 */}
+      {/* 하단: 날짜 및 장소 */}
       <div
         className="absolute inset-x-0 bottom-0 text-center space-y-1.5 px-6 pt-10 pb-10"
         style={{
           background: "linear-gradient(to top, rgba(0,0,0,0.52) 0%, transparent 100%)",
-          animation: "heroTextFadeIn 0.8s ease-out 6.3s both",
         }}
       >
         <p
