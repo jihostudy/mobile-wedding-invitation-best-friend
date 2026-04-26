@@ -84,6 +84,7 @@ export default function MainHero({
   rsvpTitle,
 }: MainHeroProps) {
   const [blossomActive, setBlossomActive] = useState(false);
+  const [heroViewportHeight, setHeroViewportHeight] = useState("100svh");
   const hasOpenedRsvpRef = useRef(false);
 
   const groomGivenName = useMemo(() => {
@@ -127,6 +128,23 @@ export default function MainHero({
     const today = new Date();
     const label = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
     localStorage.setItem(HIDE_KEY, label);
+  }, []);
+
+  useEffect(() => {
+    const lockViewportHeight = () => {
+      const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
+      setHeroViewportHeight(`${Math.round(viewportHeight)}px`);
+    };
+    const handleOrientationChange = () => {
+      window.setTimeout(lockViewportHeight, 250);
+    };
+
+    lockViewportHeight();
+    window.addEventListener("orientationchange", handleOrientationChange);
+
+    return () => {
+      window.removeEventListener("orientationchange", handleOrientationChange);
+    };
   }, []);
 
   useEffect(() => {
@@ -178,7 +196,11 @@ export default function MainHero({
   ]);
 
   return (
-    <section id="hero" className="relative h-screen overflow-hidden" style={{ height: '100svh' }}>
+    <section
+      id="hero"
+      className="relative overflow-hidden"
+      style={{ height: heroViewportHeight, minHeight: heroViewportHeight }}
+    >
       <h1 className="sr-only">
         {groom.name} 그리고 {bride.name} 결혼합니다.
       </h1>
