@@ -1,0 +1,1 @@
+export const BLUR_PLACEHOLDER = `data:image/svg+xml;charset=utf-8,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><rect width="1" height="1" fill="#f5f5f5"/></svg>')}`;
