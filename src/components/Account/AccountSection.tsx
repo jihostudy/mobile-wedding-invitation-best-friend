@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { ChevronDown, ChevronUp, Copy, UserRound } from "lucide-react";
+import { ChevronDown, ChevronUp, Copy } from "lucide-react";
 import Icon from "@/components/common/Icon";
 import useToast from "@/components/common/toast/useToast";
 import type { AccountSectionData, WeddingInfo } from "@/types";
@@ -41,13 +41,19 @@ export default function AccountSection({
   section,
   weddingData,
 }: AccountSectionProps) {
-  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(
-    Object.fromEntries(section.groups.map((group) => [group.id, true])),
-  );
-  const [selectedAccountIndexByGroup, setSelectedAccountIndexByGroup] =
-    useState<Record<string, number | null>>(
-      Object.fromEntries(section.groups.map((group) => [group.id, null])),
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => {
+    const hasBrideGroup = section.groups.some(
+      (group) => group.id.includes("bride") || group.label.includes("신부"),
     );
+    return Object.fromEntries(
+      section.groups.map((group, index) => [
+        group.id,
+        group.id.includes("bride") ||
+          group.label.includes("신부") ||
+          (!hasBrideGroup && index === 0),
+      ]),
+    );
+  });
   const toast = useToast();
   const visibleGroups = useMemo(
     () =>
@@ -80,13 +86,6 @@ export default function AccountSection({
     setOpenGroups((prev) => ({ ...prev, [groupId]: !prev[groupId] }));
   };
 
-  const handleSelectAccount = (groupId: string, accountIndex: number) => {
-    setSelectedAccountIndexByGroup((prev) => ({
-      ...prev,
-      [groupId]: accountIndex,
-    }));
-  };
-
   if (visibleGroups.length === 0) {
     return null;
   }
@@ -108,28 +107,20 @@ export default function AccountSection({
 
         <div className="mt-7 space-y-3">
           {visibleGroups.map((group) => (
-            <div
-              key={group.id}
-              className="overflow-hidden rounded-xl border border-wedding-brown/15 bg-white"
-            >
+            <div key={group.id} className="overflow-hidden ">
               <button
                 type="button"
                 onClick={() => toggleGroup(group.id)}
-                className="relative flex w-full items-center justify-between border-b border-wedding-brown/10 bg-[#faf7f2] px-5 py-4 text-left"
+                className="relative flex h-[52px] w-full items-center justify-center rounded-t-lg bg-wedding-brown/10 px-5 text-center transition hover:bg-wedding-brown/15"
                 aria-expanded={openGroups[group.id]}
               >
-                <span className="inline-flex items-center gap-2 text-base font-medium text-wedding-gray">
-                  <Icon
-                    icon={UserRound}
-                    size="md"
-                    className="text-wedding-brown-light"
-                  />
-                  {group.label}
+                <span className="text-base font-medium tracking-[0.04em] text-wedding-brown">
+                  {group.label} 계좌번호
                 </span>
                 <Icon
                   icon={openGroups[group.id] ? ChevronUp : ChevronDown}
                   size="md"
-                  className="text-wedding-brown-light"
+                  className="absolute right-6 text-wedding-brown"
                 />
               </button>
 
@@ -151,94 +142,43 @@ export default function AccountSection({
                   },
                 }}
                 style={{ willChange: "height, opacity" }}
-                className="overflow-hidden"
+                className="overflow-hidden bg-white"
                 aria-hidden={!openGroups[group.id]}
               >
-                <div className="space-y-5 bg-[#fdfcf9] px-5 py-6">
-                  <p className="text-center text-[14px] font-medium text-wedding-gray">
-                    어떤 분에게 마음을 전하시고 싶으신가요?
-                  </p>
+                <div className="bg-white divide-y divide-wedding-brown/10">
+                  {group.visibleAccounts.map(({ account, accountIndex }) => {
+                    const holderName = inferAccountHolderName(
+                      group.id,
+                      group.label,
+                      accountIndex,
+                      weddingData,
+                    );
 
-                  <div className="flex flex-wrap items-center justify-center gap-3">
-                    {group.visibleAccounts.map(({ accountIndex }) => {
-                      const holderName = inferAccountHolderName(
-                        group.id,
-                        group.label,
-                        accountIndex,
-                        weddingData,
-                      );
-                      const isSelected =
-                        selectedAccountIndexByGroup[group.id] ===
-                        accountIndex;
-                      return (
+                    return (
+                      <div
+                        key={`${group.id}-account-${accountIndex}`}
+                        className="grid min-h-[104px] grid-cols-[1fr_auto] items-center gap-4 bg-white px-5 py-5"
+                      >
+                        <div className="min-w-0 text-left">
+                          <p className="text-base font-medium leading-6 text-wedding-gray">
+                            {holderName}
+                          </p>
+                          <p className="mt-2 break-all text-xs leading-6 text-wedding-gray-light">
+                            {account.bank} {account.account}
+                          </p>
+                        </div>
                         <button
-                          key={`${group.id}-selector-${accountIndex}`}
                           type="button"
-                          onClick={() =>
-                            handleSelectAccount(group.id, accountIndex)
-                          }
-                          className={`flex h-[84px] w-[84px] items-center justify-center rounded-full px-2 text-[14px] font-medium leading-tight transition ${
-                            isSelected
-                              ? "bg-wedding-brown text-white shadow-[0_8px_18px_rgba(95,78,57,0.22)]"
-                              : "border border-wedding-brown/20 bg-white text-wedding-brown hover:bg-[#fbf8f2]"
-                          }`}
+                          onClick={() => handleCopy(account.account)}
+                          className="inline-flex h-12 items-center  justify-center gap-1 rounded-lg border border-wedding-brown/20 bg-white px-5 text-xs font-semibold text-wedding-brown transition hover:bg-white"
+                          aria-label={`${holderName} ${account.bank} ${account.account} 계좌번호 복사`}
                         >
-                          {holderName}
+                          <Icon icon={Copy} size="sm" />
+                          복사하기
                         </button>
-                      );
-                    })}
-                  </div>
-
-                  {selectedAccountIndexByGroup[group.id] !== null && (
-                    <div className="rounded-2xl border border-wedding-brown/15 bg-white px-3 py-5">
-                      {(() => {
-                        const selectedIndex =
-                          selectedAccountIndexByGroup[group.id];
-                        if (selectedIndex === null) {
-                          return null;
-                        }
-                        const selectedAccountItem =
-                          group.visibleAccounts.find(
-                            ({ accountIndex }) =>
-                              accountIndex === selectedIndex,
-                          );
-                        if (!selectedAccountItem) return null;
-                        const selectedAccount = selectedAccountItem.account;
-                        const holderName = inferAccountHolderName(
-                          group.id,
-                          group.label,
-                          selectedIndex,
-                          weddingData,
-                        );
-
-                        return (
-                          <>
-                            <button
-                              type="button"
-                              onClick={() => handleCopy(selectedAccount.account)}
-                              className="w-full text-center text-sm font-medium text-wedding-gray underline-offset-4 transition hover:underline"
-                              aria-label={`${holderName} ${selectedAccount.bank} ${selectedAccount.account} 계좌번호 복사`}
-                            >
-                              {holderName} · {selectedAccount.bank}{" "}
-                              {selectedAccount.account}
-                            </button>
-                            <div className="mt-5 grid grid-cols-1 gap-3">
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  handleCopy(selectedAccount.account)
-                                }
-                                className="inline-flex h-11 items-center justify-center gap-1 rounded-[12px] border border-wedding-brown/20 bg-white px-3 text-xs font-semibold text-wedding-brown transition hover:bg-[#fbf8f2]"
-                              >
-                                <Icon icon={Copy} size="sm" />
-                                계좌번호 복사
-                              </button>
-                            </div>
-                          </>
-                        );
-                      })()}
-                    </div>
-                  )}
+                      </div>
+                    );
+                  })}
                 </div>
               </motion.div>
             </div>
