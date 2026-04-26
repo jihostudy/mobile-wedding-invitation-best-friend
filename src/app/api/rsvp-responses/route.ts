@@ -7,7 +7,6 @@ export async function POST(request: Request) {
     attendStatus?: RsvpAttendStatus;
     side?: RsvpSide;
     name?: string;
-    contact?: string;
     extraCount?: number;
     eatMeal?: boolean;
     note?: string;
@@ -23,7 +22,6 @@ export async function POST(request: Request) {
   const attendStatus = body.attendStatus;
   const side = body.side;
   const name = body.name?.trim() || '';
-  const contact = body.contact?.trim() || '';
   const extraCount = typeof body.extraCount === 'number' ? body.extraCount : 0;
   const eatMeal = body.eatMeal ?? true;
   // Shuttle bus is always operated, so keep a fixed value in storage.
@@ -38,7 +36,6 @@ export async function POST(request: Request) {
     return fail(400, 'VALIDATION_ERROR', 'side is invalid');
   }
   if (!name) return fail(400, 'VALIDATION_ERROR', 'name is required');
-  if (!contact) return fail(400, 'VALIDATION_ERROR', 'contact is required');
   if (extraCount < 0 || extraCount > 20) return fail(400, 'VALIDATION_ERROR', 'extraCount must be between 0 and 20');
   if (!agreePrivacy) return fail(400, 'VALIDATION_ERROR', 'agreePrivacy must be true');
 
@@ -50,7 +47,7 @@ export async function POST(request: Request) {
         attend_status: attendStatus,
         side,
         name,
-        contact,
+        contact: '',
         extra_count: extraCount,
         eat_meal: eatMeal,
         ride_bus: rideBus,

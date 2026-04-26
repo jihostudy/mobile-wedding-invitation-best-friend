@@ -156,12 +156,6 @@ export default function AdminAttendancePage() {
       renderCell: (row) => formatBooleanKorean(row.eatMeal),
     },
     {
-      key: "contact",
-      header: "연락처",
-      className: "whitespace-nowrap",
-      renderCell: (row) => row.contact || "-",
-    },
-    {
       key: "note",
       header: "메모",
       className: "min-w-[220px] max-w-[360px]",

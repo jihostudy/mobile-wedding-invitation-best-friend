@@ -248,7 +248,6 @@ export interface RsvpResponseInput {
   attendStatus: RsvpAttendStatus;
   side: RsvpSide;
   name: string;
-  contact: string;
   extraCount: number;
   eatMeal: boolean;
   note: string;
@@ -341,7 +340,6 @@ export interface RsvpResponseDto {
   attendStatus: RsvpAttendStatus;
   side: RsvpSide;
   name: string;
-  contact: string;
   extraCount: number;
   eatMeal: boolean;
   note: string;

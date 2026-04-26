@@ -108,7 +108,7 @@ export async function createRsvpResponse(
       attend_status: input.attendStatus,
       side: input.side,
       name: input.name,
-      contact: input.contact,
+      contact: '',
       extra_count: input.extraCount,
       eat_meal: input.eatMeal,
       // Shuttle bus is fixed-operating; keep persisted value constant.

@@ -17,13 +17,6 @@ interface RsvpModalProps {
 type AttendStatus = "available" | "unavailable";
 type Side = "groom" | "bride";
 
-function formatPhoneNumber(value: string) {
-  const digits = value.replace(/\D/g, "").slice(0, 11);
-  if (digits.length <= 3) return digits;
-  if (digits.length <= 7) return `${digits.slice(0, 3)}-${digits.slice(3)}`;
-  return `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7)}`;
-}
-
 function SelectCard({
   label,
   selected,
@@ -91,7 +84,6 @@ export default function RsvpModal({
   const [attendStatus, setAttendStatus] = useState<AttendStatus>("available");
   const [side, setSide] = useState<Side>("groom");
   const [name, setName] = useState("");
-  const [contact, setContact] = useState("");
   const [totalCount, setTotalCount] = useState(1);
   const [eatMeal, setEatMeal] = useState(true);
   const [note, setNote] = useState("");
@@ -104,8 +96,7 @@ export default function RsvpModal({
     onEscape: onClose,
   });
 
-  const canSubmit =
-    agreePrivacy && name.trim().length > 0 && contact.trim().length > 0;
+  const canSubmit = agreePrivacy && name.trim().length > 0;
 
   if (!isOpen) return null;
 
@@ -156,7 +147,6 @@ export default function RsvpModal({
                   attendStatus,
                   side,
                   name: name.trim(),
-                  contact: contact.trim(),
                   extraCount: Math.max(totalCount - 1, 0),
                   eatMeal,
                   note: note.trim(),
@@ -243,21 +233,6 @@ export default function RsvpModal({
                     className="mt-3 h-11 w-full border-0 border-b border-[#c7c7c7] bg-transparent px-1 text-sm text-[#2f2f2f] placeholder:text-[#c2c2c2] focus:outline-none"
                   />
                 </div>
-                <div>
-                  <label className="text-sm font-semibold text-[#1f1f1f]">
-                    <span className="mr-1 text-[#d62020]">*</span>연락처
-                  </label>
-                  <input
-                    type="text"
-                    value={contact}
-                    onChange={(event) =>
-                      setContact(formatPhoneNumber(event.target.value))
-                    }
-                    placeholder="참석자 대표 연락처를 입력해 주세요."
-                    className="mt-3 h-11 w-full border-0 border-b border-[#c7c7c7] bg-transparent px-1 text-sm text-[#2f2f2f] placeholder:text-[#c2c2c2] focus:outline-none"
-                  />
-                </div>
-
                 <div className="flex items-center justify-between gap-4">
                   <p className="shrink-0 text-sm font-semibold text-[#1f1f1f]">
                     <span className="mr-1 text-[#d62020]">*</span>총 인원 (본인
@@ -347,8 +322,7 @@ export default function RsvpModal({
                         참석여부 전달을 위한 개인정보 수집 및 이용에
                         동의해주세요.
                         <br />
-                        항목: 성함,연락처,동행인 성함 · 보유기간: 청첩장 이용
-                        종료시까지
+                        항목: 성함, 참석 정보 · 보유기간: 청첩장 이용 종료시까지
                       </p>
                     </span>
                   </span>
