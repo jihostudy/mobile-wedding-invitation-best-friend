@@ -283,11 +283,12 @@ export default function MainHero({
       <div className="absolute inset-0 flex flex-col items-center justify-center -translate-y-4">
         <div>
           <p
-            className="font-sacramento text-[clamp(35px,9vw,48px)] tracking-[0.06em] leading-snug text-white px-4 pt-3 pb-2"
+            className="font-sacramento text-[clamp(35px,9vw,48px)] font-normal leading-snug text-white/85 px-4 pt-3 pb-2"
             style={{
               animation:
-                "writeClipOpen 2.2s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both, heroTextFadeOut 0.8s ease-out 5.5s both",
-              textShadow: "0 2px 16px rgba(0,0,0,0.4)",
+                "writeClipOpen 1.8s cubic-bezier(0.25, 1, 0.5, 1) 0.25s both, heroTextFadeOut 0.8s ease-out 5.5s both",
+              WebkitFontSmoothing: "antialiased",
+              textShadow: "0 1px 6px rgba(0,0,0,0.18)",
             }}
           >
             Welcome to
@@ -295,11 +296,12 @@ export default function MainHero({
         </div>
         <div className="mt-1">
           <p
-            className="font-sacramento text-[clamp(35px,9vw,48px)] tracking-[0.06em] leading-snug text-white px-4 pt-2 pb-5"
+            className="font-sacramento text-[clamp(35px,9vw,48px)] font-normal leading-snug text-white/85 px-4 pt-2 pb-5"
             style={{
               animation:
-                "writeClipOpen 2.4s cubic-bezier(0.4, 0, 0.2, 1) 2.7s both, heroTextFadeOut 0.8s ease-out 5.5s both",
-              textShadow: "0 2px 16px rgba(0,0,0,0.4)",
+                "writeClipOpen 1.95s cubic-bezier(0.25, 1, 0.5, 1) 2.1s both, heroTextFadeOut 0.8s ease-out 5.5s both",
+              WebkitFontSmoothing: "antialiased",
+              textShadow: "0 1px 6px rgba(0,0,0,0.18)",
             }}
           >
             our wedding.
