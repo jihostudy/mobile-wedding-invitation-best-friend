@@ -92,11 +92,14 @@ export default function RsvpEntryPromptOverlay({
                 </div>
               </div>
 
-              <p className="mt-4 text-center text-sm leading-6 font-medium text-[#6f6f6f]">
-                특별한 날 축하의 마음으로 참석해주시는 모든 분들을 한 분 한 분
-                더 귀하게 모실 수 있도록, 아래 버튼으로 신랑 & 신부에게 꼭
-                참석여부 전달을 부탁드립니다.
-              </p>
+              <div className="mt-6 text-left px-5 text-sm font-medium leading-7 text-[#2f2f2f]">
+                <p>참석해 주시는 모든 분들을</p>
+                <p>감사한 마음으로 정중히 모시고자 하오니</p>
+                <p>참석 여부를 전달해 주시면 감사드리겠습니다.</p>
+                <p className="mt-1 text-wedding-gray">
+                  * 화환은 반입이 불가하오니, 정중히 사양합니다.
+                </p>
+              </div>
 
               <div className="mt-6 border-y-2 font-medium border-[#d2d2d2] py-6 text-sm text-[#2f2f2f] flex flex-col gap-2 px-5">
                 <p className="flex items-center gap-3">

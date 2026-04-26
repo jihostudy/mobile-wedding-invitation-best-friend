@@ -15,7 +15,10 @@ interface RsvpSectionProps {
   weddingData: WeddingInfo;
 }
 
-export default function RsvpSection({ section, weddingData }: RsvpSectionProps) {
+export default function RsvpSection({
+  section,
+  weddingData,
+}: RsvpSectionProps) {
   const HIDE_KEY = "rsvp_prompt_hide_until";
   const SUBMITTED_KEY = "rsvp_submitted_at";
   const hasOpenedEntryPromptRef = useRef(false);
@@ -90,7 +93,7 @@ export default function RsvpSection({ section, weddingData }: RsvpSectionProps) 
         <h3 className="mt-3 text-xl tracking-[0.04em] text-wedding-gray-dark">
           {section.title}
         </h3>
-        <p className="mt-9 whitespace-pre-line text-[15px] leading-8 text-wedding-gray">
+        <p className="mt-9 whitespace-pre-line text-sm leading-8 text-wedding-gray">
           {section.description}
         </p>
 

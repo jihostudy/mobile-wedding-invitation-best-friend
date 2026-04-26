@@ -55,7 +55,9 @@ function openSingleRsvpOverlay(
 ) {
   const activeOverlayId = activeRsvpOverlayIds[type];
   if (activeOverlayId) {
-    return activeOverlayId;
+    overlay.close(activeOverlayId);
+    overlay.unmount(activeOverlayId);
+    releaseRsvpOverlay(type, activeOverlayId);
   }
 
   const overlayId = createRsvpOverlayId(type);

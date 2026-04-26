@@ -22,6 +22,18 @@ import { FALLBACK_WEDDING_CONTENT } from "@/lib/wedding-content/fallback";
 import { useWeddingContentQuery } from "@/lib/queries/wedding-content";
 import type { PageSectionId } from "@/types";
 
+function FlowerNotice() {
+  return (
+    <FadeInUp delay={0.12} amount={0.15}>
+      <div className="bg-white px-9 py-8 text-center">
+        <p className="text-sm leading-7 text-wedding-gray-light">
+          * 화환은 반입이 불가하오니, 정중히 사양합니다.
+        </p>
+      </div>
+    </FadeInUp>
+  );
+}
+
 export default function HomePageClient() {
   const toast = useToast();
   const hasShownLoginToast = useRef(false);
@@ -163,7 +175,10 @@ export default function HomePageClient() {
           {content.pageSectionOrder
             .filter((sectionId) => content.pageSectionVisibility[sectionId])
             .map((sectionId) => (
-              <div key={sectionId}>{renderSection(sectionId)}</div>
+              <div key={sectionId}>
+                {renderSection(sectionId)}
+                {sectionId === "rsvp" ? <FlowerNotice /> : null}
+              </div>
             ))}
         </div>
       </main>
