@@ -1,7 +1,6 @@
 import type { WeddingContentV1 } from "@/types";
 
-export const KAKAO_SDK_SRC =
-  "https://t1.kakaocdn.net/kakao_js_sdk/v1/kakao.min.js";
+export const KAKAO_SDK_SRC = "https://developers.kakao.com/sdk/js/kakao.js";
 
 export interface KakaoShareLink {
   mobileWebUrl: string;
