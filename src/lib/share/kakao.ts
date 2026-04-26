@@ -68,7 +68,7 @@ export function buildKakaoSharePayload(params: {
   const brideName = params.content.weddingData.bride.name;
   const title =
     params.content.kakaoShareCard?.title?.trim() ||
-    `${groomName} ❤️ ${brideName} 결혼합니다`;
+    `${groomName} ♥ ${brideName}, 우리 결혼합니다.`;
   const description =
     params.content.kakaoShareCard?.description?.trim() ||
     buildFallbackDescription(params.content);

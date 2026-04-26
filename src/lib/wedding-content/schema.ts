@@ -480,7 +480,7 @@ const weddingContentSchema = z
     kakaoShareCard: {
       title:
         content.kakaoShareCard?.title?.trim() ||
-        `${content.weddingData.groom.name} ❤️ ${content.weddingData.bride.name} 결혼합니다`,
+        `${content.weddingData.groom.name} ♥ ${content.weddingData.bride.name}, 우리 결혼합니다.`,
       description:
         content.kakaoShareCard?.description?.trim() ||
         buildDefaultKakaoDescription({
@@ -493,7 +493,8 @@ const weddingContentSchema = z
           floor: content.weddingData.venue.floor,
           hall: content.weddingData.venue.hall,
         }),
-      buttonTitle: content.kakaoShareCard?.buttonTitle?.trim() || "모바일 청첩장 보기",
+      buttonTitle:
+        content.kakaoShareCard?.buttonTitle?.trim() || "모바일 청첩장 보기",
       imageUrl:
         content.kakaoShareCard?.imageUrl?.trim() ||
         content.heroSection.mainImage.url ||
@@ -503,7 +504,7 @@ const weddingContentSchema = z
       countdownLabel:
         content.calendarSection?.countdownLabel ??
         content.calendarSection?.countdownPrefix ??
-        `${getGivenName(content.weddingData.groom.name)}❤️${getGivenName(content.weddingData.bride.name)}의 결혼식`,
+        `${getGivenName(content.weddingData.groom.name)} ♥ ${getGivenName(content.weddingData.bride.name)}, 우리 결혼합니다.`,
     },
     pageSectionOrder: normalizePageSectionOrder(content.pageSectionOrder),
     pageSectionVisibility: normalizePageSectionVisibility(

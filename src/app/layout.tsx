@@ -10,7 +10,7 @@ import { KAKAO_SDK_SRC } from "@/lib/share/kakao";
 import "./globals.css";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-const weddingTitle = "동현 ❤️ 다연 결혼합니다";
+const weddingTitle = "동현 ♥ 다연, 우리 결혼합니다.";
 const weddingDescription =
   "2026년 6월 20일 토요일 낮 12시 30분 · 루클라비더화이트";
 
@@ -85,7 +85,7 @@ export const metadata: Metadata = {
         url: "/images/placeholder-couple.svg",
         width: 1200,
         height: 630,
-        alt: "동현❤️다연의 결혼식 청첩장",
+        alt: "동현 ♥ 다연의 결혼식 청첩장",
       },
     ],
   },
