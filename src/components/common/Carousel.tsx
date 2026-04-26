@@ -32,6 +32,7 @@ export interface CarouselProps<T> {
   viewportClassName?: string;
   viewportStyle?: CSSProperties;
   slideClassName?: string;
+  slideGapPx?: number;
   prevAriaLabel?: string;
   nextAriaLabel?: string;
 }
@@ -72,6 +73,7 @@ export default function Carousel<T>({
   viewportClassName,
   viewportStyle,
   slideClassName,
+  slideGapPx = 0,
   prevAriaLabel = "이전 슬라이드",
   nextAriaLabel = "다음 슬라이드",
 }: CarouselProps<T>) {
@@ -81,8 +83,9 @@ export default function Carousel<T>({
   const [currentIndex, setCurrentIndex] = useState(() =>
     clampIndex(isControlled ? index : initialIndex, itemCount),
   );
+  const [dragOffsetPx, setDragOffsetPx] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
   const lastNotifiedIndexRef = useRef(currentIndex);
-
   const pointerStartRef = useRef<{ x: number; y: number } | null>(null);
 
   const normalizeIndex = useCallback(
@@ -133,14 +136,25 @@ export default function Carousel<T>({
     onIndexChange(currentIndex);
   }, [currentIndex, onIndexChange]);
 
+  useEffect(() => {
+    setDragOffsetPx(0);
+    setIsDragging(false);
+    pointerStartRef.current = null;
+  }, [currentIndex]);
+
   const isAtStart = currentIndex <= 0;
   const isAtEnd = currentIndex >= itemCount - 1;
   const disablePrev = itemCount <= 1 || (!loop && isAtStart);
   const disableNext = itemCount <= 1 || (!loop && isAtEnd);
 
   const trackStyle = useMemo(
-    () => ({ transform: `translateX(-${currentIndex * 100}%)` }),
-    [currentIndex],
+    () => ({
+      gap: `${slideGapPx}px`,
+      transform: `translateX(calc(-${currentIndex * 100}% - ${
+        currentIndex * slideGapPx
+      }px + ${dragOffsetPx}px))`,
+    }),
+    [currentIndex, dragOffsetPx, slideGapPx],
   );
 
   const handleKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
@@ -161,15 +175,42 @@ export default function Carousel<T>({
       return;
     }
     pointerStartRef.current = { x: event.clientX, y: event.clientY };
+    setIsDragging(true);
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+
+  const handlePointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (!swipe || itemCount <= 1 || !pointerStartRef.current) {
+      return;
+    }
+
+    const deltaX = event.clientX - pointerStartRef.current.x;
+    const deltaY = event.clientY - pointerStartRef.current.y;
+
+    if (Math.abs(deltaX) < 4 || Math.abs(deltaX) <= Math.abs(deltaY)) {
+      return;
+    }
+
+    const isDraggingPastStart = !loop && isAtStart && deltaX > 0;
+    const isDraggingPastEnd = !loop && isAtEnd && deltaX < 0;
+    const nextOffset =
+      isDraggingPastStart || isDraggingPastEnd ? deltaX * 0.28 : deltaX;
+
+    event.preventDefault();
+    setDragOffsetPx(nextOffset);
   };
 
   const handlePointerEnd = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (!swipe || itemCount <= 1 || !pointerStartRef.current) {
+      setDragOffsetPx(0);
+      setIsDragging(false);
       return;
     }
     const deltaX = event.clientX - pointerStartRef.current.x;
     const deltaY = event.clientY - pointerStartRef.current.y;
     pointerStartRef.current = null;
+    setDragOffsetPx(0);
+    setIsDragging(false);
 
     if (
       Math.abs(deltaX) >= SWIPE_THRESHOLD_PX &&
@@ -185,6 +226,8 @@ export default function Carousel<T>({
 
   const handlePointerCancel = () => {
     pointerStartRef.current = null;
+    setDragOffsetPx(0);
+    setIsDragging(false);
   };
 
   if (itemCount === 0) {
@@ -207,11 +250,17 @@ export default function Carousel<T>({
         )}
         style={viewportStyle}
         onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
         onPointerUp={handlePointerEnd}
         onPointerCancel={handlePointerCancel}
       >
         <div
-          className="flex h-full transition-transform duration-300 ease-out"
+          className={cx(
+            "flex h-full",
+            isDragging
+              ? "transition-none"
+              : "transition-transform duration-500 ease-out",
+          )}
           style={trackStyle}
         >
           {items.map((item, index) => (
