@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { ChevronDown, ChevronLeft, ChevronRight, X } from "lucide-react";
 import Carousel from "@/components/common/Carousel";
+import { BLUR_PLACEHOLDER } from "@/lib/image-placeholder";
 import FadeInUp from "@/components/common/FadeInUp";
 import Icon from "@/components/common/Icon";
 import ModalPortal from "@/components/common/ModalPortal";
@@ -40,6 +41,20 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
     active: selectedImageIndex !== null,
     onEscape: () => setSelectedImageIndex(null),
   });
+
+  useEffect(() => {
+    const nextBatch = section.images.slice(INITIAL_VISIBLE_COUNT, EXPANDED_VISIBLE_COUNT);
+    if (!nextBatch.length) return;
+
+    const timer = setTimeout(() => {
+      nextBatch.forEach((image) => {
+        const img = new window.Image();
+        img.src = image.url;
+      });
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [section.images]);
 
   return (
     <>
@@ -84,6 +99,8 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
                         className="object-cover object-center"
                         sizes="(max-width: 425px) 33vw, 140px"
                         quality={92}
+                        placeholder="blur"
+                        blurDataURL={BLUR_PLACEHOLDER}
                         priority={index < INITIAL_VISIBLE_COUNT}
                       />
                     </button>
@@ -164,7 +181,9 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
                         draggable={false}
                         className="object-contain object-center"
                         sizes="(max-width: 430px) 100vw, 430px"
-                        quality={100}
+                        quality={90}
+                        placeholder="blur"
+                        blurDataURL={BLUR_PLACEHOLDER}
                       />
                     </div>
                   </div>

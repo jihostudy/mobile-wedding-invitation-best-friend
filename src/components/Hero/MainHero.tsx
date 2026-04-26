@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { BLUR_PLACEHOLDER } from "@/lib/image-placeholder";
 import type { HeroSectionData, Person, WeddingDate } from "@/types";
 
 interface MainHeroProps {
@@ -30,8 +31,9 @@ export default function MainHero({ groom, bride, date, section }: MainHeroProps)
             fill
             className="object-cover"
             sizes="(max-width: 425px) calc(100vw - 56px), 369px"
-            quality={100}
-            unoptimized
+            quality={90}
+            placeholder="blur"
+            blurDataURL={BLUR_PLACEHOLDER}
             priority
           />
         </div>

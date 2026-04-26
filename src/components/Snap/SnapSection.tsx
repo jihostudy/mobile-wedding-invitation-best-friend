@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Camera } from "lucide-react";
+import { BLUR_PLACEHOLDER } from "@/lib/image-placeholder";
 import FadeInUp from "@/components/common/FadeInUp";
 import Icon from "@/components/common/Icon";
 import FireflyOverlay from "@/components/Snap/FireflyOverlay";
@@ -142,8 +143,9 @@ export default function SnapSection({ section }: SnapSectionProps) {
                     fill
                     className="object-cover"
                     sizes="160px"
-                    quality={100}
-                    unoptimized
+                    quality={80}
+                    placeholder="blur"
+                    blurDataURL={BLUR_PLACEHOLDER}
                   />
                   {index === 1 ? <FireflyOverlay /> : null}
                 </motion.div>
