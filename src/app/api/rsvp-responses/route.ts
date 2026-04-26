@@ -8,7 +8,6 @@ export async function POST(request: Request) {
     side?: RsvpSide;
     name?: string;
     extraCount?: number;
-    eatMeal?: boolean;
     note?: string;
     agreePrivacy?: boolean;
   };
@@ -23,7 +22,6 @@ export async function POST(request: Request) {
   const side = body.side;
   const name = body.name?.trim() || '';
   const extraCount = typeof body.extraCount === 'number' ? body.extraCount : 0;
-  const eatMeal = body.eatMeal ?? true;
   // Shuttle bus is always operated, so keep a fixed value in storage.
   const rideBus = true;
   const note = body.note?.trim() || '';
@@ -49,7 +47,6 @@ export async function POST(request: Request) {
         name,
         contact: '',
         extra_count: extraCount,
-        eat_meal: eatMeal,
         ride_bus: rideBus,
         note,
         agree_privacy: agreePrivacy,

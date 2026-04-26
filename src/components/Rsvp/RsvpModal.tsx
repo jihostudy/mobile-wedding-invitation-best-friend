@@ -85,7 +85,6 @@ export default function RsvpModal({
   const [side, setSide] = useState<Side>("groom");
   const [name, setName] = useState("");
   const [totalCount, setTotalCount] = useState(1);
-  const [eatMeal, setEatMeal] = useState(true);
   const [note, setNote] = useState("");
   const [agreePrivacy, setAgreePrivacy] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -148,7 +147,6 @@ export default function RsvpModal({
                   side,
                   name: name.trim(),
                   extraCount: Math.max(totalCount - 1, 0),
-                  eatMeal,
                   note: note.trim(),
                   agreePrivacy,
                 })
@@ -264,30 +262,6 @@ export default function RsvpModal({
                     </button>
                   </div>
                 </div>
-
-                {attendStatus === "available" && (
-                  <div>
-                    <p className="text-sm font-semibold text-[#1f1f1f]">
-                      <span className="mr-1 text-[#d62020]">*</span>식사여부
-                    </p>
-                    <div className="mt-3 grid grid-cols-2 gap-4">
-                      <SelectCard
-                        label="식사함"
-                        selected={eatMeal}
-                        onClick={() => setEatMeal(true)}
-                        leadingIcon="check"
-                        centerContent
-                      />
-                      <SelectCard
-                        label="식사안함"
-                        selected={!eatMeal}
-                        onClick={() => setEatMeal(false)}
-                        leadingIcon="x"
-                        centerContent
-                      />
-                    </div>
-                  </div>
-                )}
 
                 <div>
                   <label className="text-sm font-semibold text-[#1f1f1f]">

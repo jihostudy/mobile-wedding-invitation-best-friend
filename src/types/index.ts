@@ -249,7 +249,6 @@ export interface RsvpResponseInput {
   side: RsvpSide;
   name: string;
   extraCount: number;
-  eatMeal: boolean;
   note: string;
   agreePrivacy: boolean;
 }
@@ -341,7 +340,6 @@ export interface RsvpResponseDto {
   side: RsvpSide;
   name: string;
   extraCount: number;
-  eatMeal: boolean;
   note: string;
   agreePrivacy: boolean;
   createdAt: string;

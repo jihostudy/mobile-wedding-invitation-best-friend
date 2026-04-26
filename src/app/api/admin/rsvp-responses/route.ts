@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
   const supabase = createServerSupabaseClient({ serviceRole: true });
   const { data, error } = await supabase
     .from('rsvp_responses')
-    .select('id, attend_status, side, name, extra_count, eat_meal, note, agree_privacy, created_at')
+    .select('id, attend_status, side, name, extra_count, note, agree_privacy, created_at')
     .order('created_at', { ascending: false });
 
   if (error) return fail(500, 'ADMIN_RSVP_FETCH_FAILED', error.message);
@@ -21,7 +21,6 @@ export async function GET(request: NextRequest) {
       side: item.side,
       name: item.name,
       extraCount: item.extra_count,
-      eatMeal: item.eat_meal,
       note: item.note,
       agreePrivacy: item.agree_privacy,
       createdAt: item.created_at,
