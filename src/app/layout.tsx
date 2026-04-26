@@ -1,11 +1,12 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import localFont from "next/font/local";
-import { Crimson_Pro } from "next/font/google";
+import { Crimson_Pro, Sacramento } from "next/font/google";
 import OverlayProvider from "@/components/providers/OverlayProvider";
 import ScrollResetProvider from "@/components/providers/ScrollResetProvider";
 import ToastProvider from "@/components/common/toast/ToastProvider";
 import QueryProvider from "@/components/providers/QueryProvider";
+import { KAKAO_SDK_SRC } from "@/lib/share/kakao";
 import "./globals.css";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
@@ -31,6 +32,13 @@ const crimsonPro = Crimson_Pro({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
   variable: "--font-crimson",
+  display: "swap",
+});
+
+const sacramento = Sacramento({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-sacramento",
   display: "swap",
 });
 
@@ -97,12 +105,12 @@ export default function RootLayout({
   return (
     <html
       lang="ko"
-      className={`${tmoneyRoundWind.variable} ${crimsonPro.variable} ${nanumHyejun.variable} ${pretendard.variable}`}
+      className={`${tmoneyRoundWind.variable} ${crimsonPro.variable} ${nanumHyejun.variable} ${pretendard.variable} ${sacramento.variable}`}
     >
       <body className={`${tmoneyRoundWind.className} antialiased bg-[#eedbc8]`}>
         <Script
           id="kakao-sdk"
-          src="https://developers.kakao.com/sdk/js/kakao.js"
+          src={KAKAO_SDK_SRC}
           strategy="afterInteractive"
         />
         <QueryProvider>

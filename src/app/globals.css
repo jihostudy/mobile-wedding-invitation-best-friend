@@ -125,6 +125,10 @@
     letter-spacing: 0.01em;
   }
 
+  .font-sacramento {
+    font-family: var(--font-sacramento), cursive;
+  }
+
   /* 텍스트 섀도우 */
   .text-shadow {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -185,6 +189,50 @@
 }
 
 /* 애니메이션 키프레임 */
+@keyframes writeClip {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0% 0 0);
+  }
+}
+
+@keyframes heroTextFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes heroPetalFall {
+  0% {
+    transform: translate(var(--px-0, 0px), -20px) rotate(var(--pr-0, 0deg));
+    opacity: 0;
+  }
+  6% {
+    opacity: var(--p-opacity, 0.8);
+  }
+  25% {
+    transform: translate(var(--px-1, 10px), 22vh) rotate(var(--pr-1, 90deg));
+  }
+  50% {
+    transform: translate(var(--px-2, -5px), 48vh) rotate(var(--pr-2, 180deg));
+  }
+  75% {
+    transform: translate(var(--px-3, 15px), 74vh) rotate(var(--pr-3, 270deg));
+  }
+  94% {
+    opacity: var(--p-opacity, 0.8);
+  }
+  100% {
+    transform: translate(var(--px-4, 5px), 114vh) rotate(var(--pr-4, 360deg));
+    opacity: 0;
+  }
+}
+
 @keyframes float {
   0%,
   100% {
