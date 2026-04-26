@@ -2086,20 +2086,20 @@ export default function AdminContentPage() {
               이미지 추가
             </button>
           </div>
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+          <div className="grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-3">
             {content.gallerySection.images.map((image, index) => (
               <div
                 key={image.id}
-                className="rounded-xl border border-[#eadfcb] bg-[#fffcf7] p-3"
+                className="rounded-xl border border-[#eadfcb] bg-[#fffcf7] p-2 sm:p-3"
               >
-                <div className="flex items-center justify-between gap-2">
+                <div className="space-y-2">
                   <p className="text-xs font-semibold text-[#6f6350]">
                     이미지 {index + 1}
                   </p>
-                  <div className="flex items-center gap-2">
+                  <div className="grid grid-cols-2 gap-1">
                     <button
                       type="button"
-                      className="h-8 rounded-md border border-[#d7c9b1] px-2 text-xs disabled:opacity-50"
+                      className="h-8 rounded-md border border-[#d7c9b1] px-1 text-[11px] disabled:opacity-50"
                       onClick={() =>
                         moveArrayItem(
                           ["gallerySection", "images"],
@@ -2113,7 +2113,7 @@ export default function AdminContentPage() {
                     </button>
                     <button
                       type="button"
-                      className="h-8 rounded-md border border-[#d7c9b1] px-2 text-xs disabled:opacity-50"
+                      className="h-8 rounded-md border border-[#d7c9b1] px-1 text-[11px] disabled:opacity-50"
                       onClick={() =>
                         moveArrayItem(
                           ["gallerySection", "images"],
@@ -2135,7 +2135,7 @@ export default function AdminContentPage() {
                         alt={GALLERY_IMAGE_ALT}
                         fill
                         className="object-cover object-center"
-                        sizes="(max-width: 980px) 100vw, 600px"
+                        sizes="(max-width: 767px) 50vw, 33vw"
                       />
                     ) : (
                       <div className="flex h-full items-center justify-center text-xs text-[#8f816b]">
@@ -2144,7 +2144,7 @@ export default function AdminContentPage() {
                     )}
                   </div>
                 </div>
-                <div className="mt-4 flex items-center justify-end gap-2 border-t border-[#efe4d2] pt-3">
+                <div className="mt-3 grid grid-cols-1 gap-1 border-t border-[#efe4d2] pt-2 sm:grid-cols-2">
                   <label>
                     <input
                       type="file"
@@ -2177,7 +2177,7 @@ export default function AdminContentPage() {
                         event.target.value = "";
                       }}
                     />
-                    <span className="inline-flex h-9 cursor-pointer items-center rounded-md border border-[#d7c9b1] bg-white px-3 text-xs text-[#574938]">
+                    <span className="inline-flex h-9 w-full cursor-pointer items-center justify-center rounded-md border border-[#d7c9b1] bg-white px-2 text-[11px] text-[#574938]">
                       {uploadingKey === `gallery-${index}`
                         ? "업로드 중..."
                         : "이미지 업로드"}
@@ -2185,7 +2185,7 @@ export default function AdminContentPage() {
                   </label>
                   <button
                     type="button"
-                    className="h-9 rounded-md border border-[#e1bfbf] px-3 text-xs text-[#8a4a4a]"
+                    className="h-9 rounded-md border border-[#e1bfbf] px-2 text-[11px] text-[#8a4a4a]"
                     onClick={() =>
                       removeArrayItem(["gallerySection", "images"], index)
                     }
