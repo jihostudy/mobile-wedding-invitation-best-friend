@@ -42,7 +42,7 @@ export default function InvitationMessage({
           <h2 className="mt-3 text-xl tracking-[0.04em] text-wedding-gray-dark">
             {section.title}
           </h2>
-          <p className="mt-8 whitespace-pre-line text-[15px] leading-8 text-wedding-gray">
+          <p className="mt-8 whitespace-pre-line text-[14px] leading-8 text-wedding-gray">
             {section.message}
           </p>
         </div>
