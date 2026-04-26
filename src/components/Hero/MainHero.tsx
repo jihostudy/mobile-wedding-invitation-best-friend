@@ -181,7 +181,7 @@ export default function MainHero({
         onHideToday: hidePromptToday,
         onOpenRsvp: openRsvpForm,
       });
-    }, 4400);
+    }, 5300);
 
     return () => {
       clearTimeout(blossomTimer);
