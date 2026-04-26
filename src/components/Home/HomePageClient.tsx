@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import MainHero from "@/components/Hero/MainHero";
 import EnvelopeLetterFrame from "@/components/Home/EnvelopeLetterFrame";
+import ViewportZoomController from "@/components/Home/ViewportZoomController";
 import InvitationMessage from "@/components/Invitation/InvitationMessage";
 import InterviewSection from "@/components/Interview/InterviewSection";
 import WeddingCalendar from "@/components/Calendar/WeddingCalendar";
@@ -27,6 +28,7 @@ export default function HomePageClient() {
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
   const { data } = useWeddingContentQuery("main");
   const content = data?.content ?? FALLBACK_WEDDING_CONTENT;
+  const disableZoom = content.weddingData.display?.disableZoom !== false;
 
   const renderSection = (sectionId: PageSectionId) => {
     switch (sectionId) {
@@ -144,6 +146,7 @@ export default function HomePageClient() {
 
   return (
     <>
+      <ViewportZoomController disabled={disableZoom} />
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 bg-[#EEDBC8]"

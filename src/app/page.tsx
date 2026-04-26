@@ -46,13 +46,13 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export async function generateViewport(): Promise<Viewport> {
   const content = await getWeddingContent("main");
-  const disableZoom = Boolean(content.content.weddingData.display?.disableZoom);
+  const disableZoom = content.content.weddingData.display?.disableZoom !== false;
 
   return {
     width: "device-width",
     initialScale: 1,
-    maximumScale: disableZoom ? 1 : 5,
-    userScalable: !disableZoom,
+    maximumScale: disableZoom ? 1 : undefined,
+    userScalable: disableZoom ? false : undefined,
     themeColor: "#F5F1E8",
   };
 }

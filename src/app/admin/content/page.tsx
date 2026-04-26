@@ -922,6 +922,7 @@ export default function AdminContentPage() {
   const navigationApps = content.weddingData.venue.transport?.navigation?.apps ?? [];
   const sectionNavItems = [
     { id: "sectionOrder", label: "섹션 순서" },
+    { id: "pageSettings", label: "페이지 설정" },
     { id: "groomInfo", label: "신랑 정보" },
     { id: "brideInfo", label: "신부 정보" },
     { id: "backgroundMusic", label: "배경음악" },
@@ -1072,6 +1073,32 @@ export default function AdminContentPage() {
               </li>
             ))}
           </ul>
+        </SectionCard>
+
+        <SectionCard
+          isActive={activeSection === "pageSettings"}
+          title="페이지 설정"
+        >
+          <div className="rounded-xl border border-[#eadfcb] bg-[#fffcf7] p-3">
+            <label className="flex items-center gap-2 text-sm text-[#4f4332]">
+              <input
+                type="checkbox"
+                checked={content.weddingData.display?.disableZoom !== false}
+                onChange={(event) =>
+                  updatePath(
+                    ["weddingData", "display", "disableZoom"],
+                    event.target.checked,
+                  )
+                }
+                className="h-4 w-4"
+              />
+              서비스 화면 확대/축소 비활성화
+            </label>
+            <p className="mt-2 text-xs text-[#7e705b]">
+              체크하면 메인 청첩장 화면에서 핀치 줌과 더블탭 확대가 제한됩니다.
+              관리자 화면에는 적용되지 않습니다.
+            </p>
+          </div>
         </SectionCard>
 
         <SectionCard
@@ -1720,27 +1747,6 @@ export default function AdminContentPage() {
                   )
                 }
               />
-            </div>
-
-            <div className="mt-4 rounded-lg border border-[#efe4d2] bg-white p-3">
-              <p className="text-xs font-semibold text-[#6f6350]">페이지 설정</p>
-              <label className="mt-2 flex items-center gap-2 text-sm text-[#4f4332]">
-                <input
-                  type="checkbox"
-                  checked={Boolean(content.weddingData.display?.disableZoom)}
-                  onChange={(event) =>
-                    updatePath(
-                      ["weddingData", "display", "disableZoom"],
-                      event.target.checked,
-                    )
-                  }
-                  className="h-4 w-4"
-                />
-                확대/축소 비활성화
-              </label>
-              <p className="mt-2 text-xs text-[#7e705b]">
-                체크하면 모바일 브라우저에서 핀치 줌이 제한됩니다.
-              </p>
             </div>
           </div>
         </SectionCard>
