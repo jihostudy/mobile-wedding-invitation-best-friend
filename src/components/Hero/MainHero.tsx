@@ -132,7 +132,8 @@ export default function MainHero({
 
   useEffect(() => {
     const lockViewportHeight = () => {
-      const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
+      const viewportHeight =
+        window.visualViewport?.height ?? window.innerHeight;
       setHeroViewportHeight(`${Math.round(viewportHeight)}px`);
     };
     const handleOrientationChange = () => {
@@ -304,7 +305,7 @@ export default function MainHero({
               textShadow: "0 1px 6px rgba(0,0,0,0.18)",
             }}
           >
-            our wedding.
+            our wedding
           </p>
         </div>
       </div>
@@ -313,7 +314,8 @@ export default function MainHero({
       <div
         className="absolute inset-x-0 bottom-0 text-center space-y-1.5 px-6 pt-10 pb-10"
         style={{
-          background: "linear-gradient(to top, rgba(0,0,0,0.52) 0%, transparent 100%)",
+          background:
+            "linear-gradient(to top, rgba(0,0,0,0.52) 0%, transparent 100%)",
         }}
       >
         <p
