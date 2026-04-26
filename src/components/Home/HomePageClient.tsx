@@ -126,7 +126,7 @@ export default function HomePageClient() {
       case "closing":
         return (
           <FadeInUp delay={0.4} amount={0.15}>
-            <FinalThanksSection section={content.closingSection} />
+            <FinalThanksSection section={content.closingSection} content={content} />
           </FadeInUp>
         );
       default:

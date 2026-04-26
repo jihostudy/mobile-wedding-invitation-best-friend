@@ -1,16 +1,19 @@
 "use client";
 
 import Image from "next/image";
+import { BLUR_PLACEHOLDER } from "@/lib/image-placeholder";
 import useToast from "@/components/common/toast/useToast";
-import { ensureKakaoInitialized, type KakaoSdk } from "@/lib/share/kakao";
-import type { ClosingSectionData } from "@/types";
+import { ensureKakaoInitialized, buildKakaoSharePayload, type KakaoSdk } from "@/lib/share/kakao";
+import type { ClosingSectionData, WeddingContentV1 } from "@/types";
 
 interface FinalThanksSectionProps {
   section: ClosingSectionData;
+  content: WeddingContentV1;
 }
 
 export default function FinalThanksSection({
   section,
+  content,
 }: FinalThanksSectionProps) {
   const toast = useToast();
 
@@ -34,9 +37,12 @@ export default function FinalThanksSection({
     }
 
     try {
-      kakao.Share.sendScrap({
-        requestUrl: window.location.href,
+      const payload = buildKakaoSharePayload({
+        content,
+        origin: window.location.origin,
+        url: window.location.href,
       });
+      kakao.Share.sendDefault(payload);
     } catch (error) {
       console.error("Failed to share via Kakao:", error);
       toast.error("카카오톡 공유에 실패했어요.");
@@ -53,8 +59,9 @@ export default function FinalThanksSection({
             fill
             className="object-cover object-center"
             sizes="(max-width: 425px) 100vw, 425px"
-            quality={100}
-            unoptimized
+            quality={85}
+            placeholder="blur"
+            blurDataURL={BLUR_PLACEHOLDER}
             loading="eager"
           />
           <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-white to-transparent" />
