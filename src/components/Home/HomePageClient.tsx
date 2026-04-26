@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import MainHero from "@/components/Hero/MainHero";
-import EnvelopeLetterFrame from "@/components/Home/EnvelopeLetterFrame";
 import ViewportZoomController from "@/components/Home/ViewportZoomController";
 import InvitationMessage from "@/components/Invitation/InvitationMessage";
 import InterviewSection from "@/components/Interview/InterviewSection";
@@ -51,6 +50,8 @@ export default function HomePageClient() {
             bride={content.weddingData.bride}
             date={content.weddingData.date}
             section={content.heroSection}
+            venue={content.weddingData.venue}
+            rsvpTitle={content.rsvpSection.title}
           />
         );
       case "invitation":
@@ -165,11 +166,6 @@ export default function HomePageClient() {
       >
         <div className="mx-auto h-full w-full max-w-[425px] bg-white" />
       </div>
-      <EnvelopeLetterFrame
-        groomName={content.weddingData.groom.name}
-        brideName={content.weddingData.bride.name}
-        date={content.weddingData.date}
-      />
       <main className="relative z-10 mx-auto w-full max-w-[425px] border-x border-[#efe2d1] bg-white/95 shadow-[0_24px_64px_rgba(103,76,48,0.16)] backdrop-blur-sm">
         <div className="relative z-10 bg-white/94">
           {content.pageSectionOrder

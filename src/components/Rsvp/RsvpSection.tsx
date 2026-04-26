@@ -1,88 +1,27 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback } from "react";
 import { Armchair } from "lucide-react";
 import FadeInUp from "@/components/common/FadeInUp";
 import Icon from "@/components/common/Icon";
-import {
-  openRsvpEntryPromptOverlay,
-  openRsvpFormOverlay,
-} from "@/overlays/rsvpOverlay";
+import { openRsvpFormOverlay } from "@/overlays/rsvpOverlay";
 import type { RsvpSectionData, WeddingInfo } from "@/types";
+
+const SUBMITTED_KEY = "rsvp_submitted_at";
 
 interface RsvpSectionProps {
   section: RsvpSectionData;
-  weddingData: WeddingInfo;
+  weddingData: WeddingInfo; // kept for API compatibility
 }
 
-export default function RsvpSection({
-  section,
-  weddingData,
-}: RsvpSectionProps) {
-  const HIDE_KEY = "rsvp_prompt_hide_until";
-  const SUBMITTED_KEY = "rsvp_submitted_at";
-  const hasOpenedEntryPromptRef = useRef(false);
-
-  const todayLabel = useMemo(() => {
-    const today = new Date();
-    const y = today.getFullYear();
-    const m = String(today.getMonth() + 1).padStart(2, "0");
-    const d = String(today.getDate()).padStart(2, "0");
-    return `${y}-${m}-${d}`;
-  }, []);
-
-  const entryPromptDateLine = useMemo(() => {
-    const { year, month, day, dayOfWeek, time } = weddingData.date;
-    const normalizedDay = dayOfWeek.replace("요일", "");
-    const dayLabel = normalizedDay[0] ?? dayOfWeek;
-    return `${year}.${String(month).padStart(2, "0")}.${String(day).padStart(2, "0")} (${dayLabel}) ${time}`;
-  }, [weddingData.date]);
-
-  const entryPromptVenueLine = useMemo(() => {
-    const { name, floor } = weddingData.venue;
-    return floor ? `${name}, ${floor}` : name;
-  }, [weddingData.venue]);
-
-  const hidePromptToday = useCallback(() => {
-    localStorage.setItem(HIDE_KEY, todayLabel);
-  }, [todayLabel]);
-
-  const markSubmitted = useCallback(() => {
-    localStorage.setItem(SUBMITTED_KEY, new Date().toISOString());
-  }, []);
-
+export default function RsvpSection({ section }: RsvpSectionProps) {
   const openRsvpForm = useCallback(() => {
     openRsvpFormOverlay({
-      onComplete: markSubmitted,
+      onComplete: () => {
+        localStorage.setItem(SUBMITTED_KEY, new Date().toISOString());
+      },
     });
-  }, [markSubmitted]);
-
-  useEffect(() => {
-    const hiddenUntil = localStorage.getItem(HIDE_KEY);
-    const submittedAt = localStorage.getItem(SUBMITTED_KEY);
-    const shouldHideToday = hiddenUntil === todayLabel;
-    const hasSubmitted = Boolean(submittedAt);
-
-    if (!shouldHideToday && !hasSubmitted && !hasOpenedEntryPromptRef.current) {
-      hasOpenedEntryPromptRef.current = true;
-      openRsvpEntryPromptOverlay({
-        onHideToday: hidePromptToday,
-        onOpenRsvp: openRsvpForm,
-        title: section.title,
-        dateLine: entryPromptDateLine,
-        venueLine: entryPromptVenueLine,
-        addressLine: weddingData.venue.address,
-      });
-    }
-  }, [
-    entryPromptDateLine,
-    entryPromptVenueLine,
-    hidePromptToday,
-    openRsvpForm,
-    section.title,
-    todayLabel,
-    weddingData.venue.address,
-  ]);
+  }, []);
 
   return (
     <section id="rsvp" className="mt-12 rounded-[18px]  px-9 py-14">
