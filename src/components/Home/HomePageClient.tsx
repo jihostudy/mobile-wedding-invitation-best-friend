@@ -8,6 +8,7 @@ import InvitationMessage from "@/components/Invitation/InvitationMessage";
 import InterviewSection from "@/components/Interview/InterviewSection";
 import WeddingCalendar from "@/components/Calendar/WeddingCalendar";
 import ImageGallery from "@/components/Gallery/ImageGallery";
+import LoveTimelineSection from "@/components/Timeline/LoveTimelineSection";
 import VenueInfo from "@/components/Location/VenueInfo";
 import Guestbook from "@/components/Guestbook/Guestbook";
 import RsvpSection from "@/components/Rsvp/RsvpSection";
@@ -74,9 +75,14 @@ export default function HomePageClient() {
         );
       case "gallery":
         return (
-          <FadeInUp delay={0.15} amount={0.15}>
-            <ImageGallery section={content.gallerySection} />
-          </FadeInUp>
+          <>
+            <FadeInUp delay={0.1} amount={0.12}>
+              <LoveTimelineSection images={content.gallerySection.images} />
+            </FadeInUp>
+            <FadeInUp delay={0.15} amount={0.15}>
+              <ImageGallery section={content.gallerySection} />
+            </FadeInUp>
+          </>
         );
       case "calendar":
         return (
