@@ -113,7 +113,7 @@ function TimelineText({ item }: { item: TimelineItem }) {
       <p className="text-sm font-semibold leading-7 text-wedding-gray-dark">
         {item.title}
       </p>
-      <div className="mt-3 text-sm leading-6 text-wedding-gray-light">
+      <div className="mt-3 text-xs leading-6 text-wedding-gray-light">
         {item.description.map((line) => (
           <p key={line}>{line}</p>
         ))}
