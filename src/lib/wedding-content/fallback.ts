@@ -12,6 +12,7 @@ import {
   INVITATION_SECTION,
   RSVP_SECTION,
   SNAP_SECTION,
+  TIMELINE_SECTION,
   WEDDING_DATA,
   KAKAO_SHARE_CARD,
 } from '@/constants/wedding-data';
@@ -22,6 +23,7 @@ export const FALLBACK_WEDDING_CONTENT: WeddingContentV1 = {
   heroSection: HERO_SECTION,
   invitationSection: INVITATION_SECTION,
   calendarSection: CALENDAR_SECTION,
+  timelineSection: TIMELINE_SECTION,
   gallerySection: GALLERY_SECTION,
   interviewSection: INTERVIEW_SECTION,
   guestbookSection: GUESTBOOK_SECTION,

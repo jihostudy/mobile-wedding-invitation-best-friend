@@ -4,6 +4,7 @@ export const DEFAULT_PAGE_SECTION_ORDER: PageSectionId[] = [
   "hero",
   "invitation",
   "interview",
+  "timeline",
   "gallery",
   "calendar",
   "location",
@@ -18,6 +19,7 @@ export const PAGE_SECTION_LABELS: Record<PageSectionId, string> = {
   hero: "상단 소개",
   invitation: "초대 문구",
   interview: "인터뷰",
+  timeline: "타임라인",
   gallery: "갤러리",
   calendar: "예식 일정",
   location: "오시는 길",
@@ -32,6 +34,7 @@ export const DEFAULT_PAGE_SECTION_VISIBILITY: PageSectionVisibility = {
   hero: true,
   invitation: true,
   interview: true,
+  timeline: true,
   gallery: true,
   calendar: true,
   location: true,
@@ -58,7 +61,17 @@ export function normalizePageSectionOrder(
 
   for (const id of DEFAULT_PAGE_SECTION_ORDER) {
     if (seen.has(id)) continue;
-    next.push(id);
+    if (id === "timeline") {
+      const galleryIndex = next.indexOf("gallery");
+      if (galleryIndex >= 0) {
+        next.splice(galleryIndex, 0, id);
+      } else {
+        next.push(id);
+      }
+    } else {
+      next.push(id);
+    }
+    seen.add(id);
   }
 
   return next;

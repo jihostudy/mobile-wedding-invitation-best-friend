@@ -136,6 +136,23 @@ export interface GallerySectionData {
   images: GalleryImage[];
 }
 
+export type TimelineImageSide = "left" | "right";
+
+export interface TimelineItemData {
+  id: string;
+  dateLabel: string;
+  bodyTitle: string;
+  body: string;
+  image: ImageAsset;
+  imageSide: TimelineImageSide;
+}
+
+export interface TimelineSectionData {
+  kicker: string;
+  description: string;
+  items: TimelineItemData[];
+}
+
 export interface SnapImageItem {
   id: string;
   url: string;
@@ -262,6 +279,7 @@ export type PageSectionId =
   | "hero"
   | "invitation"
   | "interview"
+  | "timeline"
   | "gallery"
   | "calendar"
   | "location"
@@ -278,6 +296,7 @@ export interface WeddingContentV1 {
   heroSection: HeroSectionData;
   invitationSection: InvitationSectionData;
   calendarSection: CalendarSectionData;
+  timelineSection: TimelineSectionData;
   gallerySection: GallerySectionData;
   interviewSection: InterviewSectionData;
   guestbookSection: GuestbookSectionData;

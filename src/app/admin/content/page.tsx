@@ -22,6 +22,7 @@ type PathSegment = string | number;
 type Indexable = Record<string | number, unknown>;
 type DropPosition = "before" | "after";
 const GALLERY_IMAGE_ALT = "신랑신부 사진";
+const TIMELINE_IMAGE_ALT = "타임라인 이미지";
 const SNAP_COVER_IMAGE_ALT = "스냅 업로드 커버 이미지";
 
 function deepClone<T>(value: T): T {
@@ -914,6 +915,7 @@ export default function AdminContentPage() {
     { id: "hero", label: "상단 소개" },
     { id: "invitation", label: "초대 문구" },
     { id: "interview", label: "인터뷰" },
+    { id: "timeline", label: "타임라인" },
     { id: "gallery", label: "갤러리" },
     { id: "weddingInfo", label: "예식 정보" },
     { id: "calendar", label: "캘린더 문구" },
@@ -936,6 +938,7 @@ export default function AdminContentPage() {
     hero: "HERO",
     invitation: content.invitationSection.kicker,
     interview: content.interviewSection.kicker,
+    timeline: content.timelineSection.kicker,
     gallery: content.gallerySection.kicker,
     calendar: "CALENDAR",
     location: "LOCATION",
@@ -2043,6 +2046,191 @@ export default function AdminContentPage() {
                         updateInterviewAnswer(qIndex, "bride", value)
                       }
                       rows={5}
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </SectionCard>
+
+        <SectionCard
+          isActive={activeSection === "timeline"}
+          title="타임라인"
+        >
+          <TextField
+            label="영문 제목"
+            value={content.timelineSection.kicker}
+            onChange={(value) =>
+              updatePath(["timelineSection", "kicker"], value)
+            }
+          />
+          <TextField
+            label="작은 설명"
+            value={content.timelineSection.description}
+            onChange={(value) =>
+              updatePath(["timelineSection", "description"], value)
+            }
+          />
+
+          <div className="flex justify-end">
+            <button
+              type="button"
+              className="rounded-md border border-[#d7c9b1] bg-white px-3 py-1.5 text-xs"
+              onClick={() => {
+                const nextIndex = content.timelineSection.items.length;
+                addArrayItem(["timelineSection", "items"], {
+                  id: `timeline-${Date.now()}`,
+                  dateLabel: "날짜 또는 기간",
+                  bodyTitle: "본문 제목",
+                  body: "본문 내용을 입력해 주세요.",
+                  image: {
+                    url: "",
+                    alt: TIMELINE_IMAGE_ALT,
+                  },
+                  imageSide: nextIndex % 2 === 0 ? "left" : "right",
+                });
+              }}
+            >
+              타임라인 추가
+            </button>
+          </div>
+
+          <div className="space-y-3">
+            {content.timelineSection.items.map((item, index) => (
+              <div
+                key={item.id}
+                className="rounded-xl border border-[#eadfcb] bg-[#fffcf7] p-3"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-xs font-semibold text-[#6f6350]">
+                    타임라인 {index + 1}
+                  </p>
+                  <div className="grid grid-cols-3 gap-1">
+                    <button
+                      type="button"
+                      className="h-8 rounded-md border border-[#d7c9b1] px-2 text-[11px] disabled:opacity-50"
+                      onClick={() =>
+                        moveArrayItem(
+                          ["timelineSection", "items"],
+                          index,
+                          index - 1,
+                        )
+                      }
+                      disabled={index === 0}
+                    >
+                      앞으로
+                    </button>
+                    <button
+                      type="button"
+                      className="h-8 rounded-md border border-[#d7c9b1] px-2 text-[11px] disabled:opacity-50"
+                      onClick={() =>
+                        moveArrayItem(
+                          ["timelineSection", "items"],
+                          index,
+                          index + 1,
+                        )
+                      }
+                      disabled={index === content.timelineSection.items.length - 1}
+                    >
+                      뒤로
+                    </button>
+                    <button
+                      type="button"
+                      className="h-8 rounded-md border border-[#e1bfbf] px-2 text-[11px] text-[#8a4a4a]"
+                      onClick={() =>
+                        removeArrayItem(["timelineSection", "items"], index)
+                      }
+                    >
+                      삭제
+                    </button>
+                  </div>
+                </div>
+
+                <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-[160px_1fr]">
+                  <div>
+                    <div className="overflow-hidden rounded-lg border border-[#e5dccb] bg-[#f7f2e8]">
+                      <div className="relative aspect-[1/1.1] w-full">
+                        {item.image.url ? (
+                          <Image
+                            src={item.image.url}
+                            alt={item.image.alt || TIMELINE_IMAGE_ALT}
+                            fill
+                            className="object-cover object-center"
+                            sizes="160px"
+                          />
+                        ) : (
+                          <div className="flex h-full items-center justify-center px-3 text-center text-xs text-[#8f816b]">
+                            업로드된 이미지가 없습니다.
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <label className="mt-2 block">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(event) => {
+                          const file = event.target.files?.[0];
+                          if (!file) return;
+                          const key = `timeline-${index}`;
+                          void handleUpload(
+                            file,
+                            ["timelineSection", "items", index, "image", "url"],
+                            key,
+                            {
+                              altPath: [
+                                "timelineSection",
+                                "items",
+                                index,
+                                "image",
+                                "alt",
+                              ],
+                            },
+                          );
+                          event.target.value = "";
+                        }}
+                      />
+                      <span className="inline-flex h-9 w-full cursor-pointer items-center justify-center rounded-md border border-[#d7c9b1] bg-white px-2 text-[11px] text-[#574938]">
+                        {uploadingKey === `timeline-${index}`
+                          ? "업로드 중..."
+                          : "이미지 업로드"}
+                      </span>
+                    </label>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-3">
+                    <TextField
+                      label="제목"
+                      value={item.dateLabel}
+                      onChange={(value) =>
+                        updatePath(
+                          ["timelineSection", "items", index, "dateLabel"],
+                          value,
+                        )
+                      }
+                    />
+                    <TextField
+                      label="본문 제목"
+                      value={item.bodyTitle}
+                      onChange={(value) =>
+                        updatePath(
+                          ["timelineSection", "items", index, "bodyTitle"],
+                          value,
+                        )
+                      }
+                    />
+                    <TextAreaField
+                      label="본문 내용"
+                      value={item.body}
+                      rows={4}
+                      onChange={(value) =>
+                        updatePath(
+                          ["timelineSection", "items", index, "body"],
+                          value,
+                        )
+                      }
                     />
                   </div>
                 </div>

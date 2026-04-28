@@ -189,6 +189,85 @@ const gallerySectionSchema = z
     images: section.images,
   }));
 
+const defaultTimelineItems = [
+  {
+    id: "first-meet",
+    dateLabel: "21년 3월 20일, 서울",
+    bodyTitle: "🏢 운명 같은 첫 만남",
+    body: "회사에서 처음 만나\n어느 순간 서로에게\n스며들었던 우리",
+    image: normalizeImageAsset({}, "첫 만남 타임라인 사진"),
+    imageSide: "left" as const,
+  },
+  {
+    id: "dating-days",
+    dateLabel: "연애 기간 1,877일",
+    bodyTitle: "💕 행복했던 5년",
+    body: "항상 웃음이 머물던\n여러 계절들의 우리",
+    image: normalizeImageAsset({}, "연애 기간 타임라인 사진"),
+    imageSide: "right" as const,
+  },
+  {
+    id: "proposal",
+    dateLabel: "24년 9월 17일, 일본",
+    bodyTitle: "💍 프로포즈",
+    body: "눈물과 함께한\n깜짝 프로포즈.\n대답은 당연히 “YES!”",
+    image: normalizeImageAsset({}, "프로포즈 타임라인 사진"),
+    imageSide: "left" as const,
+  },
+  {
+    id: "wedding-day",
+    dateLabel: "26년 5월 9일, 춘천",
+    bodyTitle: "👰‍♀️🤵 웨딩데이",
+    body: "저희 둘이 드디어\n결혼합니다",
+    image: normalizeImageAsset({}, "웨딩데이 타임라인 사진"),
+    imageSide: "right" as const,
+  },
+];
+
+const timelineItemSchema = z
+  .object({
+    id: z.string().optional(),
+    dateLabel: z.string().optional(),
+    title: z.string().optional(),
+    bodyTitle: z.string().optional(),
+    description: z.array(z.string()).optional(),
+    body: z.string().optional(),
+    image: imageAssetSchema.optional(),
+    imageSide: z.enum(["left", "right"]).optional(),
+  })
+  .transform((item) => ({
+    id: item.id ?? "",
+    dateLabel: item.dateLabel ?? "",
+    bodyTitle: item.bodyTitle ?? item.title ?? "",
+    body:
+      item.body ??
+      (item.description ?? [])
+        .filter((line) => line.trim().length > 0)
+        .join("\n"),
+    image: item.image ?? normalizeImageAsset({}, "타임라인 이미지"),
+    imageSide: item.imageSide ?? "left",
+  }));
+
+const timelineSectionSchema = z
+  .object({
+    kicker: z.string().optional(),
+    title: z.string().optional(),
+    description: z.string().optional(),
+    items: z.array(timelineItemSchema).optional(),
+  })
+  .optional()
+  .transform((section) => ({
+    kicker: section?.kicker ?? "OUR TIMELINE",
+    description: section?.description ?? "저희 연애의 타임라인입니다",
+    items: (section?.items?.length ? section.items : defaultTimelineItems).map(
+      (item, index) => ({
+        ...item,
+        id: item.id || `timeline-${index + 1}`,
+      }),
+    ),
+    _wasDefaultTimelineSection: !section,
+  }));
+
 const interviewAnswerSchema = z.object({
   side: z.enum(["groom", "bride"]),
   content: z.string(),
@@ -376,6 +455,7 @@ const weddingContentSchema = z
     heroSection: heroSectionSchema,
     invitationSection: invitationSectionSchema,
     calendarSection: calendarSectionSchema,
+    timelineSection: timelineSectionSchema,
     gallerySection: gallerySectionSchema,
     interviewSection: interviewSectionSchema,
     guestbookSection: guestbookSectionSchema,
@@ -472,42 +552,63 @@ const weddingContentSchema = z
     floatingNavItems: z.array(z.object({ id: z.string(), label: z.string() })),
   })
   .passthrough()
-  .transform((content) => ({
-    ...content,
-    kakaoShareCard: {
-      title:
-        content.kakaoShareCard?.title?.trim() ||
-        `${content.weddingData.groom.name} ♥ ${content.weddingData.bride.name}, 우리 결혼합니다.`,
-      description:
-        content.kakaoShareCard?.description?.trim() ||
-        buildDefaultKakaoDescription({
-          year: content.weddingData.date.year,
-          month: content.weddingData.date.month,
-          day: content.weddingData.date.day,
-          dayOfWeek: content.weddingData.date.dayOfWeek,
-          time: content.weddingData.date.time,
-          venueName: content.weddingData.venue.name,
-          floor: content.weddingData.venue.floor,
-          hall: content.weddingData.venue.hall,
-        }),
-      buttonTitle:
-        content.kakaoShareCard?.buttonTitle?.trim() || "모바일 청첩장 보기",
-      imageUrl:
-        content.kakaoShareCard?.imageUrl?.trim() ||
-        content.heroSection.mainImage.url ||
-        "/images/placeholder-couple.svg",
-    },
-    calendarSection: {
-      countdownLabel:
-        content.calendarSection?.countdownLabel ??
-        content.calendarSection?.countdownPrefix ??
-        `${getGivenName(content.weddingData.groom.name)} ♥ ${getGivenName(content.weddingData.bride.name)}, 우리 결혼합니다.`,
-    },
-    pageSectionOrder: normalizePageSectionOrder(content.pageSectionOrder),
-    pageSectionVisibility: normalizePageSectionVisibility(
-      content.pageSectionVisibility,
-    ),
-  }));
+  .transform((content) => {
+    const timelineItems = content.timelineSection._wasDefaultTimelineSection
+      ? content.timelineSection.items.map((item, index) => {
+          const galleryImage = content.gallerySection.images[index];
+          if (!galleryImage?.url) return item;
+          return {
+            ...item,
+            image: {
+              url: galleryImage.url,
+              alt: galleryImage.alt || item.image.alt,
+            },
+          };
+        })
+      : content.timelineSection.items;
+
+    return {
+      ...content,
+      timelineSection: {
+        kicker: content.timelineSection.kicker,
+        description: content.timelineSection.description,
+        items: timelineItems,
+      },
+      kakaoShareCard: {
+        title:
+          content.kakaoShareCard?.title?.trim() ||
+          `${content.weddingData.groom.name} ♥ ${content.weddingData.bride.name}, 우리 결혼합니다.`,
+        description:
+          content.kakaoShareCard?.description?.trim() ||
+          buildDefaultKakaoDescription({
+            year: content.weddingData.date.year,
+            month: content.weddingData.date.month,
+            day: content.weddingData.date.day,
+            dayOfWeek: content.weddingData.date.dayOfWeek,
+            time: content.weddingData.date.time,
+            venueName: content.weddingData.venue.name,
+            floor: content.weddingData.venue.floor,
+            hall: content.weddingData.venue.hall,
+          }),
+        buttonTitle:
+          content.kakaoShareCard?.buttonTitle?.trim() || "모바일 청첩장 보기",
+        imageUrl:
+          content.kakaoShareCard?.imageUrl?.trim() ||
+          content.heroSection.mainImage.url ||
+          "/images/placeholder-couple.svg",
+      },
+      calendarSection: {
+        countdownLabel:
+          content.calendarSection?.countdownLabel ??
+          content.calendarSection?.countdownPrefix ??
+          `${getGivenName(content.weddingData.groom.name)} ♥ ${getGivenName(content.weddingData.bride.name)}, 우리 결혼합니다.`,
+      },
+      pageSectionOrder: normalizePageSectionOrder(content.pageSectionOrder),
+      pageSectionVisibility: normalizePageSectionVisibility(
+        content.pageSectionVisibility,
+      ),
+    };
+  });
 
 export function parseWeddingContent(input: unknown): WeddingContentV1 {
   return weddingContentSchema.parse(input) as WeddingContentV1;

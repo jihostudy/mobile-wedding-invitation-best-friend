@@ -73,16 +73,17 @@ export default function HomePageClient() {
             bride={content.weddingData.bride}
           />
         );
+      case "timeline":
+        return (
+          <FadeInUp delay={0.1} amount={0.12}>
+            <LoveTimelineSection section={content.timelineSection} />
+          </FadeInUp>
+        );
       case "gallery":
         return (
-          <>
-            <FadeInUp delay={0.1} amount={0.12}>
-              <LoveTimelineSection images={content.gallerySection.images} />
-            </FadeInUp>
-            <FadeInUp delay={0.15} amount={0.15}>
-              <ImageGallery section={content.gallerySection} />
-            </FadeInUp>
-          </>
+          <FadeInUp delay={0.15} amount={0.15}>
+            <ImageGallery section={content.gallerySection} />
+          </FadeInUp>
         );
       case "calendar":
         return (

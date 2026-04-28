@@ -17,6 +17,7 @@ import {
   InvitationSectionData,
   CalendarSectionData,
   GallerySectionData,
+  TimelineSectionData,
   GuestbookSectionData,
   RsvpSectionData,
   SnapSectionData,
@@ -233,6 +234,57 @@ export const GALLERY_SECTION: GallerySectionData = {
   kicker: "GALLERY",
   title: "웨딩 갤러리",
   images: GALLERY_IMAGES,
+};
+
+export const TIMELINE_SECTION: TimelineSectionData = {
+  kicker: "OUR TIMELINE",
+  description: "저희 연애의 타임라인입니다",
+  items: [
+    {
+      id: "first-meet",
+      dateLabel: "21년 3월 20일, 서울",
+      bodyTitle: "🏢 운명 같은 첫 만남",
+      body: "회사에서 처음 만나\n어느 순간 서로에게\n스며들었던 우리",
+      image: {
+        url: GALLERY_IMAGES[0]?.url ?? "/images/placeholder-couple.svg",
+        alt: "첫 만남 타임라인 사진",
+      },
+      imageSide: "left",
+    },
+    {
+      id: "dating-days",
+      dateLabel: "연애 기간 1,877일",
+      bodyTitle: "💕 행복했던 5년",
+      body: "항상 웃음이 머물던\n여러 계절들의 우리",
+      image: {
+        url: GALLERY_IMAGES[1]?.url ?? "/images/placeholder-couple.svg",
+        alt: "연애 기간 타임라인 사진",
+      },
+      imageSide: "right",
+    },
+    {
+      id: "proposal",
+      dateLabel: "24년 9월 17일, 일본",
+      bodyTitle: "💍 프로포즈",
+      body: "눈물과 함께한\n깜짝 프로포즈.\n대답은 당연히 “YES!”",
+      image: {
+        url: GALLERY_IMAGES[2]?.url ?? "/images/placeholder-couple.svg",
+        alt: "프로포즈 타임라인 사진",
+      },
+      imageSide: "left",
+    },
+    {
+      id: "wedding-day",
+      dateLabel: "26년 5월 9일, 춘천",
+      bodyTitle: "👰‍♀️🤵 웨딩데이",
+      body: "저희 둘이 드디어\n결혼합니다",
+      image: {
+        url: GALLERY_IMAGES[3]?.url ?? "/images/placeholder-couple.svg",
+        alt: "웨딩데이 타임라인 사진",
+      },
+      imageSide: "right",
+    },
+  ],
 };
 
 // 5) Interview

@@ -2,95 +2,20 @@
 
 import Image from "next/image";
 import { BLUR_PLACEHOLDER } from "@/lib/image-placeholder";
-import type { GalleryImage } from "@/types";
-
-interface TimelineImage {
-  url: string;
-  alt: string;
-}
-
-interface TimelineItem {
-  id: string;
-  dateLabel: string;
-  title: string;
-  description: string[];
-  imageSide: "left" | "right";
-  imageIndex: number;
-}
+import type {
+  ImageAsset,
+  TimelineItemData,
+  TimelineSectionData,
+} from "@/types";
 
 interface LoveTimelineSectionProps {
-  images: GalleryImage[];
+  section: TimelineSectionData;
 }
-
-const FALLBACK_IMAGES: TimelineImage[] = [
-  {
-    url: "/images/gallery/wedding.png",
-    alt: "신랑 신부의 추억 사진",
-  },
-  {
-    url: "/images/placeholder-couple.svg",
-    alt: "신랑 신부의 추억 사진",
-  },
-];
-
-const TIMELINE_ITEMS: TimelineItem[] = [
-  {
-    id: "first-meet",
-    dateLabel: "21년 3월 20일, 서울",
-    title: "🏢 운명 같은 첫 만남",
-    description: [
-      "회사에서 처음 만나",
-      "어느 순간 서로에게",
-      "스며들었던 우리",
-    ],
-    imageSide: "left",
-    imageIndex: 0,
-  },
-  {
-    id: "dating-days",
-    dateLabel: "연애 기간 1,877일",
-    title: "💕 행복했던 5년",
-    description: ["항상 웃음이 머물던", "여러 계절들의 우리"],
-    imageSide: "right",
-    imageIndex: 1,
-  },
-  {
-    id: "proposal",
-    dateLabel: "24년 9월 17일, 일본",
-    title: "💍 프로포즈",
-    description: ["눈물과 함께한", "깜짝 프로포즈.", "대답은 당연히 “YES!”"],
-    imageSide: "left",
-    imageIndex: 2,
-  },
-  {
-    id: "wedding-day",
-    dateLabel: "26년 5월 9일, 춘천",
-    title: "👰‍♀️🤵 웨딩데이",
-    description: ["저희 둘이 드디어", "결혼합니다"],
-    imageSide: "right",
-    imageIndex: 3,
-  },
-];
 
 const dateBadgeClassName =
-  "inline-flex max-w-[calc(100%+28px)] whitespace-nowrap rounded-full bg-[#d8c7aa] px-4 py-3 text-xs font-semibold leading-none text-white shadow-[0_4px_12px_rgba(103,76,48,0.12)]";
+  "inline-flex max-w-[calc(100%+28px)] whitespace-nowrap rounded-full bg-[#d8c7aa] px-5 py-3 text-xs font-semibold leading-none text-white shadow-[0_4px_12px_rgba(103,76,48,0.12)]";
 
-function getTimelineImage(
-  images: GalleryImage[],
-  index: number,
-): TimelineImage {
-  if (images.length > 0) {
-    const image = images[index % images.length] ?? images[0];
-    return {
-      url: image.url,
-      alt: image.alt,
-    };
-  }
-
-  return FALLBACK_IMAGES[index % FALLBACK_IMAGES.length];
-}
-
-function TimelinePhoto({ image }: { image: TimelineImage }) {
+function TimelinePhoto({ image }: { image: ImageAsset }) {
   return (
     <div className="relative aspect-[1/1.1] w-full overflow-hidden rounded-2xl bg-wedding-brown/10">
       <Image
@@ -107,14 +32,19 @@ function TimelinePhoto({ image }: { image: TimelineImage }) {
   );
 }
 
-function TimelineText({ item }: { item: TimelineItem }) {
+function TimelineText({ item }: { item: TimelineItemData }) {
+  const bodyLines = item.body
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+
   return (
     <div>
       <p className="text-sm font-semibold leading-7 text-wedding-gray-dark">
-        {item.title}
+        {item.bodyTitle}
       </p>
-      <div className="mt-3 text-xs leading-6 text-wedding-gray-light">
-        {item.description.map((line) => (
+      <div className="mt-3 text-[13px] leading-6 text-wedding-gray-light">
+        {bodyLines.map((line) => (
           <p key={line}>{line}</p>
         ))}
       </div>
@@ -126,7 +56,7 @@ function TimelineCopy({
   item,
   align,
 }: {
-  item: TimelineItem;
+  item: TimelineItemData;
   align: "left" | "right";
 }) {
   return (
@@ -146,7 +76,7 @@ function TimelineCopy({
 }
 
 export default function LoveTimelineSection({
-  images,
+  section,
 }: LoveTimelineSectionProps) {
   return (
     <section
@@ -155,19 +85,18 @@ export default function LoveTimelineSection({
     >
       <div className="mb-8 text-center">
         <p className="font-crimson text-sm uppercase tracking-[0.33em] text-wedding-brown">
-          OUR TIMELINE
+          {section.kicker}
         </p>
 
         <p className="mt-2 text-xs leading-8 text-wedding-gray">
-          저희 연애의 타임라인입니다
+          {section.description}
         </p>
       </div>
 
       <div className="relative mx-auto">
-        {TIMELINE_ITEMS.map((item, index) => {
-          const image = getTimelineImage(images, item.imageIndex);
-          const isImageLeft = item.imageSide === "left";
-          const isLastItem = index === TIMELINE_ITEMS.length - 1;
+        {section.items.map((item, index) => {
+          const isImageLeft = index % 2 === 0;
+          const isLastItem = index === section.items.length - 1;
 
           return (
             <div
@@ -197,7 +126,7 @@ export default function LoveTimelineSection({
 
               <div className="min-w-0">
                 {isImageLeft ? (
-                  <TimelinePhoto image={image} />
+                  <TimelinePhoto image={item.image} />
                 ) : (
                   <TimelineCopy item={item} align="right" />
                 )}
@@ -207,7 +136,7 @@ export default function LoveTimelineSection({
                 {isImageLeft ? (
                   <TimelineCopy item={item} align="left" />
                 ) : (
-                  <TimelinePhoto image={image} />
+                  <TimelinePhoto image={item.image} />
                 )}
               </div>
             </div>
