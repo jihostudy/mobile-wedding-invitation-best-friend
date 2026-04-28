@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import localFont from "next/font/local";
-import { Crimson_Pro, Tangerine } from "next/font/google";
+import { Crimson_Pro, Sacramento, Tangerine } from "next/font/google";
 import OverlayProvider from "@/components/providers/OverlayProvider";
 import ScrollResetProvider from "@/components/providers/ScrollResetProvider";
 import ToastProvider from "@/components/common/toast/ToastProvider";
@@ -39,6 +39,13 @@ const tangerine = Tangerine({
   weight: ["400", "700"],
   subsets: ["latin"],
   variable: "--font-tangerine",
+  display: "swap",
+});
+
+const sacramento = Sacramento({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-sacramento",
   display: "swap",
 });
 
@@ -105,7 +112,7 @@ export default function RootLayout({
   return (
     <html
       lang="ko"
-      className={`${tmoneyRoundWind.variable} ${crimsonPro.variable} ${nanumHyejun.variable} ${pretendard.variable} ${tangerine.variable}`}
+      className={`${tmoneyRoundWind.variable} ${crimsonPro.variable} ${nanumHyejun.variable} ${pretendard.variable} ${tangerine.variable} ${sacramento.variable}`}
     >
       <body className={`${tmoneyRoundWind.className} antialiased bg-[#eedbc8]`}>
         <Script

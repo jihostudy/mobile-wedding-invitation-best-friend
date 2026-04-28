@@ -83,7 +83,6 @@ export default function MainHero({
   venue,
   rsvpTitle,
 }: MainHeroProps) {
-  const [blossomActive, setBlossomActive] = useState(false);
   const [heroViewportHeight, setHeroViewportHeight] = useState("100svh");
   const hasOpenedRsvpRef = useRef(false);
 
@@ -160,8 +159,6 @@ export default function MainHero({
   }, []);
 
   useEffect(() => {
-    const blossomTimer = setTimeout(() => setBlossomActive(true), 4400);
-
     const rsvpTimer = setTimeout(() => {
       if (hasOpenedRsvpRef.current) return;
 
@@ -184,7 +181,6 @@ export default function MainHero({
     }, 5300);
 
     return () => {
-      clearTimeout(blossomTimer);
       clearTimeout(rsvpTimer);
     };
   }, [
@@ -226,46 +222,45 @@ export default function MainHero({
       />
 
       {/* 벚꽃 떨어지는 효과 */}
-      {blossomActive &&
-        PETALS.map((petal) => (
+      {PETALS.map((petal) => (
+        <div
+          key={petal.id}
+          aria-hidden
+          className="pointer-events-none absolute top-0"
+          style={
+            {
+              left: petal.left,
+              animation: `heroPetalFall ${petal.duration} ${petal.delay} infinite linear`,
+              "--px-0": petal.px0,
+              "--px-1": petal.px1,
+              "--px-2": petal.px2,
+              "--px-3": petal.px3,
+              "--px-4": petal.px4,
+              "--pr-0": petal.pr0,
+              "--pr-1": petal.pr1,
+              "--pr-2": petal.pr2,
+              "--pr-3": petal.pr3,
+              "--pr-4": petal.pr4,
+              "--p-opacity": petal.opacity,
+            } as React.CSSProperties
+          }
+        >
           <div
-            key={petal.id}
-            aria-hidden
-            className="pointer-events-none absolute top-0"
-            style={
-              {
-                left: petal.left,
-                animation: `heroPetalFall ${petal.duration} ${petal.delay} infinite linear`,
-                "--px-0": petal.px0,
-                "--px-1": petal.px1,
-                "--px-2": petal.px2,
-                "--px-3": petal.px3,
-                "--px-4": petal.px4,
-                "--pr-0": petal.pr0,
-                "--pr-1": petal.pr1,
-                "--pr-2": petal.pr2,
-                "--pr-3": petal.pr3,
-                "--pr-4": petal.pr4,
-                "--p-opacity": petal.opacity,
-              } as React.CSSProperties
-            }
-          >
-            <div
-              style={{
-                width: petal.width,
-                height: petal.height,
-                background:
-                  "radial-gradient(ellipse at 35% 22%, rgba(255,239,246,0.98), rgba(255,198,216,0.95) 58%, rgba(239,142,171,0.88))",
-                borderRadius: "72% 28% 76% 24% / 64% 42% 58% 36%",
-                clipPath:
-                  "polygon(50% 0%, 78% 16%, 94% 44%, 76% 78%, 54% 100%, 33% 78%, 9% 48%, 22% 18%)",
-                filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.18))",
-                transform: `rotate(${petal.innerRotation}) skewX(-5deg)`,
-                transformOrigin: "50% 65%",
-              }}
-            />
-          </div>
-        ))}
+            style={{
+              width: petal.width,
+              height: petal.height,
+              background:
+                "radial-gradient(ellipse at 35% 22%, rgba(255,239,246,0.98), rgba(255,198,216,0.95) 58%, rgba(239,142,171,0.88))",
+              borderRadius: "72% 28% 76% 24% / 64% 42% 58% 36%",
+              clipPath:
+                "polygon(50% 0%, 78% 16%, 94% 44%, 76% 78%, 54% 100%, 33% 78%, 9% 48%, 22% 18%)",
+              filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.18))",
+              transform: `rotate(${petal.innerRotation}) skewX(-5deg)`,
+              transformOrigin: "50% 65%",
+            }}
+          />
+        </div>
+      ))}
 
       {/* 상단: 이름 */}
       <div className="absolute inset-x-0 top-10 text-center">
@@ -284,10 +279,10 @@ export default function MainHero({
       <div className="absolute inset-0 flex flex-col items-center justify-center -translate-y-4">
         <div className="-translate-x-8">
           <p
-            className="font-tangerine text-[clamp(30px,8vw,40px)] font-normal leading-snug text-white/85 px-4 pt-3 pb-2"
+            className="font-sacramento text-[clamp(30px,8vw,40px)] font-normal leading-snug text-white/85 px-4 pt-3 pb-2"
             style={{
               animation:
-                "writeClipOpen 1.8s cubic-bezier(0.25, 1, 0.5, 1) 0.25s both, heroTextFadeOut 0.8s ease-out 4.4s both",
+                "writeClipOpen 1.85s linear 0.25s both, heroTextFadeOut 0.8s ease-out 4.4s both",
               WebkitFontSmoothing: "antialiased",
               textShadow: "0 1px 6px rgba(0,0,0,0.18)",
             }}
@@ -297,10 +292,10 @@ export default function MainHero({
         </div>
         <div className="mt-1 translate-x-8">
           <p
-            className="font-tangerine text-[clamp(30px,8vw,40px)] font-normal leading-snug text-white/85 px-4 pt-2 pb-5"
+            className="font-sacramento text-[clamp(30px,8vw,40px)] font-normal leading-snug text-white/85 px-4 pt-2 pb-5"
             style={{
               animation:
-                "writeClipOpen 1.95s cubic-bezier(0.25, 1, 0.5, 1) 1.75s both, heroTextFadeOut 0.8s ease-out 4.4s both",
+                "writeClipOpen 1.85s linear 2.1s both, heroTextFadeOut 0.8s ease-out 4.4s both",
               WebkitFontSmoothing: "antialiased",
               textShadow: "0 1px 6px rgba(0,0,0,0.18)",
             }}

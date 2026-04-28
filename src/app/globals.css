@@ -129,6 +129,10 @@
     font-family: var(--font-tangerine), cursive;
   }
 
+  .font-sacramento {
+    font-family: var(--font-sacramento), cursive;
+  }
+
   /* 텍스트 섀도우 */
   .text-shadow {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
