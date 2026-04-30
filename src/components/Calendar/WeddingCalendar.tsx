@@ -71,15 +71,10 @@ export default function WeddingCalendar({
             <p className="text-center text-lg font-semibold text-[#3f3f3f]">
               {date.year}년 {date.month}월 {date.day}일
             </p>
-            <p className="mt-2 text-sm text-[#3f3f3f]">
+            <p className="mt-2 mb-5 text-sm text-[#3f3f3f]">
               {date.dayOfWeek} {date.time}
             </p>
-            <p
-              aria-hidden="true"
-              className="mt-4 mb-2 font-crimson text-[32px] leading-none text-[#222222]"
-            >
-              {date.month}
-            </p>
+
             <div className="mt-1 grid grid-cols-7 text-[14px] text-[#363636]">
               {weekDays.map((day) => (
                 <div
