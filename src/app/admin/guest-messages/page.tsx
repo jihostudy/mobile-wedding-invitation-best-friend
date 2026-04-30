@@ -1,7 +1,7 @@
 "use client";
 
 import { GripVertical } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ApiError } from "@/lib/api/client";
 import AdminDataTable from "@/components/Admin/AdminDataTable";
@@ -89,6 +89,12 @@ export default function AdminGuestMessagesPage() {
     () => applyFilters(rows, filterDefinitions, filterState),
     [filterDefinitions, filterState, rows],
   );
+
+  const resetFilters = useCallback(() => {
+    setFilterState({});
+    setRows(guestMessagesQuery.data?.messages ?? []);
+    setDraggingRowId(null);
+  }, [guestMessagesQuery.data?.messages]);
 
   const reorderPublicRows = (sourceId: string, targetId: string) => {
     if (sourceId === targetId) return rows;
@@ -190,7 +196,7 @@ export default function AdminGuestMessagesPage() {
         optionsByFilter={optionsByFilter}
         state={filterState}
         onChange={setFilterState}
-        onReset={() => setFilterState({})}
+        onReset={resetFilters}
       />
 
       <AdminDataTable

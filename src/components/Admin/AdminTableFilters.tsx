@@ -5,6 +5,7 @@ import type {
   AdminFilterOption,
   AdminFilterState,
 } from "@/components/Admin/admin-filter-types";
+import { hasAnyFilterSelection } from "@/lib/admin/filters";
 
 interface AdminTableFiltersProps<T> {
   definitions: AdminFilterDefinition<T>[];
@@ -21,6 +22,8 @@ export default function AdminTableFilters<T>({
   onChange,
   onReset,
 }: AdminTableFiltersProps<T>) {
+  const hasSelection = hasAnyFilterSelection(state);
+
   const toggleOption = (filterId: string, value: string) => {
     const current = state[filterId] ?? [];
     const exists = current.includes(value);
@@ -28,10 +31,13 @@ export default function AdminTableFilters<T>({
       ? current.filter((item) => item !== value)
       : [...current, value];
 
-    onChange({
-      ...state,
-      [filterId]: nextValues,
-    });
+    const nextState = { ...state };
+    if (nextValues.length === 0) {
+      delete nextState[filterId];
+    } else {
+      nextState[filterId] = nextValues;
+    }
+    onChange(nextState);
   };
 
   return (
@@ -41,7 +47,8 @@ export default function AdminTableFilters<T>({
         <button
           type="button"
           onClick={onReset}
-          className="rounded-md border border-[#d8cebc] bg-white px-2.5 py-1.5 text-xs text-[#6a5f4d] transition hover:bg-[#f6f0e7]"
+          disabled={!hasSelection}
+          className="rounded-md border border-[#d8cebc] bg-white px-2.5 py-1.5 text-xs text-[#6a5f4d] transition hover:bg-[#f6f0e7] disabled:cursor-not-allowed disabled:opacity-45"
         >
           전체 초기화
         </button>
