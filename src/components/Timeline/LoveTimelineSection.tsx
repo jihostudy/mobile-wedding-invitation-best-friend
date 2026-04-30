@@ -42,7 +42,9 @@ function TimelineText({ item }: { item: TimelineItemData }) {
     <div>
       <p className="inline-flex items-center gap-1.5 text-sm font-semibold leading-7 text-wedding-gray-dark">
         {item.bodyEmoji ? (
-          <span className="text-lg leading-none">{item.bodyEmoji}</span>
+          <span className="inline-flex h-5 items-center leading-none">
+            {item.bodyEmoji}
+          </span>
         ) : null}
         <span>{item.bodyTitle}</span>
       </p>

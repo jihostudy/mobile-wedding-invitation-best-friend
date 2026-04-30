@@ -243,7 +243,7 @@ export const TIMELINE_SECTION: TimelineSectionData = {
     {
       id: "first-meet",
       dateLabel: "21년 3월 20일, 서울",
-      bodyEmoji: "🏢",
+      bodyEmoji: "🏫",
       bodyTitle: "운명 같은 첫 만남",
       body: "회사에서 처음 만나\n어느 순간 서로에게\n스며들었던 우리",
       image: {
