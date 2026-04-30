@@ -5,6 +5,7 @@
 
 # testing
 /coverage
+/.playwright-cli/
 
 # next.js
 /.next/
@@ -12,6 +13,7 @@
 
 # production
 /build
+/output/
 
 # misc
 .DS_Store
@@ -32,5 +34,4 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
 
