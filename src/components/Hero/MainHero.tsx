@@ -65,6 +65,12 @@ const PETALS = Array.from({ length: PETAL_COUNT }, (_, i) => {
 
 const HIDE_KEY = "rsvp_prompt_hide_until";
 const SUBMITTED_KEY = "rsvp_submitted_at";
+const HERO_INTRO_FADE_OUT_DELAY_SECONDS = 5;
+const HERO_INTRO_FADE_OUT_DURATION_SECONDS = 0.8;
+const HERO_INTRO_UNLOCK_DELAY_MS =
+  (HERO_INTRO_FADE_OUT_DELAY_SECONDS + HERO_INTRO_FADE_OUT_DURATION_SECONDS) *
+  1000;
+const RSVP_PROMPT_DELAY_MS = HERO_INTRO_UNLOCK_DELAY_MS + 100;
 
 interface MainHeroProps {
   groom: Person;
@@ -151,7 +157,7 @@ export default function MainHero({
     document.body.style.overflowY = "hidden";
     const unlockTimer = setTimeout(() => {
       document.body.style.overflowY = "";
-    }, 5200);
+    }, HERO_INTRO_UNLOCK_DELAY_MS);
     return () => {
       clearTimeout(unlockTimer);
       document.body.style.overflowY = "";
@@ -178,7 +184,7 @@ export default function MainHero({
         onHideToday: hidePromptToday,
         onOpenRsvp: openRsvpForm,
       });
-    }, 5300);
+    }, RSVP_PROMPT_DELAY_MS);
 
     return () => {
       clearTimeout(rsvpTimer);
@@ -218,7 +224,9 @@ export default function MainHero({
       {/* 검은 오버레이 — 텍스트 가독성용, 텍스트와 함께 사라짐 */}
       <div
         className="absolute inset-0 bg-black/50"
-        style={{ animation: "heroTextFadeOut 0.8s ease-out 4.4s both" }}
+        style={{
+          animation: `heroTextFadeOut ${HERO_INTRO_FADE_OUT_DURATION_SECONDS}s ease-out ${HERO_INTRO_FADE_OUT_DELAY_SECONDS}s both`,
+        }}
       />
 
       {/* 벚꽃 떨어지는 효과 */}
@@ -282,7 +290,7 @@ export default function MainHero({
             className="font-sacramento text-[clamp(30px,8vw,40px)] font-normal leading-snug text-white/85 px-4 pt-3 pb-2"
             style={{
               animation:
-                "writeClipOpen 1.85s linear 0.25s both, heroTextFadeOut 0.8s ease-out 4.4s both",
+                `writeClipOpen 1.85s linear 0.25s both, heroTextFadeOut ${HERO_INTRO_FADE_OUT_DURATION_SECONDS}s ease-out ${HERO_INTRO_FADE_OUT_DELAY_SECONDS}s both`,
               WebkitFontSmoothing: "antialiased",
               textShadow: "0 1px 6px rgba(0,0,0,0.18)",
             }}
@@ -295,7 +303,7 @@ export default function MainHero({
             className="font-sacramento text-[clamp(30px,8vw,40px)] font-normal leading-snug text-white/85 px-4 pt-2 pb-5"
             style={{
               animation:
-                "writeClipOpen 1.85s linear 2.1s both, heroTextFadeOut 0.8s ease-out 4.4s both",
+                `writeClipOpen 1.85s linear 2.1s both, heroTextFadeOut ${HERO_INTRO_FADE_OUT_DURATION_SECONDS}s ease-out ${HERO_INTRO_FADE_OUT_DELAY_SECONDS}s both`,
               WebkitFontSmoothing: "antialiased",
               textShadow: "0 1px 6px rgba(0,0,0,0.18)",
             }}
