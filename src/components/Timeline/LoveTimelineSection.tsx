@@ -104,7 +104,7 @@ export default function LoveTimelineSection({
           return (
             <div
               key={item.id}
-              className="relative grid h-[225px] grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-x-14"
+              className="relative grid h-[240px] grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-x-14"
             >
               <span
                 aria-hidden
