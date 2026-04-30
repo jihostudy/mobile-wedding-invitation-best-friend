@@ -33,7 +33,7 @@ export default function InvitationMessage({
   const brideParentLine = formatParentLine(bride, "신부");
 
   return (
-    <section id="invitation" className="relative z-10 bg-white px-9 py-16">
+    <section id="invitation" className="relative z-10 bg-white px-9 py-12">
       <div className="mx-auto w-full max-w-md space-y-10">
         <div className="text-center">
           <p className="font-crimson text-sm uppercase tracking-[0.33em] text-wedding-brown">
@@ -42,7 +42,7 @@ export default function InvitationMessage({
           <h2 className="mt-3 text-xl tracking-[0.04em] text-wedding-gray-dark">
             {section.title}
           </h2>
-          <p className="mt-8 whitespace-pre-line text-sm leading-8 text-wedding-gray">
+          <p className="mt-8 whitespace-pre-line text-base leading-8 text-wedding-gray">
             {section.message}
           </p>
         </div>

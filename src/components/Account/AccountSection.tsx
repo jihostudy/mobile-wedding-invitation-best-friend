@@ -81,7 +81,7 @@ export default function AccountSection({
   }
 
   return (
-    <section id="account" className="bg-white px-9 py-16">
+    <section id="account" className="bg-white px-9 py-12">
       <div className="mx-auto w-full max-w-md">
         <div className="text-center">
           <p className="font-crimson text-sm uppercase tracking-[0.33em] text-wedding-brown">

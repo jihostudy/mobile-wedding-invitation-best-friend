@@ -75,7 +75,10 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
   });
 
   useEffect(() => {
-    const nextBatch = section.images.slice(INITIAL_VISIBLE_COUNT, EXPANDED_VISIBLE_COUNT);
+    const nextBatch = section.images.slice(
+      INITIAL_VISIBLE_COUNT,
+      EXPANDED_VISIBLE_COUNT,
+    );
     if (!nextBatch.length) return;
 
     const timer = setTimeout(() => {
@@ -90,7 +93,7 @@ export default function ImageGallery({ section }: ImageGalleryProps) {
 
   return (
     <>
-      <section id="gallery" className="bg-white py-16">
+      <section id="gallery" className="bg-white py-12">
         <div className="mx-auto w-full max-w-md">
           <FadeInUp className="mb-8 text-center">
             <p className="font-crimson text-sm uppercase tracking-[0.33em] text-wedding-brown">

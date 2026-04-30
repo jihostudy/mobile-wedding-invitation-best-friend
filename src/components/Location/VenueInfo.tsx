@@ -44,7 +44,7 @@ export default function VenueInfo({ venue, date }: VenueInfoProps) {
       });
 
   return (
-    <section id="location" className="py-16">
+    <section id="location" className="py-12">
       <div className="mx-auto w-full max-w-[425px]">
         <div className="px-8 text-center">
           <p className="font-crimson text-sm uppercase tracking-[0.33em] text-wedding-brown">
