@@ -141,6 +141,7 @@ export type TimelineImageSide = "left" | "right";
 export interface TimelineItemData {
   id: string;
   dateLabel: string;
+  bodyEmoji: string;
   bodyTitle: string;
   body: string;
   image: ImageAsset;

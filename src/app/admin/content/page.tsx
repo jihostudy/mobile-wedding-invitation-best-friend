@@ -2082,6 +2082,7 @@ export default function AdminContentPage() {
                 addArrayItem(["timelineSection", "items"], {
                   id: `timeline-${Date.now()}`,
                   dateLabel: "날짜 또는 기간",
+                  bodyEmoji: "💫",
                   bodyTitle: "본문 제목",
                   body: "본문 내용을 입력해 주세요.",
                   image: {
@@ -2211,16 +2212,33 @@ export default function AdminContentPage() {
                         )
                       }
                     />
-                    <TextField
-                      label="본문 제목"
-                      value={item.bodyTitle}
-                      onChange={(value) =>
-                        updatePath(
-                          ["timelineSection", "items", index, "bodyTitle"],
-                          value,
-                        )
-                      }
-                    />
+                    <div className="grid grid-cols-[96px_1fr] gap-2">
+                      <TextField
+                        label="이모티콘"
+                        value={item.bodyEmoji}
+                        onChange={(value) =>
+                          updatePath(
+                            [
+                              "timelineSection",
+                              "items",
+                              index,
+                              "bodyEmoji",
+                            ],
+                            value,
+                          )
+                        }
+                      />
+                      <TextField
+                        label="본문 제목"
+                        value={item.bodyTitle}
+                        onChange={(value) =>
+                          updatePath(
+                            ["timelineSection", "items", index, "bodyTitle"],
+                            value,
+                          )
+                        }
+                      />
+                    </div>
                     <TextAreaField
                       label="본문 내용"
                       value={item.body}

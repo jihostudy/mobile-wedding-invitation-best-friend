@@ -243,7 +243,8 @@ export const TIMELINE_SECTION: TimelineSectionData = {
     {
       id: "first-meet",
       dateLabel: "21년 3월 20일, 서울",
-      bodyTitle: "🏢 운명 같은 첫 만남",
+      bodyEmoji: "🏢",
+      bodyTitle: "운명 같은 첫 만남",
       body: "회사에서 처음 만나\n어느 순간 서로에게\n스며들었던 우리",
       image: {
         url: GALLERY_IMAGES[0]?.url ?? "/images/placeholder-couple.svg",
@@ -254,7 +255,8 @@ export const TIMELINE_SECTION: TimelineSectionData = {
     {
       id: "dating-days",
       dateLabel: "연애 기간 1,877일",
-      bodyTitle: "💕 행복했던 5년",
+      bodyEmoji: "💕",
+      bodyTitle: "행복했던 5년",
       body: "항상 웃음이 머물던\n여러 계절들의 우리",
       image: {
         url: GALLERY_IMAGES[1]?.url ?? "/images/placeholder-couple.svg",
@@ -265,7 +267,8 @@ export const TIMELINE_SECTION: TimelineSectionData = {
     {
       id: "proposal",
       dateLabel: "24년 9월 17일, 일본",
-      bodyTitle: "💍 프로포즈",
+      bodyEmoji: "💍",
+      bodyTitle: "프로포즈",
       body: "눈물과 함께한\n깜짝 프로포즈.\n대답은 당연히 “YES!”",
       image: {
         url: GALLERY_IMAGES[2]?.url ?? "/images/placeholder-couple.svg",
@@ -276,7 +279,8 @@ export const TIMELINE_SECTION: TimelineSectionData = {
     {
       id: "wedding-day",
       dateLabel: "26년 5월 9일, 춘천",
-      bodyTitle: "👰‍♀️🤵 웨딩데이",
+      bodyEmoji: "👰‍♀️🤵",
+      bodyTitle: "웨딩데이",
       body: "저희 둘이 드디어\n결혼합니다",
       image: {
         url: GALLERY_IMAGES[3]?.url ?? "/images/placeholder-couple.svg",

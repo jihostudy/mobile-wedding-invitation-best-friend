@@ -40,8 +40,11 @@ function TimelineText({ item }: { item: TimelineItemData }) {
 
   return (
     <div>
-      <p className="text-sm font-semibold leading-7 text-wedding-gray-dark">
-        {item.bodyTitle}
+      <p className="inline-flex items-center gap-1.5 text-sm font-semibold leading-7 text-wedding-gray-dark">
+        {item.bodyEmoji ? (
+          <span className="text-lg leading-none">{item.bodyEmoji}</span>
+        ) : null}
+        <span>{item.bodyTitle}</span>
       </p>
       <div className="mt-3 text-[13px] leading-6 text-wedding-gray-light">
         {bodyLines.map((line) => (
@@ -81,7 +84,7 @@ export default function LoveTimelineSection({
   return (
     <section
       aria-label="두 사람의 추억 타임라인"
-      className="overflow-hidden bg-white px-6 pb-4 pt-16"
+      className="overflow-hidden bg-white px-6 pb-4 pt-12"
     >
       <div className="mb-8 text-center">
         <p className="font-crimson text-sm uppercase tracking-[0.33em] text-wedding-brown">
@@ -101,7 +104,7 @@ export default function LoveTimelineSection({
           return (
             <div
               key={item.id}
-              className="relative grid h-[280px] grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-x-14"
+              className="relative grid h-[225px] grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-x-14"
             >
               <span
                 aria-hidden
