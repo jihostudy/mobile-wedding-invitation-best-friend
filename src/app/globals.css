@@ -317,14 +317,24 @@
 @keyframes weddingDayPulse {
   0%,
   100% {
-    background-color: #ef8d98;
-    box-shadow: 0 0 0 0 rgba(239, 141, 152, 0.5);
+    fill: #ef8d98;
     transform: scale(1);
   }
   50% {
-    background-color: #dc6e7d;
-    box-shadow: 0 0 0 10px rgba(239, 141, 152, 0);
-    transform: scale(1.08);
+    fill: #dc6e7d;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes weddingDayHeartHalo {
+  0%,
+  100% {
+    opacity: 0.28;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0;
+    transform: scale(1.24);
   }
 }
 
@@ -402,10 +412,30 @@
 
 @layer utilities {
   .wedding-day-pulse {
-    background-color: #ef8d98;
-    box-shadow: 0 0 0 4px rgba(239, 141, 152, 0.14);
+    position: relative;
+    isolation: isolate;
+    font-weight: 500;
+    text-shadow: 0 1px 3px rgba(128, 58, 68, 0.22);
+  }
+
+  .wedding-day-heart-fill,
+  .wedding-day-heart-halo {
+    transform-box: fill-box;
+    transform-origin: center;
+    pointer-events: none;
+  }
+
+  .wedding-day-heart-fill {
+    fill: #ef8d98;
+    filter: drop-shadow(0 3px 7px rgba(188, 100, 112, 0.22));
     animation: weddingDayPulse 1.8s ease-in-out infinite;
-    will-change: transform, background-color, box-shadow;
+    will-change: transform, fill;
+  }
+
+  .wedding-day-heart-halo {
+    fill: rgba(239, 141, 152, 0.2);
+    animation: weddingDayHeartHalo 1.8s ease-in-out infinite;
+    will-change: transform, opacity;
   }
 
   .music-eq-bar {
@@ -493,6 +523,11 @@
   }
 
   .wedding-day-pulse {
+    animation: none;
+  }
+
+  .wedding-day-heart-fill,
+  .wedding-day-heart-halo {
     animation: none;
   }
 

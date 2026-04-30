@@ -64,17 +64,23 @@ export default function WeddingCalendar({
 
   const weekDays = ["일", "월", "화", "수", "목", "금", "토"];
   return (
-    <section id="calendar" className="bg-white px-9 py-16">
+    <section id="calendar" className="bg-white px-9 py-12">
       <div className="mx-auto w-full max-w-md text-center">
         <FadeInUp delay={0.12} amount={0.15}>
           <div className="border-y border-gray-300/40 px-2 pb-8 pt-8">
             <p className="text-center text-lg font-semibold text-[#3f3f3f]">
               {date.year}년 {date.month}월 {date.day}일
             </p>
-            <p className="mt-2 pb-4 text-sm text-[#3f3f3f]">
+            <p className="mt-2 text-sm text-[#3f3f3f]">
               {date.dayOfWeek} {date.time}
             </p>
-            <div className="grid grid-cols-7 text-[14px] text-[#363636]">
+            <p
+              aria-hidden="true"
+              className="mt-4 mb-2 font-crimson text-[32px] leading-none text-[#222222]"
+            >
+              {date.month}
+            </p>
+            <div className="mt-1 grid grid-cols-7 text-[14px] text-[#363636]">
               {weekDays.map((day) => (
                 <div
                   key={day}
@@ -94,14 +100,28 @@ export default function WeddingCalendar({
                     key={`day-${index}`}
                     className="flex h-[40px] items-center justify-center"
                   >
-                    {day ? (
+                    {day && isWeddingDay ? (
+                      <span className="wedding-day-pulse relative flex h-[40px] w-[40px] items-center justify-center text-white">
+                        <svg
+                          aria-hidden
+                          className="absolute left-1/2 top-1/2 -z-10 h-[52px] w-[52px] -translate-x-1/2 -translate-y-1/2 overflow-visible"
+                          viewBox="0 0 48 48"
+                        >
+                          <path
+                            className="wedding-day-heart-halo"
+                            d="M24 41s-2.1-1.8-4.7-4.1C11.2 29.8 6 25 6 17.8 6 12.1 10.5 8 15.9 8c3.2 0 6.2 1.5 8.1 3.9C25.9 9.5 28.9 8 32.1 8 37.5 8 42 12.1 42 17.8c0 7.2-5.2 12-13.3 19.1C26.1 39.2 24 41 24 41z"
+                          />
+                          <path
+                            className="wedding-day-heart-fill"
+                            d="M24 41s-2.1-1.8-4.7-4.1C11.2 29.8 6 25 6 17.8 6 12.1 10.5 8 15.9 8c3.2 0 6.2 1.5 8.1 3.9C25.9 9.5 28.9 8 32.1 8 37.5 8 42 12.1 42 17.8c0 7.2-5.2 12-13.3 19.1C26.1 39.2 24 41 24 41z"
+                          />
+                        </svg>
+                        <span className="relative z-10">{day}</span>
+                      </span>
+                    ) : day ? (
                       <span
                         className={`flex h-[40px] w-[40px] items-center justify-center ${
-                          isWeddingDay
-                            ? "wedding-day-pulse rounded-full text-white"
-                            : isSunday
-                              ? "text-[#d28390]"
-                              : "text-[#585858]"
+                          isSunday ? "text-[#d28390]" : "text-[#585858]"
                         }`}
                       >
                         {day}
