@@ -1,10 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type {
-  GuestMessage,
-  GuestbookSectionData,
-} from "@/types";
+import type { GuestMessage, GuestbookSectionData } from "@/types";
 import {
   useCreateGuestMessageMutation,
   useGuestMessagesQuery,
@@ -42,7 +39,7 @@ export default function Guestbook({ section }: GuestbookProps) {
   const hasMessages = messages.length > 0;
 
   return (
-    <section id="guestbook" className="bg-white px-9 py-16">
+    <section id="guestbook" className="bg-white px-9 py-12">
       <div className="mx-auto w-full max-w-md">
         <div className="text-center">
           <p className="font-crimson text-sm uppercase tracking-[0.33em] text-wedding-brown">
@@ -54,10 +51,14 @@ export default function Guestbook({ section }: GuestbookProps) {
         </div>
 
         {!hasMessages && (
-          <div className="mt-7 rounded-2xl border border-wedding-brown/10 bg-white/50 p-6 text-wedding-brown">
-            <p className="whitespace-pre-line leading-7 text-wedding-gray text-sm">
-              결혼을 진심으로 축하해 주시는 모든 마음에 감사드립니다. 두
-              사람에게 따뜻한 한 마디를 남겨주세요.
+          <div className="mt-7 rounded-2xl border border-wedding-brown/10 bg-white/50 p-5 text-wedding-brown">
+            <p className="mx-auto text-center text-xs leading-7 text-wedding-gray [word-break:keep-all]">
+              <span className="block">
+                결혼을 진심으로 축하해 주시는 마음에 감사드립니다.
+              </span>
+              <span className="block">
+                저희에게 따뜻한 한 마디를 남겨주세요.
+              </span>
             </p>
             <button
               type="button"
