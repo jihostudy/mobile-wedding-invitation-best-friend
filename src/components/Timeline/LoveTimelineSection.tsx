@@ -48,7 +48,7 @@ function TimelineText({ item }: { item: TimelineItemData }) {
         ) : null}
         <span>{item.bodyTitle}</span>
       </p>
-      <div className="mt-3 text-[13px] leading-6 text-wedding-gray-light">
+      <div className="mt-3 text-[0.8125rem] leading-6 text-wedding-gray-light">
         {bodyLines.map((line) => (
           <p key={line}>{line}</p>
         ))}
