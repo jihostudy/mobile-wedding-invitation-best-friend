@@ -136,7 +136,7 @@ export default function WeddingCalendar({
             <div className="font-crimson flex items-end justify-center gap-1 text-center">
               <div className="w-[72px]">
                 <div className="mb-1 text-[13px] tracking-[0.04em] text-[#9a9a9a]">
-                  DAYS
+                  DAY
                 </div>
                 <span className="block min-w-[2rem] text-[26px] font-medium leading-none text-[#3c3c3c]">
                   {timeLeft.days}
