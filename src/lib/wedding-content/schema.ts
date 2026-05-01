@@ -438,11 +438,7 @@ const weddingContentSchema = z
                 subwayDetails: z
                   .array(z.object({ label: z.string(), color: z.string() }))
                   .optional(),
-                busDetails: z
-                  .array(z.object({ label: z.string(), color: z.string() }))
-                  .optional(),
-                bus: z.array(z.string()).optional(),
-                busNote: z.string().optional(),
+                parkingTitle: z.string().optional(),
                 parking: z.string().optional(),
                 shuttlePickup: z.string().optional(),
               })
@@ -466,6 +462,7 @@ const weddingContentSchema = z
               ...venue,
               transport: {
                 ...venue.transport,
+                parkingTitle: venue.transport.parkingTitle ?? "주차",
                 navigation: {
                   description:
                     venue.transport.navigation?.description ??

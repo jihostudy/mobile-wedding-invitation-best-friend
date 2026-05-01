@@ -72,12 +72,7 @@ export interface TransportInfo {
     label: string;
     color: string;
   }[];
-  busDetails?: {
-    label: string;
-    color: string;
-  }[];
-  bus?: string[];
-  busNote?: string;
+  parkingTitle?: string;
   parking?: string;
   shuttlePickup?: string;
 }

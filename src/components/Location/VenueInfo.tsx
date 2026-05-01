@@ -22,26 +22,8 @@ export default function VenueInfo({ venue, date }: VenueInfoProps) {
         label,
         color: "#8d8d8d",
       }));
-  const busLines = venue.transport?.busDetails?.length
-    ? venue.transport.busDetails
-    : (venue.transport?.bus ?? []).map((line) => {
-        if (line.includes("간선")) {
-          return {
-            label: `간선버스 : ${line.replace("간선버스:", "").trim()}`,
-            color: "#1d3f8a",
-          };
-        }
-        if (line.includes("지선")) {
-          return {
-            label: `지선버스 : ${line.replace("지선버스:", "").trim()}`,
-            color: "#2d9b46",
-          };
-        }
-        return {
-          label: line,
-          color: "#8d8d8d",
-        };
-      });
+  const parkingTitle = venue.transport?.parkingTitle ?? "주차";
+  const parkingDescription = venue.transport?.parking ?? venue.parking;
 
   return (
     <section id="location" className="py-12">
@@ -113,20 +95,16 @@ export default function VenueInfo({ venue, date }: VenueInfoProps) {
           </div>
         </FadeInUp>
 
-        <FadeInUp className="px-9 mt-8 pt-8" delay={0.12}>
-          <h4 className="text-base font-semibold text-wedding-gray">버스</h4>
-          <div className="mt-4 space-y-2 text-sm text-wedding-gray">
-            {busLines.map((line) => (
-              <p key={line.label} className="flex items-center text-sm">
-                <span
-                  className="mr-2 inline-block h-3.5 w-3.5 rounded-full"
-                  style={{ backgroundColor: line.color }}
-                />
-                {line.label}
-              </p>
-            ))}
-          </div>
-        </FadeInUp>
+        {parkingDescription ? (
+          <FadeInUp className="px-9 mt-8 pt-8" delay={0.12}>
+            <h4 className="text-base font-semibold text-wedding-gray">
+              {parkingTitle}
+            </h4>
+            <p className="mt-4 whitespace-pre-line text-sm text-wedding-gray">
+              {parkingDescription}
+            </p>
+          </FadeInUp>
+        ) : null}
 
         <FadeInUp className="px-9 mt-8 pt-8" delay={0.24}>
           <h4 className="text-base font-semibold text-wedding-gray">

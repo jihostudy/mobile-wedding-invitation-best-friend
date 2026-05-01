@@ -269,26 +269,6 @@ function normalizeTransportDetails(content: WeddingContentV1): WeddingContentV1 
       }));
     }
 
-    if (
-      (!transport.busDetails || transport.busDetails.length === 0) &&
-      transport.bus?.length
-    ) {
-      transport.busDetails = transport.bus.map((line) => {
-        if (line.includes("간선")) {
-          return {
-            label: `간선버스 : ${line.replace("간선버스:", "").trim()}`,
-            color: "#1d3f8a",
-          };
-        }
-        if (line.includes("지선")) {
-          return {
-            label: `지선버스 : ${line.replace("지선버스:", "").trim()}`,
-            color: "#2d9b46",
-          };
-        }
-        return { label: line, color: "#8d8d8d" };
-      });
-    }
   }
 
   next.gallerySection.images = next.gallerySection.images.map((image) => ({
@@ -888,23 +868,6 @@ export default function AdminContentPage() {
   }
 
   const content = draftContent;
-  const busDetails = content.weddingData.venue.transport?.busDetails?.length
-    ? content.weddingData.venue.transport.busDetails
-    : (content.weddingData.venue.transport?.bus ?? []).map((line) => {
-        if (line.includes("간선")) {
-          return {
-            label: `간선버스 : ${line.replace("간선버스:", "").trim()}`,
-            color: "#1d3f8a",
-          };
-        }
-        if (line.includes("지선")) {
-          return {
-            label: `지선버스 : ${line.replace("지선버스:", "").trim()}`,
-            color: "#2d9b46",
-          };
-        }
-        return { label: line, color: "#8d8d8d" };
-      });
   const navigationApps = content.weddingData.venue.transport?.navigation?.apps ?? [];
   const sectionNavItems = [
     { id: "sectionOrder", label: "섹션 순서" },
@@ -1396,95 +1359,37 @@ export default function AdminContentPage() {
                   ))}
                 </div>
 
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <p className="text-xs font-semibold text-[#6f6350]">
-                      버스
-                    </p>
-                    <button
-                      type="button"
-                      className="rounded-md border border-[#d7c9b1] px-2 py-1 text-xs"
-                      onClick={() =>
-                        setDraftContent((prev) => {
-                          if (!prev) return prev;
-                          const next = deepClone(prev);
-                          const current =
-                            next.weddingData.venue.transport?.busDetails ?? [];
-                          next.weddingData.venue.transport = {
-                            ...(next.weddingData.venue.transport ?? {}),
-                            busDetails: [
-                              ...current,
-                              { label: "", color: "#8d8d8d" },
-                            ],
-                          };
-                          return next;
-                        })
-                      }
-                    >
-                      노선 추가
-                    </button>
-                  </div>
-                  {busDetails.map((item, index) => (
-                    <div
-                      key={`bus-detail-${index}`}
-                      className="grid grid-cols-1 gap-2 sm:grid-cols-[minmax(0,180px)_minmax(0,1fr)_auto] sm:items-end"
-                    >
-                      <ColorField
-                        label="색상"
-                        value={item.color}
-                        onChange={(value) =>
-                          updatePath(
-                            [
-                              "weddingData",
-                              "venue",
-                              "transport",
-                              "busDetails",
-                              index,
-                              "color",
-                            ],
-                            value,
-                          )
-                        }
-                      />
-                      <TextField
-                        label={`노선 ${index + 1}`}
-                        value={item.label}
-                        onChange={(value) =>
-                          updatePath(
-                            [
-                              "weddingData",
-                              "venue",
-                              "transport",
-                              "busDetails",
-                              index,
-                              "label",
-                            ],
-                            value,
-                          )
-                        }
-                      />
-                      <div className="pt-0 sm:pt-6">
-                        <button
-                          type="button"
-                          className="h-10 rounded-md border border-[#e1bfbf] px-3 text-xs text-[#8a4a4a]"
-                          onClick={() =>
-                            removeArrayItem(
-                              [
-                                "weddingData",
-                                "venue",
-                                "transport",
-                                "busDetails",
-                              ],
-                              index,
-                            )
-                          }
-                        >
-                          삭제
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+                <div className="grid gap-3 md:grid-cols-[180px_1fr]">
+                  <TextField
+                    label="주차 제목"
+                    value={
+                      content.weddingData.venue.transport?.parkingTitle ??
+                      "주차"
+                    }
+                    onChange={(value) =>
+                      updatePath(
+                        ["weddingData", "venue", "transport", "parkingTitle"],
+                        value,
+                      )
+                    }
+                  />
+                  <TextAreaField
+                    label="주차 안내"
+                    value={
+                      content.weddingData.venue.transport?.parking ??
+                      content.weddingData.venue.parking ??
+                      ""
+                    }
+                    rows={2}
+                    onChange={(value) =>
+                      updatePath(
+                        ["weddingData", "venue", "transport", "parking"],
+                        value,
+                      )
+                    }
+                  />
                 </div>
+
                 <TextField
                   label="셔틀 안내"
                   value={
@@ -1497,6 +1402,7 @@ export default function AdminContentPage() {
                     )
                   }
                 />
+
                 <div className="space-y-3 rounded-lg border border-[#efe4d2] bg-[#fffdf9] p-3">
                   <p className="text-xs font-semibold text-[#6f6350]">
                     내비게이션 앱

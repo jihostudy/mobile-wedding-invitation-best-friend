@@ -111,11 +111,7 @@ export const WEDDING_DATA: WeddingInfo = {
         { label: "신분당선 신사역 1번 출구 도보 15분", color: "#D31145" },
         { label: "7호선 학동역 8번 출구 도보 7분", color: "#747F00" },
       ],
-      busDetails: [
-        { label: "간선버스 : 146, 540, 4318", color: "#1d3f8a" },
-        { label: "지선버스 : 3414, 4318", color: "#2d9b46" },
-      ],
-      bus: ["간선버스: 146, 540, 4318", "지선버스: 3414, 4318"],
+      parkingTitle: "주차",
       parking: "건물 지하 1~3층 (3시간 무료)",
       shuttlePickup: "학동역 8번 출구 앞 셔틀 탑승",
     },
