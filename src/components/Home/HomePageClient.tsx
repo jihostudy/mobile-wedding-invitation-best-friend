@@ -185,7 +185,7 @@ export default function HomePageClient() {
             ))}
         </div>
       </main>
-      {isAdminAuthenticated ? (
+{isAdminAuthenticated ? (
         <Link
           href="/admin/guest-messages"
           className="fixed z-[10020] inline-flex max-w-[calc(100vw-24px)] items-center justify-center whitespace-nowrap rounded-full bg-wedding-brown px-4 py-2.5 text-[11px] font-semibold tracking-[0.08em] text-white shadow-[0_10px_24px_rgba(68,47,33,0.3)] transition hover:bg-wedding-brown-light bottom-[max(12px,calc(env(safe-area-inset-bottom)+8px))] right-[max(12px,env(safe-area-inset-right))] sm:px-5 sm:py-3 sm:text-xs"

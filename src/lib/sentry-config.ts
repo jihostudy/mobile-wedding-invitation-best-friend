@@ -1,9 +1,14 @@
-import type { BrowserOptions, NodeOptions } from '@sentry/nextjs'
+import type { BrowserOptions, NodeOptions } from "@sentry/nextjs";
 
 type SharedOptions = Pick<
   NodeOptions & BrowserOptions,
-  'dsn' | 'environment' | 'enabled' | 'tracesSampleRate' | 'sendDefaultPii' | 'ignoreErrors'
->
+  | "dsn"
+  | "environment"
+  | "enabled"
+  | "tracesSampleRate"
+  | "sendDefaultPii"
+  | "ignoreErrors"
+>;
 
 export const sharedSentryConfig: SharedOptions = {
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
@@ -11,8 +16,5 @@ export const sharedSentryConfig: SharedOptions = {
   enabled: process.env.NODE_ENV === 'production',
   tracesSampleRate: 0,
   sendDefaultPii: false,
-  ignoreErrors: [
-    'Non-Error promise rejection captured',
-    /^AbortError/,
-  ],
-}
+  ignoreErrors: ["Non-Error promise rejection captured", /^AbortError/],
+};
