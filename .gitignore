@@ -35,3 +35,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+
+# ralph loop state
+.ucw/
+
+# Sentry Config File
+.env.sentry-build-plugin
