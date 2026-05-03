@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { withSentryConfig } = require('@sentry/nextjs')
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -14,6 +17,14 @@ const nextConfig = {
   },
 }
 
-module.exports = nextConfig
-
-
+module.exports = withSentryConfig(nextConfig, {
+  org: 'jihostudy',
+  project: 'wedding-invitation',
+  silent: !process.env.CI,
+  widenClientFileUpload: true,
+  webpack: {
+    treeshake: {
+      removeDebugLogging: true,
+    },
+  },
+})
