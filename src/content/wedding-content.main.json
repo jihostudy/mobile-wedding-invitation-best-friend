@@ -1,0 +1,579 @@
+{
+  "slug": "main",
+  "version": 119,
+  "content": {
+    "heroSection": {
+      "mainImage": {
+        "alt": "김동현과 강다연의 결혼식",
+        "url": "/images/wedding-content/hero/hero-1.jpg"
+      }
+    },
+    "rsvpSection": {
+      "title": "참석 의사 전달",
+      "kicker": "R.S.V.P.",
+      "description": "모든 분들을 소중히 모실 수 있도록 전해주세요"
+    },
+    "snapSection": {
+      "modal": {
+        "maxFiles": 40,
+        "backLabel": "청첩장 보기",
+        "nameLabel": "이름",
+        "coverImage": {
+          "alt": "스냅 업로드 커버 이미지",
+          "url": "/images/wedding-content/hero/hero-1.jpg"
+        },
+        "coverNames": "김진호 · 이나은",
+        "coverTitle": "예식 당일, 빛나는 순간을\n공유해 주세요!",
+        "guideLines": [
+          "1. 설렘 가득한 신랑·신부의 모습",
+          "2. 두 사람의 빛나는 입장 & 행진",
+          "3. 가족, 친구들과 함께한 따뜻한 찰나",
+          "4. 그리고 여러분의 시선에서 담은 순간들까지!"
+        ],
+        "guideTitle": "우리의 소중한 순간을 함께 담아주세요!",
+        "coverKicker": "스냅",
+        "policyLines": [
+          "한 번에 최대 40장까지 업로드하실 수 있습니다.",
+          "가능하면 여러 장을 한 번에 묶어서 업로드해 주세요.",
+          "업로드는 예식 당일부터 다음날까지 가능합니다."
+        ],
+        "namePlaceholder": "입력하신 이름으로 폴더가 생성됩니다.",
+        "uploadEmptyHint": "예식 당일 촬영한 사진을 업로드해 주세요.",
+        "attachButtonLabel": "사진 첨부하기",
+        "guideHighlightLines": [
+          "📸 가장 멋진 사진을 공유해주신 분께는 신랑·신부가 직접 준비한 맛있는 한 끼를 선물로 드립니다!",
+          "✨ 예식 당일, 아래 사진 첨부하기 버튼을 눌러 사진을 업로드해주세요. 작은 순간 하나하나가 저희에게 큰 선물이 될 거예요.",
+          "여러분의 많은 참여, 기다리고 있겠습니다❤️"
+        ]
+      },
+      "title": "스냅",
+      "images": [
+        {
+          "id": "snap-1",
+          "alt": "스냅 예시 사진 1",
+          "url": "/images/wedding-content/gallery/gallery-1.jpg",
+          "offsetX": -52,
+          "rotation": -16
+        },
+        {
+          "id": "snap-2",
+          "alt": "스냅 예시 사진 2",
+          "url": "/images/wedding-content/gallery/gallery-2.jpg",
+          "offsetX": 0,
+          "rotation": -4
+        },
+        {
+          "id": "snap-3",
+          "alt": "스냅 예시 사진 3",
+          "url": "/images/wedding-content/gallery/gallery-3.jpg",
+          "offsetX": 50,
+          "rotation": 10
+        }
+      ],
+      "kicker": "CAPTURE OUR MOMENTS",
+      "description": "신랑신부의 행복한 순간을 담아주세요.\n예식 당일, 아래 버튼을 통해 사진을 올려주세요.\n많은 참여 부탁드려요!",
+      "uploadOpenAt": "2026-06-20T11:30:00+09:00"
+    },
+    "weddingData": {
+      "date": {
+        "day": 20,
+        "time": "오전 11시",
+        "year": 2026,
+        "month": 6,
+        "dayOfWeek": "토요일"
+      },
+      "bride": {
+        "name": "강다연",
+        "contact": "010-7923-3193",
+        "parents": {
+          "father": "강경춘",
+          "mother": "우윤진",
+          "fatherContact": "010-3718-3193",
+          "motherContact": "010-4039-3193"
+        },
+        "englishName": "Kang Da Yeon"
+      },
+      "groom": {
+        "name": "김동현",
+        "contact": "010-9391-8671",
+        "parents": {
+          "father": "김학수",
+          "mother": "한정아",
+          "fatherContact": "010-5348-8671",
+          "motherContact": "010-3593-8671"
+        },
+        "englishName": "Kim Dong Hyun"
+      },
+      "venue": {
+        "name": "루클라비더화이트",
+        "floor": "2층",
+        "address": "서울 강남구 논현로 742",
+        "contact": "02-3444-0777",
+        "parking": "건물 지하 1~3층 무료 주차 가능",
+        "transport": {
+          "bus": [
+            "간선버스: 146, 540, 4318",
+            "지선버스: 3414, 4318"
+          ],
+          "subway": [
+            "신분당선 신사역 1번 출구 도보 15분",
+            "7호선 학동역 8번 출구 도보 7분"
+          ],
+          "parking": "건물 지하 1~3층 (3시간 무료)",
+          "busDetails": [
+            {
+              "color": "#1d3f8a",
+              "label": "간선버스 : 146, 540, 4318"
+            },
+            {
+              "color": "#2d9b46",
+              "label": "지선버스 : 3414, 4318"
+            }
+          ],
+          "navigation": {
+            "apps": [
+              {
+                "id": "naver",
+                "label": "네이버지도",
+                "webUrl": "https://map.naver.com/v5/directions/-/127.029222699331,37.5182838663077,%EB%A3%A8%ED%81%B4%EB%9D%BC%EB%B9%84%EB%8D%94%ED%99%94%EC%9D%B4%ED%8A%B8/-/transit",
+                "enabled": true,
+                "deepLink": "nmap://route/public?dlat=37.5182838663077&dlng=127.029222699331&dname=%EB%A3%A8%ED%81%B4%EB%9D%BC%EB%B9%84%EB%8D%94%ED%99%94%EC%9D%B4%ED%8A%B8&appname=com.wedding.invitation"
+              },
+              {
+                "id": "tmap",
+                "label": "티맵",
+                "webUrl": "https://m.tmap.co.kr/tmap2/mobile/route.jsp?goalx=127.029222699331&goaly=37.5182838663077&goalname=%EB%A3%A8%ED%81%B4%EB%9D%BC%EB%B9%84%EB%8D%94%ED%99%94%EC%9D%B4%ED%8A%B8",
+                "enabled": true,
+                "deepLink": "tmap://route?goalx=127.029222699331&goaly=37.5182838663077&goalname=%EB%A3%A8%ED%81%B4%EB%9D%BC%EB%B9%84%EB%8D%94%ED%99%94%EC%9D%B4%ED%8A%B8"
+              },
+              {
+                "id": "kakao",
+                "label": "카카오내비",
+                "webUrl": "https://map.kakao.com/link/to/%EB%A3%A8%ED%81%B4%EB%9D%BC%EB%B9%84%EB%8D%94%ED%99%94%EC%9D%B4%ED%8A%B8,37.5182838663077,127.029222699331",
+                "enabled": true,
+                "deepLink": "kakaonavi://navigate?name=%EB%A3%A8%ED%81%B4%EB%9D%BC%EB%B9%84%EB%8D%94%ED%99%94%EC%9D%B4%ED%8A%B8&x=127.029222699331&y=37.5182838663077"
+              }
+            ],
+            "description": "원하시는 앱을 선택하시면 길안내가 시작됩니다."
+          },
+          "shuttlePickup": "학동역 8번 출구/신사역 1번 출구 앞 셔틀 탑승",
+          "subwayDetails": [
+            {
+              "color": "#747F00",
+              "label": "7호선 학동역 8번 출구 도보 7분"
+            },
+            {
+              "color": "#D31145",
+              "label": "신분당선 신사역 1번 출구 도보 15분"
+            }
+          ]
+        },
+        "coordinates": {
+          "lat": 37.5182838663077,
+          "lng": 127.029222699331
+        }
+      },
+      "display": {
+        "disableZoom": true
+      },
+      "backgroundMusic": {
+        "src": "/audio/1772440356162-the_mountain-wedding-165605-7ff1b227-917f-.mp3",
+        "loop": true,
+        "title": "웨딩 배경음악",
+        "volume": 0.4,
+        "enabled": true,
+        "autoplay": true
+      }
+    },
+    "accountSection": {
+      "title": "마음 전하실 곳",
+      "groups": [
+        {
+          "id": "groom",
+          "label": "신랑측",
+          "accounts": [
+            {
+              "bank": "카카오뱅크",
+              "account": "3333-09-0877486"
+            },
+            {
+              "bank": "농협은행",
+              "account": "311-12-451230"
+            },
+            {
+              "bank": "",
+              "account": ""
+            }
+          ]
+        },
+        {
+          "id": "bride",
+          "label": "신부측",
+          "accounts": [
+            {
+              "bank": "카카오뱅크",
+              "account": "3333-07-8812525"
+            },
+            {
+              "bank": "우리은행",
+              "account": "430-07-096191"
+            },
+            {
+              "bank": "우리은행",
+              "account": "332-08-180524"
+            }
+          ]
+        }
+      ],
+      "kicker": "ACCOUNT",
+      "description": "참석이 어려우신 분들을 위해\n계좌번호를 기재하였습니다.\n너그러운 마음으로 양해 부탁드립니다."
+    },
+    "closingSection": {
+      "image": {
+        "alt": "감사 인사 이미지",
+        "url": "/images/wedding-content/closing/closing-1.jpg"
+      }
+    },
+    "gallerySection": {
+      "title": "웨딩 갤러리",
+      "images": [
+        {
+          "id": "1",
+          "alt": "신랑신부 사진",
+          "url": "/images/wedding-content/gallery/gallery-1.jpg",
+          "width": 4000,
+          "height": 6000
+        },
+        {
+          "id": "2",
+          "alt": "신랑신부 사진",
+          "url": "/images/wedding-content/gallery/gallery-2.jpg",
+          "width": 4000,
+          "height": 6000
+        },
+        {
+          "id": "3",
+          "alt": "신랑신부 사진",
+          "url": "/images/wedding-content/gallery/gallery-3.jpg",
+          "width": 4000,
+          "height": 6000
+        },
+        {
+          "id": "4",
+          "alt": "신랑신부 사진",
+          "url": "/images/wedding-content/gallery/gallery-4.jpg",
+          "width": 4000,
+          "height": 6000
+        },
+        {
+          "id": "5",
+          "alt": "신랑신부 사진",
+          "url": "/images/wedding-content/gallery/gallery-5.jpg",
+          "width": 4000,
+          "height": 6000
+        },
+        {
+          "id": "6",
+          "alt": "신랑신부 사진",
+          "url": "/images/wedding-content/gallery/gallery-6.jpg",
+          "width": 4000,
+          "height": 6000
+        },
+        {
+          "id": "7",
+          "alt": "신랑신부 사진",
+          "url": "/images/wedding-content/gallery/gallery-7.jpg",
+          "width": 6000,
+          "height": 4000
+        },
+        {
+          "id": "8",
+          "alt": "신랑신부 사진",
+          "url": "/images/wedding-content/gallery/gallery-8.jpg",
+          "width": 4000,
+          "height": 6000
+        },
+        {
+          "id": "9",
+          "alt": "신랑신부 사진",
+          "url": "/images/wedding-content/gallery/gallery-9.jpg",
+          "width": 3987,
+          "height": 5982
+        },
+        {
+          "id": "gallery-1777168823505",
+          "alt": "신랑신부 사진",
+          "url": "/images/wedding-content/gallery/gallery-10.jpg",
+          "width": 4000,
+          "height": 6000
+        },
+        {
+          "id": "gallery-1777180655008",
+          "alt": "신랑신부 사진",
+          "url": "/images/wedding-content/gallery/gallery-11.jpg",
+          "width": 4000,
+          "height": 6000
+        },
+        {
+          "id": "gallery-1777180655750",
+          "alt": "신랑신부 사진",
+          "url": "/images/wedding-content/gallery/gallery-12.jpg",
+          "width": 4000,
+          "height": 6000
+        },
+        {
+          "id": "gallery-1777180656391",
+          "alt": "신랑신부 사진",
+          "url": "/images/wedding-content/gallery/gallery-13.jpg",
+          "width": 2000,
+          "height": 3059
+        },
+        {
+          "id": "gallery-1777180658063",
+          "alt": "신랑신부 사진",
+          "url": "/images/wedding-content/gallery/gallery-14.jpg",
+          "width": 2000,
+          "height": 3000
+        },
+        {
+          "id": "gallery-1777180658746",
+          "alt": "신랑신부 사진",
+          "url": "/images/wedding-content/gallery/gallery-15.jpg",
+          "width": 2000,
+          "height": 3000
+        },
+        {
+          "id": "gallery-1777180660033",
+          "alt": "신랑신부 사진",
+          "url": "/images/wedding-content/gallery/gallery-16.jpg",
+          "width": 2000,
+          "height": 3059
+        },
+        {
+          "id": "gallery-1777180660805",
+          "alt": "신랑신부 사진",
+          "url": "/images/wedding-content/gallery/gallery-17.jpg",
+          "width": 2000,
+          "height": 3059
+        },
+        {
+          "id": "gallery-1777180662566",
+          "alt": "신랑신부 사진",
+          "url": "/images/wedding-content/gallery/gallery-18.jpg",
+          "width": 2000,
+          "height": 3000
+        },
+        {
+          "id": "gallery-1777180663167",
+          "alt": "신랑신부 사진",
+          "url": "/images/wedding-content/gallery/gallery-19.jpg",
+          "width": 2000,
+          "height": 3000
+        },
+        {
+          "id": "gallery-1777180663533",
+          "alt": "신랑신부 사진",
+          "url": "/images/wedding-content/gallery/gallery-20.jpg",
+          "width": 2000,
+          "height": 3000
+        },
+        {
+          "id": "gallery-1777180668487",
+          "alt": "신랑신부 사진",
+          "url": "/images/wedding-content/gallery/gallery-21.jpg",
+          "width": 2000,
+          "height": 3000
+        },
+        {
+          "id": "gallery-1777180668854",
+          "alt": "신랑신부 사진",
+          "url": "/images/wedding-content/gallery/gallery-22.jpg",
+          "width": 4000,
+          "height": 6000
+        },
+        {
+          "id": "gallery-1777180669187",
+          "alt": "신랑신부 사진",
+          "url": "/images/wedding-content/gallery/gallery-23.jpg",
+          "width": 2000,
+          "height": 3000
+        },
+        {
+          "id": "gallery-1777180669588",
+          "alt": "신랑신부 사진",
+          "url": "/images/wedding-content/gallery/gallery-24.jpg",
+          "width": 2000,
+          "height": 3000
+        }
+      ],
+      "kicker": "GALLERY"
+    },
+    "kakaoShareCard": {
+      "title": "김동현 ♥ 강다연 결혼합니다",
+      "imageUrl": "/images/wedding-content/share/share-1.jpg",
+      "buttonTitle": "모바일 청첩장 보기",
+      "description": "2026년 6월 20일 토요일 오전 11시"
+    },
+    "calendarSection": {
+      "countdownLabel": "동현 ♥ 다연의 결혼식"
+    },
+    "timelineSection": {
+      "items": [
+        {
+          "id": "first-meet",
+          "body": "학원에서 처음 만나\n학교에서 같은 반으로! ",
+          "image": {
+            "alt": "신랑신부 사진",
+            "url": "/images/wedding-content/timeline/timeline-1.jpg"
+          },
+          "bodyEmoji": "🏫",
+          "bodyTitle": "운명 같은 첫 만남",
+          "dateLabel": "2014년 4월 15일",
+          "imageSide": "left"
+        },
+        {
+          "id": "dating-days",
+          "body": "행복으로 가득했던\n여러 계절들의 우리",
+          "image": {
+            "alt": "신랑신부 사진",
+            "url": "/images/wedding-content/timeline/timeline-2.jpg"
+          },
+          "bodyEmoji": "💗",
+          "bodyTitle": "12년째 연애중",
+          "dateLabel": "연애 기간 4,450일",
+          "imageSide": "right"
+        },
+        {
+          "id": "proposal",
+          "body": "12주년 기념\n깜짝 프로포즈\n대답은 당연히 “YES!”",
+          "image": {
+            "alt": "신랑신부 사진",
+            "url": "/images/wedding-content/timeline/timeline-3.jpg"
+          },
+          "bodyEmoji": "💍",
+          "bodyTitle": "프로포즈",
+          "dateLabel": "2026년 4월 15일",
+          "imageSide": "left"
+        },
+        {
+          "id": "wedding-day",
+          "body": "저희 둘이 드디어\n결혼합니다!",
+          "image": {
+            "alt": "신랑신부 사진",
+            "url": "/images/wedding-content/timeline/timeline-4.jpg"
+          },
+          "bodyEmoji": "👰 🤵",
+          "bodyTitle": "웨딩데이",
+          "dateLabel": "2026년 6월 20일",
+          "imageSide": "right"
+        }
+      ],
+      "kicker": "OUR TIMELINE",
+      "description": "저희 연애의 타임라인입니다"
+    },
+    "floatingNavItems": [
+      {
+        "id": "hero",
+        "label": "처음"
+      },
+      {
+        "id": "interview",
+        "label": "인터뷰"
+      },
+      {
+        "id": "gallery",
+        "label": "사진"
+      },
+      {
+        "id": "calendar",
+        "label": "일정"
+      },
+      {
+        "id": "location",
+        "label": "오시는 길"
+      },
+      {
+        "id": "account",
+        "label": "계좌"
+      },
+      {
+        "id": "guestbook",
+        "label": "방명록"
+      }
+    ],
+    "guestbookSection": {
+      "title": "방명록",
+      "kicker": "GUESTBOOK"
+    },
+    "interviewSection": {
+      "image": {
+        "alt": "신랑 신부 인터뷰 대표 사진",
+        "url": "/images/wedding-content/gallery/gallery-1.jpg"
+      },
+      "title": "우리 두 사람의 이야기",
+      "kicker": "INTERVIEW",
+      "questions": [
+        {
+          "answers": [
+            {
+              "side": "groom",
+              "content": "드디어 장가갑니다! 먼저 인생에서 가장 큰 결심을 할 수 있게 해준 예비 신부에게 정말 고맙습니다.\n\n가족이라는 단어를 함께 한다는 것은 정말 설레고 아름다운 일이지만 그만큼 책임감을 더 갖고 살아야겠다고 다짐했습니다.\n\n저희 부부가 한걸음 한걸음 성장해 나가는 모습을 지켜봐주시고 응원해주세요."
+            },
+            {
+              "side": "bride",
+              "content": "오래된 연인에서 이제는 서로의 부부가 되기로 약속했습니다.\n\n아직은 남자친구라는 말이 더 익숙하지만, 그동안 제 옆을 든든하게 지켜주면서 큰 행복을 준 예비 신랑에게 고맙습니다.\n\n이제는 저의 평생의 반려자가 될 신랑에게 좋은 아내로서 더욱 배려하며 큰 힘이 되는 존재로 살겠습니다."
+            }
+          ],
+          "question": "Q1. 결혼을 앞둔 소감"
+        },
+        {
+          "answers": [
+            {
+              "side": "groom",
+              "content": "서로의 다름을 존중하면서 같은 방향을 바라보는 부부가 되고 싶습니다.\n\n사소한 일상에서도 감사함을 잊지 않고, 웃음이 많은 가정을 만들어가겠습니다."
+            },
+            {
+              "side": "bride",
+              "content": "서로에게 가장 편안한 쉼이 되는 사람이 되고 싶습니다.\n\n좋은 날도 어려운 날도 손을 놓지 않고, 함께 성장하는 부부로 살아가겠습니다."
+            }
+          ],
+          "question": "Q2. 앞으로의 우리"
+        }
+      ],
+      "description": "결혼을 앞두고 저희 두 사람의\n인터뷰를 준비했습니다."
+    },
+    "pageSectionOrder": [
+      "hero",
+      "invitation",
+      "interview",
+      "timeline",
+      "gallery",
+      "calendar",
+      "location",
+      "rsvp",
+      "account",
+      "guestbook",
+      "closing",
+      "snap"
+    ],
+    "invitationSection": {
+      "title": "",
+      "kicker": "INVITATION",
+      "message": "가장 순수했던 시절의 \n첫만남을 기억하며\n지금처럼 서로를 아껴주고 \n존중하며 살아가겠습니다.\n\n귀한 발걸음 하시어\n저희 두 사람이  가족이 되는 첫날\n자리를 빛내어 주시면 감사하겠습니다."
+    },
+    "pageSectionVisibility": {
+      "hero": true,
+      "rsvp": true,
+      "snap": false,
+      "account": true,
+      "closing": true,
+      "gallery": true,
+      "calendar": true,
+      "location": true,
+      "timeline": true,
+      "guestbook": true,
+      "interview": false,
+      "invitation": true
+    }
+  }
+}

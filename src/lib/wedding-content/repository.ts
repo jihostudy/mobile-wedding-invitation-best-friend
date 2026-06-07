@@ -1,44 +1,25 @@
-import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { FALLBACK_WEDDING_CONTENT } from '@/lib/wedding-content/fallback';
 import { toViewWeddingContent } from '@/lib/wedding-content/mapper';
 import { parseWeddingContent } from '@/lib/wedding-content/schema';
+import staticWeddingContent from '@/content/wedding-content.main.json';
 import type { WeddingContentResponse, WeddingContentV1 } from '@/types';
 
 export async function getWeddingContent(slug = 'main'): Promise<WeddingContentResponse> {
-  console.log('[wedding-content] fetching content from Supabase', { slug });
-  const supabase = createServerSupabaseClient();
-  const { data, error } = await supabase
-    .from('wedding_content')
-    .select('slug, version, content')
-    .eq('slug', slug)
-    .maybeSingle();
-
-  if (error || !data) {
-    if (error) {
-      console.error('[wedding-content] Supabase fetch failed, using fallback', { slug, error });
-    } else {
-      console.warn('[wedding-content] no content row found, using fallback', { slug });
-    }
-    return {
-      slug,
-      version: 1,
-      content: FALLBACK_WEDDING_CONTENT,
-    };
-  }
+  const data = staticWeddingContent as {
+    slug?: string;
+    version?: number;
+    content?: unknown;
+  };
 
   try {
     const parsed = parseWeddingContent(data.content);
-    console.log('[wedding-content] Supabase fetch succeeded', {
-      slug: data.slug,
-      version: data.version,
-    });
     return {
-      slug: data.slug,
-      version: data.version,
+      slug: data.slug ?? slug,
+      version: data.version ?? 1,
       content: toViewWeddingContent(parsed),
     };
   } catch (parseError) {
-    console.error('[wedding-content] invalid schema, using fallback', {
+    console.error('[wedding-content] invalid static schema, using fallback', {
       slug,
       version: data.version,
       parseError,
@@ -77,51 +58,11 @@ export async function updateWeddingContent(params: {
     };
   }
 
-  const supabase = createServerSupabaseClient({ serviceRole: true });
+  void validatedContent;
 
-  const { data: current, error: readError } = await supabase
-    .from('wedding_content')
-    .select('version')
-    .eq('slug', params.slug)
-    .maybeSingle();
-
-  if (readError) {
-    return { success: false, code: 'UPDATE_FAILED', message: readError.message };
-  }
-
-  const latestVersion = current?.version ?? 1;
-  if (latestVersion !== params.expectedVersion) {
-    return {
-      success: false,
-      code: 'VERSION_CONFLICT',
-      latestVersion,
-      message: 'Content version conflict',
-    };
-  }
-
-  const nextVersion = latestVersion + 1;
-  const { error: updateError } = await supabase
-    .from('wedding_content')
-    .upsert([
-      {
-        slug: params.slug,
-        version: nextVersion,
-        content: validatedContent,
-      },
-    ], { onConflict: 'slug' });
-
-  if (updateError) {
-    return { success: false, code: 'UPDATE_FAILED', message: updateError.message };
-  }
-
-  await supabase.from('admin_audit_logs').insert([
-    {
-      action: 'UPDATE_WEDDING_CONTENT',
-      target: 'wedding_content',
-      target_id: params.slug,
-      detail: { expectedVersion: params.expectedVersion, nextVersion },
-    },
-  ]);
-
-  return { success: true, version: nextVersion };
+  return {
+    success: false,
+    code: 'UPDATE_FAILED',
+    message: 'Wedding content is managed as static project files.',
+  };
 }

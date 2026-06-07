@@ -21,7 +21,7 @@ export default function AdminPage() {
       .then((result) => {
         if (cancelled) return;
         if (result.authenticated) {
-          router.replace("/admin/content");
+          router.replace("/admin/attendance");
         }
       })
       .catch(() => {
@@ -43,7 +43,7 @@ export default function AdminPage() {
         body: JSON.stringify({ password }),
       });
       toast.success("관리자 로그인에 성공했습니다.");
-      router.replace("/admin/content");
+      router.replace("/admin/attendance");
     } catch (error) {
       const message =
         error instanceof ApiError

@@ -21,7 +21,7 @@ const personSchema = z.object({
 });
 
 const fallbackHeroImage = {
-  url: "/images/placeholder-couple.svg",
+  url: "/images/wedding-content/hero/hero-1.jpg",
   alt: "웨딩 메인 이미지",
 };
 
@@ -637,7 +637,7 @@ const weddingContentSchema = z
         imageUrl:
           content.kakaoShareCard?.imageUrl?.trim() ||
           content.heroSection.mainImage.url ||
-          "/images/placeholder-couple.svg",
+          "/images/wedding-content/hero/hero-1.jpg",
       },
       calendarSection: {
         countdownLabel:
