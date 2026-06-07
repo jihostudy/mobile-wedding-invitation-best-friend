@@ -124,7 +124,7 @@ export default function EnvelopeLetterFrame({
         </svg>
         <div className="absolute left-1/2 top-[86px] flex -translate-x-1/2 flex-col items-center text-center text-[#5b4637]">
           <Image
-            src="/images/gallery/wedding.png"
+            src="/images/wedding-content/share/share-1.jpg"
             alt=""
             width={54}
             height={54}

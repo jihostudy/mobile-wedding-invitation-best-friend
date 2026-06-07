@@ -89,7 +89,7 @@ export const metadata: Metadata = {
     locale: "ko_KR",
     images: [
       {
-        url: "/images/placeholder-couple.svg",
+        url: "/images/wedding-content/hero/hero-1.jpg",
         width: 1200,
         height: 630,
         alt: "동현 ♥ 다연의 결혼식 청첩장",

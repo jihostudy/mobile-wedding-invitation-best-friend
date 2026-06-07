@@ -132,7 +132,7 @@ export const WEDDING_DATA: WeddingInfo = {
 // 2) Hero
 export const HERO_SECTION: HeroSectionData = {
   mainImage: {
-    url: "/images/placeholder-couple.svg",
+    url: "/images/wedding-content/hero/hero-1.jpg",
     alt: `${WEDDING_DATA.groom.name}과 ${WEDDING_DATA.bride.name}의 결혼식`,
   },
 };
@@ -163,63 +163,63 @@ export const CALENDAR_SECTION: CalendarSectionData = {
 const GALLERY_IMAGES: GalleryImage[] = [
   {
     id: "1",
-    url: "/images/placeholder-couple.svg",
+    url: "/images/wedding-content/gallery/gallery-1.jpg",
     alt: "신랑신부 메인 사진",
     width: 800,
     height: 1200,
   },
   {
     id: "2",
-    url: "/images/placeholder-couple.svg",
+    url: "/images/wedding-content/gallery/gallery-2.jpg",
     alt: "신랑신부 야외 사진",
     width: 800,
     height: 1200,
   },
   {
     id: "3",
-    url: "/images/placeholder-couple.svg",
+    url: "/images/wedding-content/gallery/gallery-3.jpg",
     alt: "신랑신부 웨딩 사진",
     width: 800,
     height: 1200,
   },
   {
     id: "4",
-    url: "/images/placeholder-couple.svg",
+    url: "/images/wedding-content/gallery/gallery-4.jpg",
     alt: "신랑신부 사진",
     width: 800,
     height: 1200,
   },
   {
     id: "5",
-    url: "/images/placeholder-couple.svg",
+    url: "/images/wedding-content/gallery/gallery-5.jpg",
     alt: "신랑신부 사진",
     width: 800,
     height: 1200,
   },
   {
     id: "6",
-    url: "/images/placeholder-couple.svg",
+    url: "/images/wedding-content/gallery/gallery-6.jpg",
     alt: "신랑신부 사진",
     width: 800,
     height: 1200,
   },
   {
     id: "7",
-    url: "/images/placeholder-couple.svg",
+    url: "/images/wedding-content/gallery/gallery-7.jpg",
     alt: "신랑신부 사진",
     width: 800,
     height: 1200,
   },
   {
     id: "8",
-    url: "/images/placeholder-couple.svg",
+    url: "/images/wedding-content/gallery/gallery-8.jpg",
     alt: "신랑신부 사진",
     width: 800,
     height: 1200,
   },
   {
     id: "9",
-    url: "/images/placeholder-couple.svg",
+    url: "/images/wedding-content/gallery/gallery-9.jpg",
     alt: "신랑신부 사진",
     width: 800,
     height: 1200,
@@ -243,7 +243,7 @@ export const TIMELINE_SECTION: TimelineSectionData = {
       bodyTitle: "운명 같은 첫 만남",
       body: "회사에서 처음 만나\n어느 순간 서로에게\n스며들었던 우리",
       image: {
-        url: GALLERY_IMAGES[0]?.url ?? "/images/placeholder-couple.svg",
+        url: GALLERY_IMAGES[0]?.url ?? "/images/wedding-content/hero/hero-1.jpg",
         alt: "첫 만남 타임라인 사진",
       },
       imageSide: "left",
@@ -255,7 +255,7 @@ export const TIMELINE_SECTION: TimelineSectionData = {
       bodyTitle: "행복했던 5년",
       body: "항상 웃음이 머물던\n여러 계절들의 우리",
       image: {
-        url: GALLERY_IMAGES[1]?.url ?? "/images/placeholder-couple.svg",
+        url: GALLERY_IMAGES[1]?.url ?? "/images/wedding-content/hero/hero-1.jpg",
         alt: "연애 기간 타임라인 사진",
       },
       imageSide: "right",
@@ -267,7 +267,7 @@ export const TIMELINE_SECTION: TimelineSectionData = {
       bodyTitle: "프로포즈",
       body: "눈물과 함께한\n깜짝 프로포즈.\n대답은 당연히 “YES!”",
       image: {
-        url: GALLERY_IMAGES[2]?.url ?? "/images/placeholder-couple.svg",
+        url: GALLERY_IMAGES[2]?.url ?? "/images/wedding-content/hero/hero-1.jpg",
         alt: "프로포즈 타임라인 사진",
       },
       imageSide: "left",
@@ -279,7 +279,7 @@ export const TIMELINE_SECTION: TimelineSectionData = {
       bodyTitle: "웨딩데이",
       body: "저희 둘이 드디어\n결혼합니다",
       image: {
-        url: GALLERY_IMAGES[3]?.url ?? "/images/placeholder-couple.svg",
+        url: GALLERY_IMAGES[3]?.url ?? "/images/wedding-content/hero/hero-1.jpg",
         alt: "웨딩데이 타임라인 사진",
       },
       imageSide: "right",
@@ -293,7 +293,7 @@ export const INTERVIEW_SECTION: InterviewSectionData = {
   title: "우리 두 사람의 이야기",
   description: "결혼을 앞두고 저희 두 사람의\n인터뷰를 준비했습니다.",
   image: {
-    url: "/images/placeholder-couple.svg",
+    url: "/images/wedding-content/gallery/gallery-1.jpg",
     alt: "신랑 신부 인터뷰 대표 사진",
   },
   questions: [
@@ -399,21 +399,21 @@ export const SNAP_SECTION: SnapSectionData = {
   images: [
     {
       id: "snap-1",
-      url: "/images/placeholder-couple.svg",
+      url: "/images/wedding-content/gallery/gallery-1.jpg",
       alt: "스냅 예시 사진 1",
       rotation: -16,
       offsetX: -52,
     },
     {
       id: "snap-2",
-      url: "/images/placeholder-couple.svg",
+      url: "/images/wedding-content/gallery/gallery-2.jpg",
       alt: "스냅 예시 사진 2",
       rotation: -4,
       offsetX: 0,
     },
     {
       id: "snap-3",
-      url: "/images/placeholder-couple.svg",
+      url: "/images/wedding-content/gallery/gallery-3.jpg",
       alt: "스냅 예시 사진 3",
       rotation: 10,
       offsetX: 50,
@@ -422,7 +422,7 @@ export const SNAP_SECTION: SnapSectionData = {
   modal: {
     backLabel: "청첩장 보기",
     coverImage: {
-      url: "/images/placeholder-couple.svg",
+      url: "/images/wedding-content/hero/hero-1.jpg",
       alt: "스냅 업로드 커버 이미지",
     },
     coverKicker: "스냅",
@@ -455,7 +455,7 @@ export const SNAP_SECTION: SnapSectionData = {
 
 export const CLOSING_SECTION: ClosingSectionData = {
   image: {
-    url: "/images/placeholder-couple.svg",
+    url: "/images/wedding-content/closing/closing-1.jpg",
     alt: "감사 인사 이미지",
   },
 };

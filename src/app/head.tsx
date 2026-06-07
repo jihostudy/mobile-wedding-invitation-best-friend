@@ -9,7 +9,7 @@ export default function Head() {
       <meta name="theme-color" content="#F5F1E8" />
       
       {/* Apple Touch Icon */}
-      <link rel="apple-touch-icon" href="/images/placeholder-couple.svg" />
+      <link rel="apple-touch-icon" href="/images/wedding-content/hero/hero-1.jpg" />
       
       {/* Favicon */}
       <link rel="icon" href="/favicon.ico" />

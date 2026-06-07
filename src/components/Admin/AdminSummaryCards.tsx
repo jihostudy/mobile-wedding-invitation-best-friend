@@ -5,8 +5,7 @@ import Link from "next/link";
 type AdminSectionKey =
   | "guest-messages"
   | "attendance"
-  | "snap-submissions"
-  | "content";
+  | "snap-submissions";
 
 interface AdminSummaryCardsProps {
   loading: boolean;
@@ -17,10 +16,6 @@ interface AdminSummaryCardsProps {
 }
 
 export default function AdminSummaryCards({
-  loading: _loading,
-  guestMessageCount: _guestMessageCount,
-  attendanceCount: _attendanceCount,
-  snapCount: _snapCount,
   active,
 }: AdminSummaryCardsProps) {
   const baseClassName =
@@ -30,12 +25,6 @@ export default function AdminSummaryCards({
   return (
     <nav aria-label="관리자 빠른 이동" className="mt-5 border-b border-[#e6dccd] pb-3">
       <div className="flex flex-wrap items-center gap-2">
-      <Link
-        href="/admin/content"
-        className={`${baseClassName} ${active === "content" ? activeClassName : ""}`}
-      >
-        <p>메인 콘텐츠</p>
-      </Link>
       <Link
         href="/admin/guest-messages"
         className={`${baseClassName} ${active === "guest-messages" ? activeClassName : ""}`}
