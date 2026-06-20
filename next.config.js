@@ -16,13 +16,16 @@ function getSupabaseHostname() {
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['localhost'],
     minimumCacheTTL: 31536000,
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [
       {
         protocol: 'https',
         hostname: getSupabaseHostname(),
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
       },
     ],
   },
