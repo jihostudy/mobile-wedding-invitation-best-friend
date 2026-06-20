@@ -25,20 +25,18 @@ export default function WeddingCalendar({
   useEffect(() => {
     const calculateTimeLeft = () => {
       const now = Date.now();
-      const difference = targetDate.getTime() - now;
+      const elapsed = now - targetDate.getTime();
 
-      if (difference <= 0) {
+      if (elapsed <= 0) {
         setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
         return;
       }
 
       setTimeLeft({
-        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-        hours: Math.floor(
-          (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-        ),
-        minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
-        seconds: Math.floor((difference % (1000 * 60)) / 1000),
+        days: Math.floor(elapsed / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((elapsed % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+        minutes: Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60)),
+        seconds: Math.floor((elapsed % (1000 * 60)) / 1000),
       });
     };
 
@@ -197,7 +195,9 @@ export default function WeddingCalendar({
         <FadeInUp delay={0.28} amount={0.15}>
           <p className="mt-7 text-[15px] text-[#4a4a4a]">
             {section.countdownLabel}{" "}
-            <span className="font-semibold">D-{timeLeft.days}</span>
+            <span className="font-semibold">
+              결혼한지 {timeLeft.days}일째
+            </span>
           </p>
         </FadeInUp>
       </div>
